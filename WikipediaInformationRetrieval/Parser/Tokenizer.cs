@@ -10,7 +10,7 @@ namespace Parser
     /// Class representing a tokenizer.
     /// It can read data from stream and return tokens as strings.
     /// </summary>
-    public class Tokenizer : Stream
+    public class Tokenizer
     {
 
     }
