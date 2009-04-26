@@ -1,0 +1,5 @@
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\MorphologicDictionary\bin\Debug\MorphologicDictionary.dll
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\MorphologicDictionary\bin\Debug\MorphologicDictionary.pdb
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\MorphologicDictionary\obj\Debug\ResolveAssemblyReference.cache
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\MorphologicDictionary\obj\Debug\MorphologicDictionary.dll
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\MorphologicDictionary\obj\Debug\MorphologicDictionary.pdb
