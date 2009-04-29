@@ -1,0 +1,5 @@
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\Parser\bin\Debug\Parser.dll
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\Parser\bin\Debug\Parser.pdb
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\Parser\obj\Debug\ResolveAssemblyReference.cache
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\Parser\obj\Debug\Parser.dll
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\Parser\obj\Debug\Parser.pdb

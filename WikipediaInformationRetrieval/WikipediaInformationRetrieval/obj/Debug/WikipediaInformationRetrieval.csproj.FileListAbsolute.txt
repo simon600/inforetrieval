@@ -1,0 +1,11 @@
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\WikipediaInformationRetrieval\bin\Debug\WikipediaInformationRetrieval.exe
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\WikipediaInformationRetrieval\bin\Debug\WikipediaInformationRetrieval.pdb
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\WikipediaInformationRetrieval\bin\Debug\Parser.dll
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\WikipediaInformationRetrieval\bin\Debug\Parser.pdb
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\WikipediaInformationRetrieval\obj\Debug\ResolveAssemblyReference.cache
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\WikipediaInformationRetrieval\obj\Debug\WikipediaInformationRetrieval.Properties.Resources.resources
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\WikipediaInformationRetrieval\obj\Debug\WikipediaInformationRetrieval.csproj.GenerateResource.Cache
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\WikipediaInformationRetrieval\obj\Debug\WikipediaInformationRetrieval.exe
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\WikipediaInformationRetrieval\obj\Debug\WikipediaInformationRetrieval.pdb
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\WikipediaInformationRetrieval\bin\Debug\MorphologicDictionary.dll
+D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\WikipediaInformationRetrieval\bin\Debug\MorphologicDictionary.pdb
