@@ -31,20 +31,19 @@ namespace Parser
             string read_string = "";
             char c;
 
-            c = (char)mStreamReader.Peek();
+            c = (char)mStreamReader.Read();
 
-            while (!msSeparators.Contains(c))
+            while (msSeparators.Contains(c))
             {
-                mStreamReader.Read();
-                c = (char)mStreamReader.Peek();
+                c = (char)mStreamReader.Read();                
             }
 
-            while (!mStreamReader.EndOfStream &&
-                !msSeparators.Contains(c))
+            do
             {
                 read_string += c;
-                c = (char)mStreamReader.Read();
-            }
+                c = (char)mStreamReader.Read();                
+            } while (!mStreamReader.EndOfStream &&
+                !msSeparators.Contains(c));
 
             return read_string;
         }
@@ -65,6 +64,17 @@ namespace Parser
             get
             {
                 return mStreamReader.EndOfStream;
+            }
+        }
+
+        /// <summary>
+        /// Gets current position in the underlying stream.
+        /// </summary>
+        public long Position
+        {
+            get
+            {
+                return mStreamReader.BaseStream.Position;
             }
         }
 
