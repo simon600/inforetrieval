@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.IO.Compression;
 
 namespace MorphologicConverter
 {
@@ -25,65 +26,59 @@ namespace MorphologicConverter
             }
             else
             {
-                output_file = "converted.txt";
+                output_file = "converted.bin";
             }
                                     
-            MakeDictionary(args[0]);
+            MakeDictionary(args[0]);            
             WriteMorphologic(output_file);
             
         }// Main
 
-        //static void MakeWordsMap(string filename)
-        //{
-        //    ulong word_nb = 0;
-        //    StreamReader reader = new StreamReader(filename);
-        //    string[] line;
-
-        //    while (!reader.EndOfStream)
-        //    {
-        //        line = reader.ReadLine().Split(' ');
-        //        if (line.Length >= 2)
-        //        {
-        //            foreach (string word in line)
-        //            {
-        //                if (!words_map.ContainsKey(word))
-        //                {
-        //                    words_map[word] = word_nb;
-        //                    word_nb++;
-        //                }                            
-        //            }
-        //        }
-        //    }
-        //    reader.Close();
-        //}// MakeWrodsMap
-
         static void MakeDictionary(string filename)
         {
             StreamReader reader = new StreamReader(filename);
-            string[] line;
-            string word;
-            string[] bases;
+            String[] line;
+            Dictionary<string, uint> word_map = new Dictionary<string, uint>();
+
+            uint number = 0;
 
             while (!reader.EndOfStream)
             {
                 line = reader.ReadLine().Split(' ');
                 if (line.Length >= 2)
                 {
-                    word = line[0];
-                    bases = new string[line.Length - 1];
                     for (int i = 1; i < line.Length; i++)
                     {
-                        bases[i - 1] = line[i];
-                    }                    
-                    foreach (string base_word in bases)
-                    {
-                        if (!morphologic.ContainsKey(base_word))
+                        if (!word_map.ContainsKey(line[i]))
                         {
-                            morphologic[base_word] = new List<string>();
+                            word_map.Add(line[i], number);
+                            words_list.Add(line[i]);
+                            number++;
                         }
-                        if (!morphologic[base_word].Contains(word))
+                    }
+                    
+                }
+            }
+
+            reader.BaseStream.Seek(0, SeekOrigin.Begin);
+            List<uint> list;
+
+            while (!reader.EndOfStream)
+            {
+                line = reader.ReadLine().Split(' ');
+                if (line.Length >= 2)
+                {
+                    if (!morphologic.ContainsKey(line[0]))
+                    {
+                        morphologic[line[0]] = new List<uint>();
+                    }
+                    list = morphologic[line[0]];
+                    
+                    for (int i = 1; i < line.Length; i++)
+                    {
+                        if (!list.Contains(word_map[line[i]]))
                         {
-                            morphologic[base_word].Add(word);
+                            list.Add(word_map[line[i]]);
                         }
                     }
                 }
@@ -93,24 +88,55 @@ namespace MorphologicConverter
         }// MakeDictionary
 
         static void WriteMorphologic(string filename)
-        {
-            StreamWriter writer = new StreamWriter(filename);
+        {            
 
-            foreach (KeyValuePair<string, List<string>> pair in morphologic)
+            FileStream fstream = new FileStream(filename, FileMode.OpenOrCreate);
+            BinaryWriter binary_writer = new BinaryWriter(fstream);
+            //BinaryFormatter formatter = new BinaryFormatter();
+            
+            // serialize words_list
+            //formatter.Serialize(fstream, words_list.ToArray());
+            binary_writer.Write(words_list.Count); // write length of words list
+            foreach (string word in words_list)
             {
-                writer.Write(pair.Key);
-                foreach (string word in pair.Value)
-                {
-                    writer.Write(" ");
-                    writer.Write(word);
-                }
-                writer.WriteLine();
+                binary_writer.Write(word);
             }
 
-            writer.Close();
+            
+            //formatter.Serialize(fstream, morphologic.Keys.ToArray<string>());
+
+            //List<uint>[] lists = morphologic.Values.ToArray<List<uint>>();
+
+            //uint[][] base_form_numbers = new uint[lists.Length][];
+
+            //binary_writer.Write(lists.Length);
+            //for (uint i = 0; i < lists.Length; i++)
+            //{
+            //    formatter.Serialize(fstream,lists[i].ToArray());
+            //}
+
+            //formatter.Serialize(fstream, base_form_numbers);
+
+            // serialize dictionary
+            binary_writer.Write(morphologic.Count); // number of enries
+            foreach (KeyValuePair<string, List<uint>> pair in morphologic)
+            {
+                binary_writer.Write(pair.Key); // write word
+                // serialize base forms numbers                
+                binary_writer.Write(pair.Value.Count);
+                // write base forms
+                foreach (uint num in pair.Value)
+                {
+                    binary_writer.Write(num);
+                }                
+            }
+
+            //binary_writer.Close();
         }// WriteMorphologic
 
-        static Dictionary<string, List<string>> morphologic =
-            new Dictionary<string, List<string>>();// maps words to bases
+        static SortedDictionary<string, List<uint>> morphologic =
+            new SortedDictionary<string, List<uint>>();// maps words to bases        
+
+        static List<string> words_list = new List<string>();
     }
 }

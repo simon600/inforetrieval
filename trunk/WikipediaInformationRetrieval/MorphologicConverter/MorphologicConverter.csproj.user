@@ -1,8 +1,8 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <StartArguments>morfologik_do_wyszukiwarek.txt morphologic.txt</StartArguments>
+    <StartArguments>"E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\morfologik_do_wyszukiwarek.txt" morphologic.bin</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <StartArguments>morfologik_do_wyszukiwarek.txt morphologic.txt</StartArguments>
+    <StartArguments>"E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\morfologik_do_wyszukiwarek.txt" morphologic.bin</StartArguments>
   </PropertyGroup>
 </Project>
