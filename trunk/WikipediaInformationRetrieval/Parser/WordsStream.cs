@@ -45,6 +45,11 @@ namespace Parser
             } while (!mStreamReader.EndOfStream &&
                 !msSeparators.Contains(c));
 
+            while (msSeparators.Contains((char)mStreamReader.Peek()))
+            {
+                mStreamReader.Read();
+            }
+
             return read_string;
         }
 

@@ -21,11 +21,12 @@ namespace Parser
         public List<string> ConvertStrings(List<string> strings)
         {
             List<string> list = new List<string>();
-            char[] trim_chars = { ' ', '\t', '\n', '.', ',' };
+            char[] trim_chars = { ' ', '\t', '\n', '\r', '.', ',', '(',
+                                  ')',  '[',  ']', '"', '\'', '/', '\\'};
 
             foreach (string word in strings)
             {
-                list.Add(word.Trim(trim_chars));
+                list.Add(word.Trim(trim_chars).ToLower());
             }
 
             return list;

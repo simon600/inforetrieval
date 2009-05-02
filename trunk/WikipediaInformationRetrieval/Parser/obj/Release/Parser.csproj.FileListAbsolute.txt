@@ -3,3 +3,10 @@ D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInf
 D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\Parser\bin\Release\Parser.pdb
 D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\Parser\obj\Release\Parser.dll
 D:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt 1\inforetrieval\WikipediaInformationRetrieval\Parser\obj\Release\Parser.pdb
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\Parser\bin\Release\Parser.dll
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\Parser\bin\Release\Parser.pdb
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\Parser\obj\Release\ResolveAssemblyReference.cache
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\Parser\obj\Release\Parser.dll
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\Parser\obj\Release\Parser.pdb
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\Parser\bin\Release\MorphologicDictionary.dll
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\Parser\bin\Release\MorphologicDictionary.pdb
