@@ -82,9 +82,9 @@ namespace Morphologic
         {
             get
             {
-                List<string> list = new List<string>();
-                int index = BinarySearch(word);
-                if (index > 0)
+                List<string> list = new List<string>();                
+                int index = Array.BinarySearch(mWords, word);
+                if (index >= 0)
                 {
                     foreach (uint base_form_num in mBaseFormNumbers[index])
                     {
@@ -103,48 +103,6 @@ namespace Morphologic
             mWords = null;
             mBaseFormNumbers = null;
             mBaseWords = null;
-        }
-
-        /// <summary>
-        /// Binary search for a word in mWords array.
-        /// </summary>
-        /// <param name="word">Word to find.</param>
-        /// <returns>Index of found word, or -1 if not found.</returns>
-        private int BinarySearch(string word)
-        {
-            CaseInsensitiveComparer comparer = new CaseInsensitiveComparer();
-
-            int begining = 0;
-            int end = mWords.Length-1;
-            int middle;
-            int cmp;
-
-            while (end > begining + 1)
-            {
-                middle = (end + begining) / 2;
-
-                cmp = comparer.Compare(word, mWords[middle]);
-
-                if (cmp < 0)
-                {
-                    end = middle;
-                }
-                else if (cmp > 0)
-                {
-                    begining = middle;
-                }
-                else
-                {
-                    return middle;
-                }
-            }
-
-            if (word == mWords[end])
-            {
-                return end;
-            }
-
-            return -1;
         }
 
         private static MorphologicDictionary mInstance;
