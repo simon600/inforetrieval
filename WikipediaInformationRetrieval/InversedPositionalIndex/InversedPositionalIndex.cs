@@ -55,20 +55,19 @@ namespace InversedIndex
             BinaryReader reader = new BinaryReader(stream);
 
             // get size of the index
-            int size = reader.ReadInt32();
+            int size = reader.ReadInt32();            
 
             mWords = new string[size];
             mPostingLists = new PositionalPostingList[size];
 
+            string word;
             // read from stream
             for (int i = 0; i < size; i++)
             {
                 mWords[i] = reader.ReadString();
-                if (i > 88700)
-                {
-                    string word = mWords[i];
-                }
-                mPostingLists[i] = ReadPostingList(reader);
+                word = mWords[i];
+                PositionalPostingList postingList = 
+                    mPostingLists[i] = ReadPostingList(reader);
             }
 
             // read documents
@@ -118,13 +117,13 @@ namespace InversedIndex
 
             for (int i = 0; i < posting_length; i++)
             {
-                doc_ids[i] = (uint)reader.ReadInt32();
+                doc_ids[i] = reader.ReadUInt32();
                 positions_length = reader.ReadInt32();
                 positions[i] = new uint[positions_length];
 
                 for (int j = 0; j < positions_length; j++)
                 {
-                    positions[i][j] = (uint)reader.ReadInt32();
+                    positions[i][j] = reader.ReadUInt32();
                 }
             }
 

@@ -63,7 +63,7 @@ namespace Morphologic
                 mBaseFormNumbers[entry_num] = new uint[length];
                 for (int i = 0; i < length; i++)
                 {
-                    mBaseFormNumbers[entry_num][i] = (uint)reader.ReadInt32();                    
+                    mBaseFormNumbers[entry_num][i] = reader.ReadUInt32();                    
                 }                
             }
 

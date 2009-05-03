@@ -1,0 +1,14 @@
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Debug\WikipediaIndexCreator.exe
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Debug\WikipediaIndexCreator.pdb
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\obj\Debug\ResolveAssemblyReference.cache
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\obj\Debug\WikipediaIndexCreator.Properties.Resources.resources
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\obj\Debug\WikipediaIndexCreator.csproj.GenerateResource.Cache
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\obj\Debug\WikipediaIndexCreator.exe
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\obj\Debug\WikipediaIndexCreator.pdb
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Debug\Parser.dll
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Debug\Parser.pdb
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Debug\InversedPositionalIndex.dll
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Debug\MorphologicDictionary.dll
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Debug\MorphologicDictionary.pdb
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Debug\InversedPositionalIndex.pdb
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\obj\Debug\WikipediaIndexCreator.Form1.resources
