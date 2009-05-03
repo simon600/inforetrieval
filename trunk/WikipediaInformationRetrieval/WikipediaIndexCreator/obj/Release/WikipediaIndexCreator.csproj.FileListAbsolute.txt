@@ -1,0 +1,14 @@
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\obj\Release\ResolveAssemblyReference.cache
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\obj\Release\WikipediaIndexCreator.Properties.Resources.resources
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\obj\Release\WikipediaIndexCreator.csproj.GenerateResource.Cache
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Release\WikipediaIndexCreator.exe
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Release\WikipediaIndexCreator.pdb
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\obj\Release\WikipediaIndexCreator.exe
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\obj\Release\WikipediaIndexCreator.pdb
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Release\Parser.dll
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Release\Parser.pdb
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Release\MorphologicDictionary.dll
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Release\MorphologicDictionary.pdb
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Release\InversedPositionalIndex.dll
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Release\InversedPositionalIndex.pdb
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\obj\Release\WikipediaIndexCreator.Form1.resources

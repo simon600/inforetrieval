@@ -1,0 +1,5 @@
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\InversedPositionalIndex\obj\Release\ResolveAssemblyReference.cache
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\InversedPositionalIndex\bin\Release\InversedPositionalIndex.dll
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\InversedPositionalIndex\bin\Release\InversedPositionalIndex.pdb
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\InversedPositionalIndex\obj\Release\InversedPositionalIndex.dll
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\InversedPositionalIndex\obj\Release\InversedPositionalIndex.pdb
