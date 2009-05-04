@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{7079C90E-D5F4-409F-B844-6CE8FDE34B07}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -56,6 +56,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -76,13 +79,21 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MorphologicDictionary\MorphologicDictionary.csproj">
+    <ProjectReference Include="..\InversedPositionalIndex\InversedIndex.csproj">
+      <Project>{203378EE-48D2-4104-9751-1E39D94E76F6}</Project>
+      <Name>InversedIndex</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MorphologicDictionary\Morphologic.csproj">
       <Project>{50BCC921-4602-44B5-B864-EA62A0BA7379}</Project>
-      <Name>MorphologicDictionary</Name>
+      <Name>Morphologic</Name>
     </ProjectReference>
     <ProjectReference Include="..\Parser\Parser.csproj">
       <Project>{88DDBE1D-6F60-4EF1-89CE-064F4D9C6C5F}</Project>
       <Name>Parser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WikipediaSearchEngine\WikipediaSearchEngine.csproj">
+      <Project>{50B1EDD0-153A-44CD-B1DA-E7D536A71505}</Project>
+      <Name>WikipediaSearchEngine</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

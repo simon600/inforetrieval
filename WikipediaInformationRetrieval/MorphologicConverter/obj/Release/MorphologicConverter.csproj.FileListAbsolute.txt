@@ -8,3 +8,8 @@ E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInfor
 E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\MorphologicConverter\obj\Release\ResolveAssemblyReference.cache
 E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\MorphologicConverter\obj\Release\MorphologicConverter.exe
 E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\MorphologicConverter\obj\Release\MorphologicConverter.pdb
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\MorphologicConverter\bin\Release\MorphologicConverter.exe
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\MorphologicConverter\bin\Release\MorphologicConverter.pdb
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\MorphologicConverter\obj\Release\ResolveAssemblyReference.cache
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\MorphologicConverter\obj\Release\MorphologicConverter.exe
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\MorphologicConverter\obj\Release\MorphologicConverter.pdb

@@ -3,3 +3,8 @@ E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInfor
 E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\MorphologicDictionary\obj\Release\ResolveAssemblyReference.cache
 E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\MorphologicDictionary\obj\Release\MorphologicDictionary.dll
 E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\MorphologicDictionary\obj\Release\MorphologicDictionary.pdb
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\MorphologicDictionary\bin\Release\MorphologicDictionary.dll
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\MorphologicDictionary\bin\Release\MorphologicDictionary.pdb
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\MorphologicDictionary\obj\Release\ResolveAssemblyReference.cache
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\MorphologicDictionary\obj\Release\MorphologicDictionary.dll
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\MorphologicDictionary\obj\Release\MorphologicDictionary.pdb
