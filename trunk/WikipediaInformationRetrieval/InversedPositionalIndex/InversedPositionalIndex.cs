@@ -55,7 +55,11 @@ namespace InversedIndex
             BinaryReader reader = new BinaryReader(stream);
 
             // get size of the index
-            int size = reader.ReadInt32();            
+            int size = reader.ReadInt32();
+
+            mPerformedLematization = reader.ReadBoolean();
+            mPerformedStemming = reader.ReadBoolean();
+            mPerformedStopWordsRemoval = reader.ReadBoolean();            
 
             mWords = new string[size];
             mPostingLists = new PositionalPostingList[size];
@@ -66,8 +70,8 @@ namespace InversedIndex
             {
                 mWords[i] = reader.ReadString();
                 word = mWords[i];
-                PositionalPostingList postingList = 
-                    mPostingLists[i] = ReadPostingList(reader);
+                PositionalPostingList postingList =
+                    mPostingLists[i] = ReadPostingList(stream);
             }
 
             // read documents
@@ -94,6 +98,40 @@ namespace InversedIndex
             }
         }
 
+        public bool CompressedPostingLists
+        {
+            get
+            {
+                return mCompressedPostingLists;
+            }
+        }
+
+        public bool PerformedStemming
+        {
+            get
+            {
+                return mPerformedStemming;
+            }
+        }
+
+        public bool PerformedLematization
+        {
+            get
+            {
+                return mPerformedLematization;
+            }
+        }
+
+        public bool PerformedStopWordsRemoval
+        {
+            get
+            {
+                return mPerformedStopWordsRemoval;
+            }
+        }
+
+        //////////////////////////////// PRIVATE /////////////////////////////
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -102,8 +140,19 @@ namespace InversedIndex
             mDocuments = new Dictionary<uint, Document>();
         }
 
-        private PositionalPostingList ReadPostingList(BinaryReader reader)
+        private PositionalPostingList ReadPostingList(Stream stream)
         {
+            BinaryReader reader;
+            if (mCompressedPostingLists)
+            {
+                GZipStream gzip_stream =
+                    new GZipStream(stream, CompressionMode.Decompress);
+                reader = new BinaryReader(gzip_stream);
+            }
+            else
+            {
+                reader = new BinaryReader(stream);
+            }
             int posting_length;
             int positions_length;
 
@@ -139,5 +188,10 @@ namespace InversedIndex
         /// Mapis document identifiers to documents.
         /// </summary>
         private Dictionary<uint, Document> mDocuments;
+        
+        private bool mPerformedStemming;
+        private bool mPerformedStopWordsRemoval;
+        private bool mPerformedLematization;
+        private bool mCompressedPostingLists;        
     }
 }

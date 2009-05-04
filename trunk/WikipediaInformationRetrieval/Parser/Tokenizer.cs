@@ -20,7 +20,7 @@ namespace Parser
         {
             //string str = " \t\n\r.,'\";:-_=+(){}[]!@#$%^&*|\\/><";
             //trim_chars = str.ToCharArray();
-            string str = ".,;_";
+            string str = ".,;_()[]{}";
 
             split_chars = str.ToCharArray();
         }
@@ -36,17 +36,26 @@ namespace Parser
             string modified_word;
             
             foreach (string word in strings)
-            {
-                modified_word = TrimWord(word);
-                if (modified_word.Length > 0)
+            {                
+                foreach (string str in word.Split(split_chars))
                 {
-                    list.AddRange(modified_word.Split(split_chars));
+                    modified_word = TrimWord(str);
+                    if (modified_word.Length > 0 &&
+                        ContainsLetters(modified_word))
+                    {
+                        list.Add(modified_word);
+                    }
                 }
             }
 
             return list;
         }
 
+        /// <summary>
+        /// Trims word.
+        /// </summary>
+        /// <param name="word">Word to trim.</param>
+        /// <returns>Modiefied word.</returns>
         private string TrimWord(string word)
         {
             bool contains_bad_char = true;
@@ -66,6 +75,26 @@ namespace Parser
             }
 
             return word;
+        }
+
+        /// <summary>
+        /// Checks if word contains letters.
+        /// </summary>
+        /// <param name="word">Word to check.</param>
+        /// <returns>True if has letters, false otherwise.</returns>
+        private bool ContainsLetters(string word)
+        {
+            bool has_letters = false;
+            foreach (char c in word)
+            {
+                if (char.IsLetter(c))
+                {
+                    has_letters = true;
+                    break;
+                }
+            }
+
+            return has_letters;
         }
         
         private char[] split_chars;
