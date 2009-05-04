@@ -3,3 +3,8 @@ E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInfor
 E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\InversedPositionalIndex\obj\Debug\ResolveAssemblyReference.cache
 E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\InversedPositionalIndex\obj\Debug\InversedPositionalIndex.dll
 E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\InversedPositionalIndex\obj\Debug\InversedPositionalIndex.pdb
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\InversedPositionalIndex\bin\Debug\InversedPositionalIndex.dll
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\InversedPositionalIndex\bin\Debug\InversedPositionalIndex.pdb
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\InversedPositionalIndex\obj\Debug\ResolveAssemblyReference.cache
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\InversedPositionalIndex\obj\Debug\InversedPositionalIndex.dll
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\InversedPositionalIndex\obj\Debug\InversedPositionalIndex.pdb

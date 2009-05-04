@@ -5,9 +5,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WikipediaInformationRetriev
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parser", "Parser\Parser.csproj", "{88DDBE1D-6F60-4EF1-89CE-064F4D9C6C5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MorphologicDictionary", "MorphologicDictionary\MorphologicDictionary.csproj", "{50BCC921-4602-44B5-B864-EA62A0BA7379}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MorphologicConverter", "MorphologicConverter\MorphologicConverter.csproj", "{FDC05AF6-EB88-4689-A22E-6B0B2414D971}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morphologic", "MorphologicDictionary\Morphologic.csproj", "{50BCC921-4602-44B5-B864-EA62A0BA7379}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WikipediaIndexCreator", "WikipediaIndexCreator\WikipediaIndexCreator.csproj", "{0DFA609D-F829-4629-B0C5-134AA76A6C2F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InversedIndex", "InversedPositionalIndex\InversedIndex.csproj", "{203378EE-48D2-4104-9751-1E39D94E76F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WikipediaSearchEngine", "WikipediaSearchEngine\WikipediaSearchEngine.csproj", "{50B1EDD0-153A-44CD-B1DA-E7D536A71505}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,14 +29,26 @@ Global
 		{88DDBE1D-6F60-4EF1-89CE-064F4D9C6C5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88DDBE1D-6F60-4EF1-89CE-064F4D9C6C5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88DDBE1D-6F60-4EF1-89CE-064F4D9C6C5F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{50BCC921-4602-44B5-B864-EA62A0BA7379}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{50BCC921-4602-44B5-B864-EA62A0BA7379}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{50BCC921-4602-44B5-B864-EA62A0BA7379}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{50BCC921-4602-44B5-B864-EA62A0BA7379}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FDC05AF6-EB88-4689-A22E-6B0B2414D971}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FDC05AF6-EB88-4689-A22E-6B0B2414D971}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDC05AF6-EB88-4689-A22E-6B0B2414D971}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDC05AF6-EB88-4689-A22E-6B0B2414D971}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50BCC921-4602-44B5-B864-EA62A0BA7379}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50BCC921-4602-44B5-B864-EA62A0BA7379}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50BCC921-4602-44B5-B864-EA62A0BA7379}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50BCC921-4602-44B5-B864-EA62A0BA7379}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DFA609D-F829-4629-B0C5-134AA76A6C2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DFA609D-F829-4629-B0C5-134AA76A6C2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DFA609D-F829-4629-B0C5-134AA76A6C2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DFA609D-F829-4629-B0C5-134AA76A6C2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{203378EE-48D2-4104-9751-1E39D94E76F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{203378EE-48D2-4104-9751-1E39D94E76F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{203378EE-48D2-4104-9751-1E39D94E76F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{203378EE-48D2-4104-9751-1E39D94E76F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50B1EDD0-153A-44CD-B1DA-E7D536A71505}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50B1EDD0-153A-44CD-B1DA-E7D536A71505}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50B1EDD0-153A-44CD-B1DA-E7D536A71505}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50B1EDD0-153A-44CD-B1DA-E7D536A71505}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
