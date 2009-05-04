@@ -12,6 +12,12 @@ namespace WikipediaSearchEngine
             :base(query)
         {}
 
+        /// <summary>
+        /// Normal form for boolean query:
+        /// word1 or word2 = word1|word2  ("|" is separator)
+        /// word1 and word2 = word1 word2 (" " is separator)
+        /// Words in disjunction are sorted and parts of conjunction also.
+        /// </summary>
         public override string QueryNormalForm
         {
             get
@@ -20,9 +26,12 @@ namespace WikipediaSearchEngine
                 {
                     List<string> sorted_clause = new List<string>();
                    
-                    string clause = "";
+                    string clause;
                     foreach (List<string> or_list in mQueryStructure)
                     {
+                        if (or_list.Count == 0)     //tu bylo stop words
+                            continue;
+
                         clause = "";
                         or_list.Sort();
                         foreach (string w in or_list)
@@ -32,8 +41,13 @@ namespace WikipediaSearchEngine
                         sorted_clause.Add(clause);
                     }
 
-                    sorted_clause.Sort();
                     mNormalizedQuery = "";
+
+                    if (sorted_clause.Count == 0)
+                        return mNormalizedQuery;
+
+                    sorted_clause.Sort();
+                    
                     foreach (string w in sorted_clause)
                         mNormalizedQuery += w + " ";
 
@@ -44,14 +58,22 @@ namespace WikipediaSearchEngine
             }
         }
        
-
+        /// <summary>
+        /// Compute union of postings list.
+        /// Positions list are not relevant, in result posting list positions list are not sorted.
+        /// </summary>
+        /// <param name="postings">List of postings to merge</param>
+        /// <returns>Union of postings</returns>
         protected override PositionalPostingList MergePostings(List<PositionalPostingList> postings)
         {
+            if (postings.Count == 0)
+                return new PositionalPostingList();
+
             if (postings.Count == 1)
                 return postings[0];
 
             if (postings.Count == 2)
-                return SumPostings(postings[0], postings[1]);
+                return UnionPostings(postings[0], postings[1]);
 
             int[] sequence = DetermineSequence(postings);
             int ind = 0;
@@ -61,7 +83,7 @@ namespace WikipediaSearchEngine
 
             for (ind = 0; ind < postings.Count - 1; ind+= 2)
             {
-                new_posting = SumPostings( postings[ sequence[ind] ], postings[ sequence[ind+1] ]);  
+                new_posting = UnionPostings( postings[ sequence[ind] ], postings[ sequence[ind+1] ]);  
                 merge_postings.Add(new_posting);
             }
 
@@ -70,7 +92,7 @@ namespace WikipediaSearchEngine
 
             while (merge_postings.Count > 1)
             {
-                new_posting = SumPostings(merge_postings[0], merge_postings[1]);
+                new_posting = UnionPostings(merge_postings[0], merge_postings[1]);
                 merge_postings.RemoveRange(0, 2);
                 merge_postings.Add(new_posting);
             }
@@ -78,8 +100,17 @@ namespace WikipediaSearchEngine
             return merge_postings[0];
         }
 
+        /// <summary>
+        /// Compute intersection of postings list.
+        /// Positions list are not relevant, in result posting list positions list are not sorted.
+        /// </summary>
+        /// <param name="postings">List of postings to intersect</param>
+        /// <returns>Intersection of postings</returns>
         protected override PositionalPostingList GetPostingsProduct(List<PositionalPostingList> postings)
         {
+            if (postings.Count == 0)
+                return new PositionalPostingList();
+
             if (postings.Count == 1)
                 return postings[0];
 
@@ -97,9 +128,15 @@ namespace WikipediaSearchEngine
             return new_posting;
         }
 
-        private PositionalPostingList SumPostings(PositionalPostingList posting1, PositionalPostingList posting2)
+        /// <summary>
+        /// Union two posting list
+        /// </summary>
+        /// <param name="posting1">First posting list</param>
+        /// <param name="posting2">Second posting list</param>
+        /// <returns>Results of union</returns>
+        private PositionalPostingList UnionPostings(PositionalPostingList posting1, PositionalPostingList posting2)
         {
-            PositionalPostingList sum_of_postings;
+            PositionalPostingList union_of_postings;
            
             List<uint> doc_ids = new List<uint>();
             List<uint[]> list_of_positions = new List<uint[]>();
@@ -163,11 +200,17 @@ namespace WikipediaSearchEngine
                 index2++;
             }
 
-            //list_of_positions moze byc pusta
-            sum_of_postings = new PositionalPostingList(doc_ids.ToArray(), list_of_positions.ToArray());
-            return sum_of_postings;
+            //list_of_positions is not sorted 
+            union_of_postings = new PositionalPostingList(doc_ids.ToArray(), list_of_positions.ToArray());
+            return union_of_postings;
         }
 
+        /// <summary>
+        /// Compute intersection of two posting lists
+        /// </summary>
+        /// <param name="posting1">First posting list</param>
+        /// <param name="posting2">Second posting list</param>
+        /// <returns>Intersection of postings</returns>
         private PositionalPostingList ProductPostings(PositionalPostingList posting1, PositionalPostingList posting2)
         {
             PositionalPostingList product_of_postings;
