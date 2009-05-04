@@ -11,4 +11,4 @@ E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInfor
 E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Debug\MorphologicDictionary.dll
 E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Debug\MorphologicDictionary.pdb
 E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Debug\InversedPositionalIndex.pdb
-E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\obj\Debug\WikipediaIndexCreator.Form1.resources
+E:\Studia\Wyszukiwanie Informacji\Pracownia\Projekt\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\obj\Debug\WikipediaIndexCreator.MainWindow.resources

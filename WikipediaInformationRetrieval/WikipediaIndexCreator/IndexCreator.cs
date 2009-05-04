@@ -99,6 +99,58 @@ namespace WikipediaIndexCreator
             }
         }
 
+        /// <summary>
+        /// Gets or sets string separating articles in file.
+        /// </summary>
+        public string ArticleSeparator
+        {
+            get
+            {
+                return mArticleSeparator;
+            }
+            set
+            {
+                mArticleSeparator = value.Trim();
+            }
+        }
+
+        public bool PerformStemming
+        {
+            get
+            {
+                return mPerformStemming;
+            }
+            set
+            {
+                mPerformStemming = value;
+            }
+        }
+
+        public bool PerformStopWordsRemoval
+        {
+            get
+            {
+                return mPerformStopWordsRemoval;
+            }
+            set
+            {
+                mPerformStopWordsRemoval = value;
+            }
+        }
+
+        public bool PerformLematization
+        {
+            get
+            {
+                return mPerformLematization;
+            }
+            set
+            {
+                mPerformLematization = value;
+            }
+        }
+
+
         /////////////////////////////// PRIVATE //////////////////////////////        
 
         /// <summary>
@@ -106,6 +158,15 @@ namespace WikipediaIndexCreator
         /// </summary>
         private IndexCreator()
         {
+            mArticleSeparator = "##TITLE##";
+            mPerformLematization = true;
+            mPerformStemming = true;
+            mPerformStopWordsRemoval = true;
+
+            tokenizer = new Tokenizer();
+            normalizer = new Normalizer();
+            lematizer = new Lematizer();
+            stemmer = new Stemmer();
         }
 
         /// <summary>
@@ -134,12 +195,8 @@ namespace WikipediaIndexCreator
             inversedIndex =
                 new SortedDictionary<string, SortedList<uint, List<uint>>>();            
             
-            List<string> article = new List<string>();
-            List<string> base_forms;
-            Tokenizer tokenizer = new Tokenizer();
-            Normalizer normalizer = new Normalizer();
-            Lematizer lematizer = new Lematizer();
-            Stemmer stemmer = new Stemmer();
+            List<string> article = new List<string>();            
+                        
             string word;
             uint index_in_article = 0;
             Document document;
@@ -161,39 +218,78 @@ namespace WikipediaIndexCreator
 
                 foreach (string token in article)
                 {
-                    word = normalizer.Normalize(token);
-                    base_forms = lematizer.LematizeString(word);
-
-                    foreach (string base_form in base_forms)
-                    {
-                        if (base_form.Length > 0 &&
-                            !StopWords.IsStopWord(base_form))
-                        {                            
-                            word = stemmer.DoStemming(base_form);
-                            if (!inversedIndex.ContainsKey(word))
-                            {
-                                size += (long)word.Length + 1;
-                                inversedIndex.Add(word,
-                                    new SortedList<uint, List<uint>>());
-                            }
-
-                            if (!inversedIndex[word].ContainsKey(
-                                document.Id))
-                            {
-                                size += sizeof(uint); // size of uint
-                                inversedIndex[word].Add(
-                                    document.Id, new List<uint>());
-                            }
-
-                            size += sizeof(uint);
-                            inversedIndex[word][document.Id].Add(
-                                index_in_article);
-                        }
-                    }
+                    size += InsertTokenToIndex(token,
+                        inversedIndex,
+                        document,
+                        index_in_article);
 
                     index_in_article++;
                 }
             }            
+        }
+
+        private long InsertTokenToIndex(
+            string token,
+            SortedDictionary<string, SortedList<uint, List<uint>>>
+                inversedIndex,
+            Document document,
+            uint indexInArticle)
+        {
+            long size = 0;
+            bool add = true;
+            List<string> base_forms;
+            string word;
+
+            word = normalizer.Normalize(token);
+
+            if (mPerformLematization)
+            {
+                base_forms = lematizer.LematizeString(word);
+            }
+            else
+            {
+                base_forms = new List<string>();
+                base_forms.Add(word);
+            }
+
+            foreach (string base_form in base_forms)
+            {
+                word = base_form;
+                if (mPerformStopWordsRemoval &&
+                    StopWords.IsStopWord(base_form))
+                {
+                    add = false;
+                }
+
+                if (base_form.Length > 0 && add)
+                {
+                    if (mPerformStemming)
+                    {
+                        word = stemmer.DoStemming(word);
+                    }
+
+                    if (!inversedIndex.ContainsKey(word))
+                    {
+                        size += (long)word.Length + 1;
+                        inversedIndex.Add(word,
+                            new SortedList<uint, List<uint>>());
+                    }
+
+                    if (!inversedIndex[word].ContainsKey(
+                        document.Id))
+                    {
+                        size += sizeof(uint); // size of uint
+                        inversedIndex[word].Add(
+                            document.Id, new List<uint>());
+                    }
+
+                    size += sizeof(uint);
+                    inversedIndex[word][document.Id].Add(
+                        indexInArticle);
+                }
+            }
+
+            return size;
         }
 
         /// <summary>
@@ -285,7 +381,13 @@ namespace WikipediaIndexCreator
             CaseInsensitiveComparer comparer = new CaseInsensitiveComparer();
             int cmp;
             BinaryWriter writer = new BinaryWriter(outputStream);
-            long length = 0; // length of the output stream              
+            long length = 0; // length of the output stream   
+            int size = 0; // total size of merged index
+
+            // write number of entries, will be changed later
+            writer.Write(size);
+
+            WriteSettings(writer);
 
             foreach (FileStream file_stream in sourceStreams)
             {
@@ -304,16 +406,12 @@ namespace WikipediaIndexCreator
             for (int i = 0; i < sourceStreams.Count; i++)
             {
                 readers.Add(new BinaryReader(sourceStreams[i]));
-            }
-
-            int size = 0; // total size of merged index
+            }            
 
             for (int i = 0; i < readers.Count; i++)
             {
                 sizes.Add(readers[i].ReadInt32());
-            }
-            // write number of entries
-            writer.Write(size);
+            }            
 
             List<string> words_in_streams = new List<string>(sourceStreams.Count);
 
@@ -377,6 +475,17 @@ namespace WikipediaIndexCreator
             outputStream.Seek(0, SeekOrigin.Begin);
             writer.Write(size);
             outputStream.Seek(0, SeekOrigin.End);
+        }
+
+        /// <summary>
+        /// Writes settings to stream.
+        /// </summary>
+        /// <param name="writer">Binary writter to use.</param>
+        private void WriteSettings(BinaryWriter writer)
+        {
+            writer.Write(mPerformLematization);
+            writer.Write(mPerformStemming);
+            writer.Write(mPerformStopWordsRemoval);
         }
 
         /// <summary>
@@ -590,5 +699,19 @@ namespace WikipediaIndexCreator
         /// Holds instance of index creator.
         /// </summary>
         private static IndexCreator msIndexCreator;
+
+        /// <summary>
+        /// Separates articles in files.
+        /// </summary>
+        private string mArticleSeparator;
+
+        private bool mPerformStemming;
+        private bool mPerformStopWordsRemoval;
+        private bool mPerformLematization;
+
+        Tokenizer tokenizer;
+        Normalizer normalizer;
+        Lematizer lematizer;
+        Stemmer stemmer;
     }
 }
