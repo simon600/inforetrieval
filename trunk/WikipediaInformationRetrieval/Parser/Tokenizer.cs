@@ -18,10 +18,9 @@ namespace Parser
         /// </summary>
         public Tokenizer()
         {
-            string str = " \t\n\r.,'\";:-_=+(){}[]!@#$%^&*|\\/><";
-            trim_chars = str.ToCharArray();
-
-            str = ".,;";
+            //string str = " \t\n\r.,'\";:-_=+(){}[]!@#$%^&*|\\/><";
+            //trim_chars = str.ToCharArray();
+            string str = ".,;_";
 
             split_chars = str.ToCharArray();
         }
@@ -33,17 +32,42 @@ namespace Parser
         /// <returns>Converted list of strings</returns>
         public List<string> ConvertStrings(List<string> strings)
         {
-            List<string> list = new List<string>();         
+            List<string> list = new List<string>();
+            string modified_word;
             
             foreach (string word in strings)
-            {                
-                list.AddRange(word.Trim(trim_chars).Split(split_chars));
+            {
+                modified_word = TrimWord(word);
+                if (modified_word.Length > 0)
+                {
+                    list.AddRange(modified_word.Split(split_chars));
+                }
             }
 
             return list;
         }
 
-        private char[] trim_chars;
+        private string TrimWord(string word)
+        {
+            bool contains_bad_char = true;
+            while (contains_bad_char && word.Length > 0)
+            {
+                contains_bad_char = false;
+                if (!char.IsLetterOrDigit(word[0]))
+                {
+                    word = word.Remove(0, 1);
+                    contains_bad_char = true;
+                }
+                else if (!char.IsLetterOrDigit(word[word.Length - 1]))
+                {
+                    word = word.Remove(word.Length - 1, 1);
+                    contains_bad_char = true;
+                }
+            }
+
+            return word;
+        }
+        
         private char[] split_chars;
     }
 }
