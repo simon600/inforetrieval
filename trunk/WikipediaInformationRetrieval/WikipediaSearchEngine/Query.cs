@@ -70,7 +70,6 @@ namespace WikipediaSearchEngine
                         or_list.Add(mIndex.PostingList(word));
                 }
                 
-               
                 and_list.Add(MergePostings(or_list));
             }
 
@@ -83,21 +82,81 @@ namespace WikipediaSearchEngine
         /// </summary>
         /// <param name="postings">List of posting list to merge</param>
         /// <returns>Result of merging</returns>
-        protected abstract PositionalPostingList MergePostings(List<PositionalPostingList> postings);
+        protected PositionalPostingList MergePostings(List<PositionalPostingList> postings)
+        {
+            if (postings.Count == 0)
+                return new PositionalPostingList();
+
+            if (postings.Count == 1)
+                return postings[0];
+
+            if (postings.Count == 2)
+                return UnionPostings(postings[0], postings[1]);
+
+            mSequence = DetermineSequence(postings);
+            int ind = 0;
+
+            List<PositionalPostingList> merge_postings = new List<PositionalPostingList>();
+            PositionalPostingList new_posting;
+
+            for (ind = 0; ind < postings.Count - 1; ind += 2)
+            {
+                new_posting = UnionPostings(postings[mSequence[ind]], postings[mSequence[ind + 1]]);
+                merge_postings.Add(new_posting);
+            }
+
+            if (postings.Count % 2 != 0)
+                merge_postings.Add(postings[mSequence[ind]]);
+
+            while (merge_postings.Count > 1)
+            {
+                new_posting = UnionPostings(merge_postings[0], merge_postings[1]);
+                merge_postings.RemoveRange(0, 2);
+                merge_postings.Add(new_posting);
+            }
+
+            return merge_postings[0];
+
+
+        }
 
         /// <summary>
         /// Merge list of postings to one posting list, which is intersection of them.
         /// </summary>
         /// <param name="postings">List of posting list to merge</param>
         /// <returns>Product of postings</returns>
-        protected abstract PositionalPostingList GetPostingsProduct(List<PositionalPostingList> postings);
+        protected PositionalPostingList GetPostingsProduct(List<PositionalPostingList> postings)
+        {
+            if (postings.Count == 0)
+                return new PositionalPostingList();
+
+            if (postings.Count == 1)
+                return postings[0];
+
+            mSequence = DetermineSequence(postings);
+
+            PositionalPostingList new_posting =
+                IntersectPostings(postings[mSequence[0]], postings[mSequence[1]]);
+
+            int ind = 2;
+            while (ind < mSequence.Length)
+            {
+                new_posting = IntersectPostings(new_posting, postings[mSequence[ind]]);
+                ind++;
+            }
+            return new_posting;
+        }
+
+        protected abstract PositionalPostingList UnionPostings(PositionalPostingList posting1, PositionalPostingList postings2);
+
+        protected abstract PositionalPostingList IntersectPostings(PositionalPostingList posting1, PositionalPostingList posting2);
 
         /// <summary>
         /// Return order of increasing document frequency for list of postings
         /// </summary>
         /// <param name="postings">List of posting list to determine merging order</param>
         /// <returns></returns>
-        protected int[] DetermineSequence(List<PositionalPostingList> postings)
+        protected virtual int[] DetermineSequence(List<PositionalPostingList> postings)
         {
             if (postings.Count < 2)
                 return null;
@@ -181,5 +240,6 @@ namespace WikipediaSearchEngine
         protected PositionalPostingList mQueryAnswer;
         protected string mUserQuery;
         protected string mNormalizedQuery;
+        protected int[] mSequence;
     }
 }
