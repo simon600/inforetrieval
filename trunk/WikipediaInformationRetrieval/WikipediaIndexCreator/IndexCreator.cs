@@ -51,7 +51,7 @@ namespace WikipediaIndexCreator
             List<FileStream> file_streams = new List<FileStream>();            
 
             // inverted index to create
-            SortedDictionary<string, SortedList<uint, List<uint>>> inverted_index;
+            SortedDictionary<string, SortedList<uint, List<ushort>>> inverted_index;
 
             // documents accesible by their id;
             Dictionary<uint, Document> documents = new Dictionary<uint,Document>();
@@ -184,7 +184,7 @@ namespace WikipediaIndexCreator
             CreateInversedIndex(
                 WordsStream wordsStream,
                 long blockSize,
-                out SortedDictionary<string, SortedList<uint, List<uint>>>
+                out SortedDictionary<string, SortedList<uint, List<ushort>>>
                     inversedIndex,
                 Dictionary<uint, Document> documents,
                 out long size)
@@ -193,12 +193,12 @@ namespace WikipediaIndexCreator
             size = 0;
 
             inversedIndex =
-                new SortedDictionary<string, SortedList<uint, List<uint>>>();            
+                new SortedDictionary<string, SortedList<uint, List<ushort>>>();            
             
             List<string> article = new List<string>();            
                         
             string word;
-            uint index_in_article = 0;
+            ushort index_in_article = 0;
             Document document;
                         
             while (!wordsStream.EndOfStream && size < blockSize)
@@ -230,10 +230,10 @@ namespace WikipediaIndexCreator
 
         private long InsertTokenToIndex(
             string token,
-            SortedDictionary<string, SortedList<uint, List<uint>>>
+            SortedDictionary<string, SortedList<uint, List<ushort>>>
                 inversedIndex,
             Document document,
-            uint indexInArticle)
+            ushort indexInArticle)
         {
             long size = 0;
             bool add = true;
@@ -272,7 +272,7 @@ namespace WikipediaIndexCreator
                     {
                         size += (long)word.Length + 1;
                         inversedIndex.Add(word,
-                            new SortedList<uint, List<uint>>());
+                            new SortedList<uint, List<ushort>>());
                     }
 
                     if (!inversedIndex[word].ContainsKey(
@@ -280,7 +280,7 @@ namespace WikipediaIndexCreator
                     {
                         size += sizeof(uint); // size of uint
                         inversedIndex[word].Add(
-                            document.Id, new List<uint>());
+                            document.Id, new List<ushort>());
                     }
 
                     size += sizeof(uint);
@@ -298,7 +298,7 @@ namespace WikipediaIndexCreator
         /// <param name="inversedIndex">Index structure.</param>
         /// <param name="stream">Stream to write to.</param>
         private void WriteIndexToStream(
-            SortedDictionary<string, SortedList<uint, List<uint>>> inversedIndex,
+            SortedDictionary<string, SortedList<uint, List<ushort>>> inversedIndex,
             Stream stream,
             long size)
         {
@@ -310,7 +310,7 @@ namespace WikipediaIndexCreator
             binary_writer.Write(inversedIndex.Count);
 
             // write entries
-            foreach (KeyValuePair<string, SortedList<uint, List<uint>>> entry
+            foreach (KeyValuePair<string, SortedList<uint, List<ushort>>> entry
                 in inversedIndex)
             {
                 binary_writer.Write(entry.Key);     // write key
@@ -328,12 +328,12 @@ namespace WikipediaIndexCreator
         /// <param name="postingList">Posting list to write.</param>
         private void WritePostingListToStream(
             BinaryWriter writer,
-            SortedList<uint, List<uint>> postingList)
+            SortedList<uint, List<ushort>> postingList)
         {
             // write size
             writer.Write(postingList.Count);
 
-            foreach (KeyValuePair<uint, List<uint>> post_pair
+            foreach (KeyValuePair<uint, List<ushort>> post_pair
                     in postingList)
             {
                 writer.Write(post_pair.Key);  // write doc_id
@@ -341,7 +341,7 @@ namespace WikipediaIndexCreator
                 writer.Write(post_pair.Value.Count);
 
                 // write positions list
-                foreach (uint pos in post_pair.Value)
+                foreach (ushort pos in post_pair.Value)
                 {
                     writer.Write(pos);
                 }
@@ -399,8 +399,8 @@ namespace WikipediaIndexCreator
 
             List<BinaryReader> readers = new List<BinaryReader>(sourceStreams.Count);
             List<int> min_words = new List<int>();
-            List<SortedList<uint, List<uint>>> postingLists =
-                new List<SortedList<uint,List<uint>>>();
+            List<SortedList<uint, List<ushort>>> postingLists =
+                new List<SortedList<uint, List<ushort>>>();
             List<int> sizes = new List<int>(sourceStreams.Count);
 
             for (int i = 0; i < sourceStreams.Count; i++)
@@ -493,12 +493,12 @@ namespace WikipediaIndexCreator
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         /// <returns>Posting list read.</returns>
-        private SortedList<uint, List<uint>> ReadPostingList(Stream stream)
+        private SortedList<uint, List<ushort>> ReadPostingList(Stream stream)
         {
-            SortedList<uint, List<uint>> posting_list =
-                new SortedList<uint,List<uint>>();
+            SortedList<uint, List<ushort>> posting_list =
+                new SortedList<uint, List<ushort>>();
 
-            List<uint> positions_list;
+            List<ushort> positions_list;
 
             BinaryReader reader = new BinaryReader(stream);
             int posting_length;
@@ -510,14 +510,14 @@ namespace WikipediaIndexCreator
             for (int i = 0; i < posting_length; i++)
             {
                 doc_id = reader.ReadUInt32();
-                positions_list = new List<uint>();
+                positions_list = new List<ushort>();
                 posting_list.Add(doc_id, positions_list);
 
                 positions_length = reader.ReadInt32();
                 
                 for (int j = 0; j < positions_length; j++)
                 {
-                    positions_list.Add(reader.ReadUInt32());
+                    positions_list.Add(reader.ReadUInt16());
                 }
             }
 
@@ -533,17 +533,17 @@ namespace WikipediaIndexCreator
         /// </summary>
         /// <param name="postingLists">Posting lists to merge.</param>
         /// <returns>Merged posting list.</returns>
-        private SortedList<uint, List<uint>> MergePostingLists(
-            List<SortedList<uint, List<uint>>> postingLists)
+        private SortedList<uint, List<ushort>> MergePostingLists(
+            List<SortedList<uint, List<ushort>>> postingLists)
         {
-            SortedList<uint, List<uint>> merged_list;
+            SortedList<uint, List<ushort>> merged_list;
 
-            merged_list = new SortedList<uint,List<uint>>();
-            
-            foreach (SortedList<uint, List<uint>> posting_list
+            merged_list = new SortedList<uint, List<ushort>>();
+
+            foreach (SortedList<uint, List<ushort>> posting_list
                 in postingLists)
             {
-                foreach (KeyValuePair<uint, List<uint>> pair
+                foreach (KeyValuePair<uint, List<ushort>> pair
                     in posting_list)
                 {
                     merged_list.Add(pair.Key, pair.Value);
