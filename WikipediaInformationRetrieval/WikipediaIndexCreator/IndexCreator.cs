@@ -238,6 +238,8 @@ namespace WikipediaIndexCreator
             long size = 0;
             bool add = true;
             List<string> base_forms;
+            List<string> base_forms_after_stemming = new List<string>();
+
             string word;
 
             word = normalizer.Normalize(token);
@@ -255,6 +257,7 @@ namespace WikipediaIndexCreator
             foreach (string base_form in base_forms)
             {
                 word = base_form;
+               
                 if (mPerformStopWordsRemoval &&
                     StopWords.IsStopWord(base_form))
                 {
@@ -266,6 +269,12 @@ namespace WikipediaIndexCreator
                     if (mPerformStemming)
                     {
                         word = stemmer.DoStemming(word);
+
+                        //the word is already in inverted index with this indexInArticle
+                        if (base_forms_after_stemming.Contains(word))
+                            continue;
+
+                        else base_forms_after_stemming.Add(word);
                     }
 
                     if (!inversedIndex.ContainsKey(word))
