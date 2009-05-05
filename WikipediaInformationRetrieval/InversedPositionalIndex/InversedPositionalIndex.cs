@@ -157,22 +157,22 @@ namespace InversedIndex
             int positions_length;
 
             uint[] doc_ids;
-            uint[][] positions;
+            ushort[][] positions;
 
             posting_length = reader.ReadInt32();
 
             doc_ids = new uint[posting_length];
-            positions = new uint[posting_length][];
+            positions = new ushort[posting_length][];
 
             for (int i = 0; i < posting_length; i++)
             {
                 doc_ids[i] = reader.ReadUInt32();
                 positions_length = reader.ReadInt32();
-                positions[i] = new uint[positions_length];
+                positions[i] = new ushort[positions_length];
 
                 for (int j = 0; j < positions_length; j++)
                 {
-                    positions[i][j] = reader.ReadUInt32();
+                    positions[i][j] = reader.ReadUInt16();
                 }
             }
 

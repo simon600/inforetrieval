@@ -12,10 +12,10 @@ namespace InversedIndex
         public PositionalPostingList()
         {
             mDocIds = new uint[0];
-            mPositions = new uint[0][];
+            mPositions = new ushort[0][];
         }
 
-        public PositionalPostingList(uint[] DocIds, uint[][]Positions)
+        public PositionalPostingList(uint[] DocIds, ushort[][] Positions)
         {
             mDocIds = DocIds;
             mPositions = Positions;
@@ -29,7 +29,7 @@ namespace InversedIndex
             }
         }
 
-        public uint[][] Positions
+        public ushort[][] Positions
         {
             get
             {
@@ -45,6 +45,6 @@ namespace InversedIndex
         /// <summary>
         /// Array of arrays of positions for each doc id.
         /// </summary>
-        private uint[][] mPositions;
+        private ushort[][] mPositions;
     }
 }
