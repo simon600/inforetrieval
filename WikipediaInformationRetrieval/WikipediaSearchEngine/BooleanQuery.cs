@@ -59,89 +59,20 @@ namespace WikipediaSearchEngine
         }
        
         /// <summary>
-        /// Compute union of postings list.
-        /// Positions list are not relevant, in result posting list positions list are not sorted.
-        /// </summary>
-        /// <param name="postings">List of postings to merge</param>
-        /// <returns>Union of postings</returns>
-        protected override PositionalPostingList MergePostings(List<PositionalPostingList> postings)
-        {
-            if (postings.Count == 0)
-                return new PositionalPostingList();
-
-            if (postings.Count == 1)
-                return postings[0];
-
-            if (postings.Count == 2)
-                return UnionPostings(postings[0], postings[1]);
-
-            int[] sequence = DetermineSequence(postings);
-            int ind = 0;
-
-            List<PositionalPostingList> merge_postings = new List<PositionalPostingList>();
-            PositionalPostingList new_posting;
-
-            for (ind = 0; ind < postings.Count - 1; ind+= 2)
-            {
-                new_posting = UnionPostings( postings[ sequence[ind] ], postings[ sequence[ind+1] ]);  
-                merge_postings.Add(new_posting);
-            }
-
-            if (postings.Count % 2 != 0)
-                merge_postings.Add(postings[sequence[ind]]);
-
-            while (merge_postings.Count > 1)
-            {
-                new_posting = UnionPostings(merge_postings[0], merge_postings[1]);
-                merge_postings.RemoveRange(0, 2);
-                merge_postings.Add(new_posting);
-            }
-
-            return merge_postings[0];
-        }
-
-        /// <summary>
-        /// Compute intersection of postings list.
-        /// Positions list are not relevant, in result posting list positions list are not sorted.
-        /// </summary>
-        /// <param name="postings">List of postings to intersect</param>
-        /// <returns>Intersection of postings</returns>
-        protected override PositionalPostingList GetPostingsProduct(List<PositionalPostingList> postings)
-        {
-            if (postings.Count == 0)
-                return new PositionalPostingList();
-
-            if (postings.Count == 1)
-                return postings[0];
-
-            int[] sequence = DetermineSequence(postings);
-
-            PositionalPostingList new_posting = 
-                ProductPostings(postings[ sequence[0] ], postings[ sequence[1] ]);
-            
-            int ind = 2;
-            while( ind < sequence.Length )
-            {
-                new_posting = ProductPostings(new_posting, postings[ sequence[ind] ]);
-                ind++;
-            }
-            return new_posting;
-        }
-
-        /// <summary>
         /// Union two posting list
+        /// Positions list are not relevant, in result posting list positions are empty.
         /// </summary>
         /// <param name="posting1">First posting list</param>
         /// <param name="posting2">Second posting list</param>
         /// <returns>Results of union</returns>
-        private PositionalPostingList UnionPostings(PositionalPostingList posting1, PositionalPostingList posting2)
+        protected override PositionalPostingList UnionPostings(PositionalPostingList posting1, PositionalPostingList posting2)
         {
             PositionalPostingList union_of_postings;
            
             List<uint> doc_ids = new List<uint>();
-            List<uint[]> list_of_positions = new List<uint[]>();
+            List<ushort[]> list_of_positions = new List<ushort[]>();
 
-            uint[] positions;
+            ushort[] positions;
 
             int index1 = 0;
             int index2 = 0;
@@ -160,14 +91,17 @@ namespace WikipediaSearchEngine
                 if (key1 < key2)
                 {
                     doc_ids.Add(key1);
-                    list_of_positions.Add(posting1.Positions[index1]);  //to nas nie obchodzi
+                   // list_of_positions.Add(posting1.Positions[index1]);  //to nas nie obchodzi
 
+                    list_of_positions.Add(new ushort[0]);
                     index1++;
                 }
                 else if (key2 < key1)
                 {
                     doc_ids.Add(key2);
-                    list_of_positions.Add(posting2.Positions[index2]);  
+                  //  list_of_positions.Add(posting2.Positions[index2]);
+
+                    list_of_positions.Add(new ushort[0]);
 
                     index2++;
                 }
@@ -175,7 +109,8 @@ namespace WikipediaSearchEngine
                 {
                     doc_ids.Add(key1);
                     //niezachowana kolejnosc pozycji!!! to nas nie obchodzi
-                    positions = posting1.Positions[index1].Concat(posting2.Positions[index2]).ToArray();
+                    //positions = posting1.Positions[index1].Concat(posting2.Positions[index2]).ToArray();
+                    positions = new ushort[0];
 
                     list_of_positions.Add(positions);
 
@@ -187,7 +122,8 @@ namespace WikipediaSearchEngine
             while (index1 < size1)
             {
                 doc_ids.Add(posting1.DocumentIds[index1]);
-                list_of_positions.Add(posting1.Positions[index1]);
+                //list_of_positions.Add(posting1.Positions[index1]);
+                list_of_positions.Add(new ushort[0]);
 
                 index1++;
             }
@@ -195,7 +131,8 @@ namespace WikipediaSearchEngine
             while (index2 < size2)
             {
                 doc_ids.Add(posting2.DocumentIds[index2]);
-                list_of_positions.Add(posting2.Positions[index2]);
+                //list_of_positions.Add(posting2.Positions[index2]);
+                list_of_positions.Add(new ushort[0]);
 
                 index2++;
             }
@@ -207,18 +144,19 @@ namespace WikipediaSearchEngine
 
         /// <summary>
         /// Compute intersection of two posting lists
+        /// Positions list are not relevant, in result posting list positions are empty.
         /// </summary>
         /// <param name="posting1">First posting list</param>
         /// <param name="posting2">Second posting list</param>
         /// <returns>Intersection of postings</returns>
-        private PositionalPostingList ProductPostings(PositionalPostingList posting1, PositionalPostingList posting2)
+        protected override PositionalPostingList IntersectPostings(PositionalPostingList posting1, PositionalPostingList posting2)
         {
             PositionalPostingList product_of_postings;
 
             List<uint> doc_ids = new List<uint>();
-            List<uint[]> list_of_positions = new List<uint[]>();
+            List<ushort[]> list_of_positions = new List<ushort[]>();
 
-            uint[] positions;
+            ushort[] positions;
 
             int index1 = 0;
             int index2 = 0;
@@ -244,8 +182,8 @@ namespace WikipediaSearchEngine
                 {
                     doc_ids.Add(key1);
                     //niezachowana kolejnosc pozycji!!!
-                    positions = posting1.Positions[index1].Concat(posting2.Positions[index2]).ToArray();
-
+                    //positions = posting1.Positions[index1].Concat(posting2.Positions[index2]).ToArray();
+                    positions = new ushort[0];
                     list_of_positions.Add(positions);
 
                     index1++;
