@@ -132,7 +132,7 @@
             // 
             this.zapszPlikIndeksuToolStripMenuItem.Name = "zapszPlikIndeksuToolStripMenuItem";
             this.zapszPlikIndeksuToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-            this.zapszPlikIndeksuToolStripMenuItem.Text = "Zapsz plik indeksu";
+            this.zapszPlikIndeksuToolStripMenuItem.Text = "Zapisz plik indeksu";
             this.zapszPlikIndeksuToolStripMenuItem.Click += new System.EventHandler(this.zapszPlikIndeksuToolStripMenuItem_Click);
             // 
             // progressBarLabel

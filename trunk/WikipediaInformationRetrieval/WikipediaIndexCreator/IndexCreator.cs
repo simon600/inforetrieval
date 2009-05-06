@@ -16,7 +16,7 @@ namespace WikipediaIndexCreator
     /// <summary>
     /// Used for creating inversed positional index.
     /// </summary>
-    class IndexCreator
+    public class IndexCreator
     {
         /// <summary>
         /// Gets only instance of index creator.
