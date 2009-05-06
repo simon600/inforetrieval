@@ -80,6 +80,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GammaCompression\GammaCompression.csproj">
+      <Project>{AA74FB13-EFBC-466F-8011-15B918F63C74}</Project>
+      <Name>GammaCompression</Name>
+    </ProjectReference>
     <ProjectReference Include="..\InversedPositionalIndex\InversedIndex.csproj">
       <Project>{203378EE-48D2-4104-9751-1E39D94E76F6}</Project>
       <Name>InversedIndex</Name>

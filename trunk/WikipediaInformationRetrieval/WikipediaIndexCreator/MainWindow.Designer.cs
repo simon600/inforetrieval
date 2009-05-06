@@ -37,14 +37,15 @@
             this.plikToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.otwórzPlikDoZindeksowaniaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.otwórzSłownikMorfologicznyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.zapszPlikIndeksuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.progressBarLabel = new System.Windows.Forms.Label();
             this.toIndexOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.delimiterTextBox = new System.Windows.Forms.TextBox();
             this.delimiterLabel = new System.Windows.Forms.Label();
             this.morphologicOpenFileDilalog = new System.Windows.Forms.OpenFileDialog();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.zapszPlikIndeksuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveIndexFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.compressCheckBox = new System.Windows.Forms.CheckBox();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -110,22 +111,29 @@
             this.otwórzSłownikMorfologicznyToolStripMenuItem,
             this.zapszPlikIndeksuToolStripMenuItem});
             this.plikToolStripMenuItem.Name = "plikToolStripMenuItem";
-            this.plikToolStripMenuItem.Size = new System.Drawing.Size(34, 20);
+            this.plikToolStripMenuItem.Size = new System.Drawing.Size(38, 20);
             this.plikToolStripMenuItem.Text = "Plik";
             // 
             // otwórzPlikDoZindeksowaniaToolStripMenuItem
             // 
             this.otwórzPlikDoZindeksowaniaToolStripMenuItem.Name = "otwórzPlikDoZindeksowaniaToolStripMenuItem";
-            this.otwórzPlikDoZindeksowaniaToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.otwórzPlikDoZindeksowaniaToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
             this.otwórzPlikDoZindeksowaniaToolStripMenuItem.Text = "Otwórz plik do zindeksowania";
             this.otwórzPlikDoZindeksowaniaToolStripMenuItem.Click += new System.EventHandler(this.otwórzPlikDoZindeksowaniaToolStripMenuItem_Click);
             // 
             // otwórzSłownikMorfologicznyToolStripMenuItem
             // 
             this.otwórzSłownikMorfologicznyToolStripMenuItem.Name = "otwórzSłownikMorfologicznyToolStripMenuItem";
-            this.otwórzSłownikMorfologicznyToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.otwórzSłownikMorfologicznyToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
             this.otwórzSłownikMorfologicznyToolStripMenuItem.Text = "Otwórz słownik morfologiczny";
             this.otwórzSłownikMorfologicznyToolStripMenuItem.Click += new System.EventHandler(this.otwórzSłownikMorfologicznyToolStripMenuItem_Click);
+            // 
+            // zapszPlikIndeksuToolStripMenuItem
+            // 
+            this.zapszPlikIndeksuToolStripMenuItem.Name = "zapszPlikIndeksuToolStripMenuItem";
+            this.zapszPlikIndeksuToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.zapszPlikIndeksuToolStripMenuItem.Text = "Zapsz plik indeksu";
+            this.zapszPlikIndeksuToolStripMenuItem.Click += new System.EventHandler(this.zapszPlikIndeksuToolStripMenuItem_Click);
             // 
             // progressBarLabel
             // 
@@ -162,22 +170,26 @@
             // 
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // zapszPlikIndeksuToolStripMenuItem
-            // 
-            this.zapszPlikIndeksuToolStripMenuItem.Name = "zapszPlikIndeksuToolStripMenuItem";
-            this.zapszPlikIndeksuToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
-            this.zapszPlikIndeksuToolStripMenuItem.Text = "Zapsz plik indeksu";
-            this.zapszPlikIndeksuToolStripMenuItem.Click += new System.EventHandler(this.zapszPlikIndeksuToolStripMenuItem_Click);
-            // 
             // saveIndexFileDialog
             // 
             this.saveIndexFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.saveIndexFileDialog_FileOk);
+            // 
+            // compressCheckBox
+            // 
+            this.compressCheckBox.AutoSize = true;
+            this.compressCheckBox.Location = new System.Drawing.Point(12, 121);
+            this.compressCheckBox.Name = "compressCheckBox";
+            this.compressCheckBox.Size = new System.Drawing.Size(109, 17);
+            this.compressCheckBox.TabIndex = 5;
+            this.compressCheckBox.Text = "Kompresuj indeks";
+            this.compressCheckBox.UseVisualStyleBackColor = true;
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 266);
+            this.Controls.Add(this.compressCheckBox);
             this.Controls.Add(this.delimiterTextBox);
             this.Controls.Add(this.delimiterLabel);
             this.Controls.Add(this.progressBarLabel);
@@ -214,6 +226,7 @@
         private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.ToolStripMenuItem zapszPlikIndeksuToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveIndexFileDialog;
+        private System.Windows.Forms.CheckBox compressCheckBox;
 
 
     }

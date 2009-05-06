@@ -38,7 +38,10 @@ namespace InversedIndex
 
             if (index >= 0)
             {
-                return mPostingLists[index];
+                PositionalPostingList posting = mPostingLists[index];
+                posting.Decompress();
+
+                return posting;
             }
             else
             {                
@@ -59,7 +62,8 @@ namespace InversedIndex
 
             mPerformedLematization = reader.ReadBoolean();
             mPerformedStemming = reader.ReadBoolean();
-            mPerformedStopWordsRemoval = reader.ReadBoolean();            
+            mPerformedStopWordsRemoval = reader.ReadBoolean();
+            mPerformCompression = reader.ReadBoolean();
 
             mWords = new string[size];
             mPostingLists = new PositionalPostingList[size];
@@ -106,6 +110,14 @@ namespace InversedIndex
             }
         }
 
+        public bool PerformedCompression
+        {
+            get
+            {
+                return mPerformCompression;
+            }
+        }
+
         public bool PerformedStemming
         {
             get
@@ -143,16 +155,23 @@ namespace InversedIndex
         private PositionalPostingList ReadPostingList(Stream stream)
         {
             BinaryReader reader;
-            if (mCompressedPostingLists)
-            {
-                GZipStream gzip_stream =
-                    new GZipStream(stream, CompressionMode.Decompress);
-                reader = new BinaryReader(gzip_stream);
-            }
-            else
-            {
-                reader = new BinaryReader(stream);
-            }
+            //if (mCompressedPostingLists)
+            //{
+            //    GZipStream gzip_stream =
+            //        new GZipStream(stream, CompressionMode.Decompress);
+            //    reader = new BinaryReader(gzip_stream);
+            //}
+            //else
+            //{
+            //    reader = new BinaryReader(stream);
+            //}
+
+            reader = new BinaryReader(stream);
+           
+            if (mPerformCompression)
+                return ReadCompressedPostingList(reader);
+
+
             int posting_length;
             int positions_length;
 
@@ -179,6 +198,20 @@ namespace InversedIndex
             return new PositionalPostingList(doc_ids, positions);
         }
 
+        private CompressedPositionalPostingList ReadCompressedPostingList(BinaryReader reader)
+        {
+            int posting_length;
+            int stream_size;
+            byte[] stream;
+
+            posting_length = reader.ReadInt32();
+            stream_size = reader.ReadInt32();
+
+            stream = reader.ReadBytes(stream_size);
+
+            return new CompressedPositionalPostingList(posting_length, stream);
+        }
+
         private static InversedPositionalIndex msInversedPositionalIndex;        
 
         private string[] mWords;
@@ -192,6 +225,7 @@ namespace InversedIndex
         private bool mPerformedStemming;
         private bool mPerformedStopWordsRemoval;
         private bool mPerformedLematization;
-        private bool mCompressedPostingLists;        
+        private bool mCompressedPostingLists;
+        private bool mPerformCompression;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using GammaCompression;
 
 namespace InversedIndex
 {
@@ -37,14 +38,50 @@ namespace InversedIndex
             }
         }
 
+        public virtual CompressedPositionalPostingList Compress()
+        {
+            BitStream compressed_posting = new BitStream();
+
+            uint gap = 0;
+            uint current_id = 0;
+            ushort current_position = 0;
+
+            for (int k = 0; k < mDocIds.Length; k++)
+            {
+                gap = mDocIds[k] - current_id;
+                current_id += gap;
+               
+                GammaEncoding.CodeInt(gap, compressed_posting);
+       
+                GammaEncoding.CodeInt((uint)mPositions[k].Length, compressed_posting);
+                
+                current_position = 0;
+
+                for (int i = 0; i < mPositions[k].Length; i++)
+                {
+                    gap = (uint)(mPositions[k][i] - current_position);
+                    current_position += (ushort)gap;
+
+                    GammaEncoding.CodeInt(gap, compressed_posting); 
+                }
+            }
+            
+            return new CompressedPositionalPostingList(mDocIds.Length, compressed_posting);
+        }
+
+        public virtual void Decompress()
+        {
+        }
+
         /// <summary>
         /// Array of document ids.
         /// </summary>
-        private uint[] mDocIds;
+        protected uint[] mDocIds;
 
         /// <summary>
         /// Array of arrays of positions for each doc id.
         /// </summary>
-        private ushort[][] mPositions;
+        protected ushort[][] mPositions;
+
     }
 }

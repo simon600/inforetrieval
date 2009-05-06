@@ -9,6 +9,7 @@ using System.IO.Compression;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using InversedIndex;
+using GammaCompression;
 
 namespace WikipediaIndexCreator
 {
@@ -147,6 +148,18 @@ namespace WikipediaIndexCreator
             set
             {
                 mPerformLematization = value;
+            }
+        }
+
+        public bool PerformCompression
+        {
+            get
+            {
+                return mPerformCompression;
+            }
+            set
+            {
+                mPerformCompression = value;
             }
         }
 
@@ -357,6 +370,51 @@ namespace WikipediaIndexCreator
             }
         }
 
+        private void CompressAndWritePostingListToStream(
+            BinaryWriter writer,
+            SortedList<uint, List<ushort>> postingList)
+        {
+            //write size
+            writer.Write(postingList.Count);
+
+            BitStream bitstream = CompressPostingList(postingList);
+
+            //write size of bitstream
+            writer.Write(bitstream.StreamSize);
+            //write bitstream
+            writer.Write(bitstream.Bytes);
+        }
+
+        private BitStream CompressPostingList(SortedList<uint, List<ushort>> postingList)
+        {
+            BitStream compressed_posting = new BitStream();
+
+            uint gap = 0;
+            uint current_id = 0;
+            ushort current_position = 0;
+
+            foreach (KeyValuePair<uint, List<ushort>> pair in postingList)
+            {
+                gap = pair.Key - current_id;
+                current_id = pair.Key;
+
+                GammaEncoding.CodeInt(gap, compressed_posting);
+                GammaEncoding.CodeInt((uint)pair.Value.Count, compressed_posting);
+
+                current_position = 0;
+
+                foreach (ushort pos in pair.Value)
+                {
+                    gap = (uint)pos - current_position;
+                    current_position += (ushort)gap;
+
+                    GammaEncoding.CodeInt(gap, compressed_posting);
+                }
+            }
+
+            return compressed_posting;
+        }
+
         /// <summary>
         /// Writes list of documents to stream.
         /// </summary>
@@ -455,7 +513,12 @@ namespace WikipediaIndexCreator
 
                 size++;
                 writer.Write(words_in_streams[min_words[0]]);
-                WritePostingListToStream(writer, MergePostingLists(postingLists));
+                SortedList<uint, List<ushort>> mergedPostingList = MergePostingLists(postingLists);
+
+                //if compress index
+                if (mPerformCompression)
+                    CompressAndWritePostingListToStream(writer, mergedPostingList);
+                else WritePostingListToStream(writer, mergedPostingList);
 
                 foreach (int num in min_words)
                 {
@@ -495,6 +558,7 @@ namespace WikipediaIndexCreator
             writer.Write(mPerformLematization);
             writer.Write(mPerformStemming);
             writer.Write(mPerformStopWordsRemoval);
+            writer.Write(mPerformCompression);
         }
 
         /// <summary>
@@ -717,6 +781,7 @@ namespace WikipediaIndexCreator
         private bool mPerformStemming;
         private bool mPerformStopWordsRemoval;
         private bool mPerformLematization;
+        private bool mPerformCompression;
 
         Tokenizer tokenizer;
         Normalizer normalizer;

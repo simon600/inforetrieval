@@ -26,3 +26,5 @@ D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformati
 D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\obj\Debug\WikipediaIndexCreator.csproj.GenerateResource.Cache
 D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\obj\Debug\WikipediaIndexCreator.exe
 D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\obj\Debug\WikipediaIndexCreator.pdb
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Debug\GammaCompression.exe
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\WikipediaIndexCreator\bin\Debug\GammaCompression.pdb

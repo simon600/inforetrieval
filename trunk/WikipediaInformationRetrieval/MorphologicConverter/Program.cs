@@ -29,8 +29,8 @@ namespace MorphologicConverter
                 output_file = "converted.bin";
             }
                                     
-            MakeDictionary(args[0]);            
-            WriteMorphologic(output_file);
+            MakeDictionary("D:\\ZAJECIA\\WyszukiwanieInformacji\\projekt1\\morfologik_do_wyszukiwarek.txt");
+            WriteMorphologic("D:\\ZAJECIA\\WyszukiwanieInformacji\\projekt1\\morfologik.bin");
             
         }// Main
 

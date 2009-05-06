@@ -22,33 +22,40 @@ namespace WikipediaInformationRetrieval
 
         private void button1_Click(object sender, EventArgs e)
         {
-            FileStream f = new FileStream("D:\\ZAJECIA\\WyszukiwanieInformacji\\projekt1\\index2.bin", FileMode.Open);
+            FileStream f = new FileStream("D:\\ZAJECIA\\WyszukiwanieInformacji\\projekt1\\compressedIndex.bin", FileMode.Open);
             InversedIndex.InversedPositionalIndex index = InversedIndex.InversedPositionalIndex.Get();
             index.ReadFromStream(f);
 
             f.Close();
 
             int i = index.Documents.Count;
-            index.PostingList("dziesiąty");
+            PositionalPostingList posting = index.PostingList("2006r");
+
+            CompressedPositionalPostingList cposting = posting.Compress();
+
+
+            cposting.Decompress();
+
 
             MorphologicDictionary morphologic =
                     MorphologicDictionary.Get();
 
-            morphologic.ReadFromFile("D:\\ZAJECIA\\WyszukiwanieInformacji\\projekt1\\morphologic.bin");
-            List<string> l = morphologic["dzisiąty"];
-            l = morphologic["astronomia"];
-
-           
+            morphologic.ReadFromFile("D:\\ZAJECIA\\WyszukiwanieInformacji\\projekt1\\morfologik.bin");
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
+           
+            //BooleanQuery query = new BooleanQuery(this.textBox1.Text);
+            //this.textBox2.Text = query.QueryNormalForm;
+            //PositionalPostingList posting = query.ProcessQuery();
+            //if(posting!= null)
+            //    this.textBox2.Text += posting.DocumentIds.Length.ToString();
 
-            BooleanQuery query = new BooleanQuery(this.textBox1.Text);
+            PhraseQuery query = new PhraseQuery(this.textBox1.Text);
             this.textBox2.Text = query.QueryNormalForm;
-            PositionalPostingList posting = query.ProcessQuery(); 
 
-
+            PositionalPostingList result = query.ProcessQuery();
         }
     }
 }
