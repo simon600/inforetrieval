@@ -48,7 +48,7 @@ namespace WikipediaSearchEngine
         public PositionalPostingList ProcessQuery()
         {
             //it's possibly query with stop words only
-            if (this.mNormalizedQuery.Length < 1)
+            if (this.QueryNormalForm.Length < 1)
                 return null;
 
             if (mQueryAnswer != null)
