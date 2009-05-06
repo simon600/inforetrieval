@@ -25,3 +25,5 @@ D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformati
 D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\WikipediaInformationRetrieval\obj\Debug\WikipediaInformationRetrieval.Form1.resources
 D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\WikipediaInformationRetrieval\bin\Debug\WikipediaSearchEngine.exe
 D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\WikipediaInformationRetrieval\bin\Debug\WikipediaSearchEngine.pdb
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\WikipediaInformationRetrieval\bin\Debug\GammaCompression.exe
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\WikipediaInformationRetrieval\bin\Debug\GammaCompression.pdb

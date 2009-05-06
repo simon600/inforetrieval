@@ -176,6 +176,7 @@ namespace WikipediaIndexCreator
                 creator.PerformLematization = lematyzationCheckBox.Checked;
                 creator.PerformStemming = stemmingCheckBox.Checked;
                 creator.PerformStopWordsRemoval = stopWordsCheckBox.Checked;
+                creator.PerformCompression = compressCheckBox.Checked;
 
                 BeginLoading("Tworzenie indeksu");
                 Thread thread = new Thread(CreateIndex);

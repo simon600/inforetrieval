@@ -5,8 +5,16 @@ using System.Text;
 
 namespace GammaCompression
 {
+    /// <summary>
+    /// Elias gamma coding for positive integers
+    /// </summary>
     public class GammaEncoding
     {
+        /// <summary>
+        /// Write value in Elias gamma code on stream
+        /// </summary>
+        /// <param name="value">Integer to compressed</param>
+        /// <param name="stream">Place to write compressed value</param>
         public static void CodeInt(uint value, BitStream stream)
         {
             string binary_value = Convert.ToString(value+1, 2);
@@ -20,6 +28,11 @@ namespace GammaCompression
 
         }
 
+        /// <summary>
+        /// Decompressed integer from bit stream
+        /// </summary>
+        /// <param name="stream">Bit stream to read value from</param>
+        /// <returns>Next integer coded on stream</returns>
         public static uint DecodeInt(BitStream stream)
         {
             int len = 0;

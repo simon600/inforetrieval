@@ -41,6 +41,7 @@
   </Target>
   -->
   <ItemGroup>
+    <Compile Include="CompressedPositionalPostingList.cs" />
     <Compile Include="Document.cs" />
     <Compile Include="Identifyable.cs" />
     <Compile Include="InversedPositionalIndex.cs" />
@@ -50,5 +51,11 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GammaCompression\GammaCompression.csproj">
+      <Project>{AA74FB13-EFBC-466F-8011-15B918F63C74}</Project>
+      <Name>GammaCompression</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

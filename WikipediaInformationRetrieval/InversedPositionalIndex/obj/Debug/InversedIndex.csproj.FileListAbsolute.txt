@@ -8,3 +8,5 @@ D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformati
 D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\InversedPositionalIndex\obj\Debug\ResolveAssemblyReference.cache
 D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\InversedPositionalIndex\obj\Debug\InversedPositionalIndex.dll
 D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\InversedPositionalIndex\obj\Debug\InversedPositionalIndex.pdb
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\InversedPositionalIndex\bin\Debug\GammaCompression.exe
+D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\WikipediaInformationRetrieval\InversedPositionalIndex\bin\Debug\GammaCompression.pdb

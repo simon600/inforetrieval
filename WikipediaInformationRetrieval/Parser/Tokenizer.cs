@@ -20,7 +20,7 @@ namespace Parser
         {
             //string str = " \t\n\r.,'\";:-_=+(){}[]!@#$%^&*|\\/><";
             //trim_chars = str.ToCharArray();
-            string str = ".,;_()[]{}";
+            string str = ".,;|_()[]{}";
 
             split_chars = str.ToCharArray();
         }
