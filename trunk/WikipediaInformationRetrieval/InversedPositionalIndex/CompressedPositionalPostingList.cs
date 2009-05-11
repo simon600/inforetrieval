@@ -11,13 +11,11 @@ namespace InversedIndex
     public class CompressedPositionalPostingList: PositionalPostingList
     {
         public CompressedPositionalPostingList(int size)
-            : base()
         {
             mSizeOfDocIds = size;
         }
 
         public CompressedPositionalPostingList(int size, byte[] byte_stream)
-            : base()
         {
             mSizeOfDocIds = size;
             mCompressedPosting = new BitStream(byte_stream);
@@ -72,6 +70,15 @@ namespace InversedIndex
 
             }
         }
+
+        public override long SizeInBytes
+        {
+            get
+            {
+                return sizeof(int) + mCompressedPosting.SizeInBytes;
+            }
+        }
+
 
         private int mSizeOfDocIds;
         private BitStream mCompressedPosting;

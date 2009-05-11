@@ -32,6 +32,14 @@ namespace WikipediaSearchEngine
             get;
         }
 
+        public string UserQuery
+        {
+            get
+            {
+                return mUserQuery;
+            }
+        }
+
         /// <summary>
         /// Query can be represent as conjunction (AND) of one or more disjunction (OR) with one or more words.
         /// </summary>

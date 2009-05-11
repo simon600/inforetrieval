@@ -1,6 +1,6 @@
 ﻿namespace WikipediaSearchEngine
 {
-    partial class Form1
+    partial class WaitForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,20 +28,38 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
-            // Form1
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(2, 2);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(374, 23);
+            this.progressBar1.Step = 30;
+            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progressBar1.TabIndex = 0;
+            this.progressBar1.UseWaitCursor = true;
+            // 
+            // WaitForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(886, 657);
-            this.Name = "Form1";
-            this.Text = "Szukacz";
+            this.ClientSize = new System.Drawing.Size(377, 30);
+            this.Controls.Add(this.progressBar1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Location = new System.Drawing.Point(200, 200);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "WaitForm";
+            this.Text = "Trwa wczytywanie";
+            this.UseWaitCursor = true;
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
-

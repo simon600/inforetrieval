@@ -15,10 +15,18 @@ namespace WikipediaSearchEngine
         [STAThread]
         static void Main()
         {
-            //Application.EnableVisualStyles();
-           // Application.SetCompatibleTextRenderingDefault(false);
-           // Application.Run(new Form1());
 
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            try
+            {
+
+                Application.Run(new MainForm());
+
+            }
+            catch (NotPreparedException e)
+            { 
+            }
             //StreamReader read = new StreamReader(new FileStream("D:\\ZAJECIA\\WyszukiwanieInformacji\\projekt1\\wikipedia_dla_wyszukiwarek.txt", FileMode.Open));
             //StreamWriter writer = new StreamWriter(new FileStream("D:\\ZAJECIA\\WyszukiwanieInformacji\\projekt1\\wikipedia2.txt", FileMode.Create), read.CurrentEncoding);
 

@@ -48,13 +48,26 @@ namespace InversedIndex
                 return new PositionalPostingList();
             }
         }
+
+        public long VocabularySize
+        {
+            get
+            {
+                if (mWords == null)
+                    return 0;
+                return mWords.Length;
+            }
+        }
+
        
+      
         /// <summary>
         /// Reads inversed index from stream.
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         public void ReadFromStream(Stream stream)
         {
+
             BinaryReader reader = new BinaryReader(stream);
 
             // get size of the index
@@ -68,12 +81,12 @@ namespace InversedIndex
             mWords = new string[size];
             mPostingLists = new PositionalPostingList[size];
 
-            string word;
+            
             // read from stream
             for (int i = 0; i < size; i++)
             {
                 mWords[i] = reader.ReadString();
-                word = mWords[i];
+            
                 PositionalPostingList postingList =
                     mPostingLists[i] = ReadPostingList(stream);
             }
@@ -99,14 +112,6 @@ namespace InversedIndex
             get
             {
                 return mDocuments;
-            }
-        }
-
-        public bool CompressedPostingLists
-        {
-            get
-            {
-                return mCompressedPostingLists;
             }
         }
 
@@ -142,6 +147,32 @@ namespace InversedIndex
             }
         }
 
+        public long PostingSizeInBytes
+        {
+            get
+            {
+                long size = 0;
+                foreach (PositionalPostingList p in mPostingLists)
+                    size += p.SizeInBytes;
+
+                return size;
+            }
+
+        }
+
+        public long VocabularySizeInBytes
+        {
+            get
+            {
+                long size = 0;
+                foreach (string word in mWords)
+                    size += word.Length;
+
+                return size * sizeof(char);
+            }
+
+        }
+
         //////////////////////////////// PRIVATE /////////////////////////////
 
         /// <summary>
@@ -154,6 +185,7 @@ namespace InversedIndex
 
         private PositionalPostingList ReadPostingList(Stream stream)
         {
+            //ResetIndex();
             BinaryReader reader;
             //if (mCompressedPostingLists)
             //{
@@ -212,6 +244,14 @@ namespace InversedIndex
             return new CompressedPositionalPostingList(posting_length, stream);
         }
 
+        public void ResetIndex()
+        {
+            mDocuments = new Dictionary<uint,Document>();
+            mWords = null;
+            mPostingLists = null;
+        }
+
+
         private static InversedPositionalIndex msInversedPositionalIndex;        
 
         private string[] mWords;
@@ -225,7 +265,6 @@ namespace InversedIndex
         private bool mPerformedStemming;
         private bool mPerformedStopWordsRemoval;
         private bool mPerformedLematization;
-        private bool mCompressedPostingLists;
         private bool mPerformCompression;
     }
 }
