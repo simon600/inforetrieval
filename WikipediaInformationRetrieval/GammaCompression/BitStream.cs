@@ -156,6 +156,15 @@ namespace GammaCompression
             }
         }
 
+        public long SizeInBytes
+        {
+            get
+            {
+                return 3 * sizeof(int) + mByteTape.Count * sizeof(byte)
+                    + mMasks.Length * sizeof(byte);
+            }
+        }
+
         private List<byte> mByteTape;
         private int mIndex;
         private int mMaskIndex;

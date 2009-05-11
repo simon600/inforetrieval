@@ -25,7 +25,7 @@ namespace WikipediaSearchEngine
                 ReadTitles();
 
             if (QueryPerformanceFrequency(out mFrequency) == false)
-                throw new Exception("DUPA");
+                throw new Exception("blad");
         }
 
 
@@ -33,7 +33,6 @@ namespace WikipediaSearchEngine
         {
             mTextSource.Close();
         }
-
 
         public List<string> SearchFor(string query_string)
         {
@@ -54,6 +53,45 @@ namespace WikipediaSearchEngine
             return mAnswers;
         }
 
+        public void QueriesFromFile(string queries_path, string results_path)
+        {
+            StreamReader reader = new StreamReader(new FileStream(queries_path, FileMode.Open));
+            StreamWriter writer = new StreamWriter(new FileStream(results_path, FileMode.Create), Encoding.UTF8);
+
+            string query_string;
+            Query query;
+            PositionalPostingList postings;
+            mTotalTime = 0;
+
+            while (!reader.EndOfStream)
+            {
+                query_string = reader.ReadLine();
+              
+                if (query_string.StartsWith("\"") && query_string.EndsWith("\""))
+                    query = new PhraseQuery(query_string);
+                else query = new BooleanQuery(query_string);
+
+                //mierzymy czas
+                QueryPerformanceCounter(out mStart);
+                
+                postings = query.ProcessQuery();
+                PrepareAnswerList(postings);
+                
+                QueryPerformanceCounter(out mStop);
+
+                mTotalTime += (mStop - mStart);
+
+                writer.Write("QUERY: " + query.UserQuery);
+                writer.WriteLine(" TOTAL: " + mAnswers.Count.ToString());
+
+                foreach (string title in mAnswers)
+                    writer.WriteLine(title);
+            }
+
+            reader.Close();
+            writer.Close();
+        }
+
         public TimeSpan ResponseTime
         {
             get
@@ -70,12 +108,23 @@ namespace WikipediaSearchEngine
             }
         }
 
+        public double TotalResponseTime
+        {
+            get
+            {
+                return mTotalTime;
+            }
+        }
+
         private void PrepareAnswerList(PositionalPostingList query_result)
         {
             long position;
             string title;
 
             mAnswers = new List<string>();
+            if (query_result == null)
+                return;
+
             if (hasTitles)
             {
                 foreach (uint docId in query_result.DocumentIds)
@@ -149,10 +198,10 @@ namespace WikipediaSearchEngine
         private long mStart;
         private long mStop;
         private long mFrequency;
+        private long mTotalTime;
 
         private DateTime start;
         private DateTime stop;
-
-        private long mElapsedTime;
+       
     }
 }

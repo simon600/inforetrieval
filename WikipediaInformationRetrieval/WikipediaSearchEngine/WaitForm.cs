@@ -9,11 +9,14 @@ using System.Windows.Forms;
 
 namespace WikipediaSearchEngine
 {
-    public partial class Form1 : Form
+    public partial class WaitForm : Form
     {
-        public Form1()
+        public WaitForm(string name)
         {
             InitializeComponent();
+
+            this.Name = name;
+            
         }
     }
 }

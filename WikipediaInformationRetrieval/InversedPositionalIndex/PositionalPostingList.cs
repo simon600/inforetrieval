@@ -38,6 +38,18 @@ namespace InversedIndex
             }
         }
 
+        public virtual long SizeInBytes
+        {
+            get
+            {
+                long len = 0;
+                foreach (ushort[] positions in mPositions)
+                    len += positions.Length;
+                
+                return len * sizeof(ushort) + mDocIds.Length * sizeof(uint);
+            }
+        }
+
         public virtual CompressedPositionalPostingList Compress()
         {
             BitStream compressed_posting = new BitStream();
