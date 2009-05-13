@@ -136,14 +136,12 @@ namespace WikipediaSearchEngine
             foreach (uint docId in query_result.DocumentIds)
             {
                 position = mIndex.Documents[docId].FilePosition;
-                mTextSource.BaseStream.Seek(position, SeekOrigin.Begin);
+                mTextSource.BaseStream.Position = position;
+                mTextSource.DiscardBufferedData();
 
                 title = mTextSource.ReadLine();
-                title = title.Replace("#", "").Trim();
-                mAnswers.Add(title);
-
-                mTextSource.DiscardBufferedData();
-                
+                //title = title.Replace("#", "").Trim();
+                mAnswers.Add(title);             
              }
         }
 
@@ -154,14 +152,15 @@ namespace WikipediaSearchEngine
 
             foreach(Document d in mIndex.Documents.Values)
             {
-                mTextSource.BaseStream.Seek(d.FilePosition, SeekOrigin.Begin);
-               
+                mTextSource.BaseStream.Position = d.FilePosition;
+                //mTextSource.BaseStream.Seek(d.FilePosition, SeekOrigin.Begin);
+                mTextSource.DiscardBufferedData();
                 title = mTextSource.ReadLine();
-                title = title.Replace("#", "").Trim();
+                //title = title.Replace("#", "").Trim();
                
                 mTitles.Add(title);
 
-                mTextSource.DiscardBufferedData();
+                
             }
 
             mTextSource.Close();
