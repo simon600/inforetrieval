@@ -6,6 +6,7 @@ using System.IO;
 using Morphologic;
 using InversedIndex;
 using System.Runtime.InteropServices;
+using Parser;
 
 namespace WikipediaSearchEngine
 {
@@ -13,7 +14,7 @@ namespace WikipediaSearchEngine
     {
         public SearchEngine(string source_path, string morphologic_path, string index_path, bool readTitles)
         {
-            mTextSource = new StreamReader(new FileStream(source_path, FileMode.Open));
+            mTextSource = new CharReader(new FileStream(source_path, FileMode.Open), 100);
 
             mMorphologic = MorphologicDictionary.Get();
             mMorphologic.ReadFromFile(morphologic_path);
@@ -136,8 +137,7 @@ namespace WikipediaSearchEngine
             foreach (uint docId in query_result.DocumentIds)
             {
                 position = mIndex.Documents[docId].FilePosition;
-                mTextSource.BaseStream.Position = position;
-                mTextSource.DiscardBufferedData();
+                mTextSource.Position = position;
 
                 title = mTextSource.ReadLine();
                 //title = title.Replace("#", "").Trim();
@@ -152,9 +152,8 @@ namespace WikipediaSearchEngine
 
             foreach(Document d in mIndex.Documents.Values)
             {
-                mTextSource.BaseStream.Position = d.FilePosition;
+                mTextSource.Position = d.FilePosition;
                 //mTextSource.BaseStream.Seek(d.FilePosition, SeekOrigin.Begin);
-                mTextSource.DiscardBufferedData();
                 title = mTextSource.ReadLine();
                 //title = title.Replace("#", "").Trim();
                
@@ -184,7 +183,7 @@ namespace WikipediaSearchEngine
         private List<string> mTitles;
         private bool hasTitles = false;
 
-        private StreamReader mTextSource;
+        private CharReader mTextSource;
         private MorphologicDictionary mMorphologic;
         private InversedPositionalIndex mIndex;
 
