@@ -49,15 +49,18 @@ namespace Parser
                         return -1;
                     }
                 }
-                int bytes_read;
-                int size = Encoding.UTF8.GetByteCount(mChars, 0, mNumberOfChars-1);
-                for (int i = 0; i < mBufferSize - size; i++)
+                else
                 {
-                    mBytes[i] = mBytes[size + i];
+                    int bytes_read;
+                    int size = Encoding.UTF8.GetByteCount(mChars, 0, mNumberOfChars - 1);
+                    for (int i = 0; i < mBufferSize - size; i++)
+                    {
+                        mBytes[i] = mBytes[size + i];
+                    }
+                    bytes_read = mBaseStream.Read(mBytes, mBufferSize - size, size);
+                    mNumberOfChars = Encoding.UTF8.GetChars(mBytes, 0, bytes_read, mChars, 0);
+                    mCharNumber = 0;
                 }
-                bytes_read = mBaseStream.Read(mBytes, mBufferSize - size, size);
-                mNumberOfChars = Encoding.UTF8.GetChars(mBytes, 0, bytes_read, mChars, 0);
-                mCharNumber = 0;
             }
 
             c = mChars[mCharNumber];
@@ -88,15 +91,18 @@ namespace Parser
                         return -1;
                     }
                 }
-                int bytes_read;
-                int size = Encoding.UTF8.GetByteCount(mChars, 0, mNumberOfChars - 1);
-                for (int i = 0; i < mBufferSize - size; i++)
+                else
                 {
-                    mBytes[i] = mBytes[size + i];
+                    int bytes_read;
+                    int size = Encoding.UTF8.GetByteCount(mChars, 0, mNumberOfChars - 1);
+                    for (int i = 0; i < mBufferSize - size; i++)
+                    {
+                        mBytes[i] = mBytes[size + i];
+                    }
+                    bytes_read = mBaseStream.Read(mBytes, mBufferSize - size, size);
+                    mNumberOfChars = Encoding.UTF8.GetChars(mBytes, 0, bytes_read, mChars, 0);
+                    mCharNumber = 0;
                 }
-                bytes_read = mBaseStream.Read(mBytes, mBufferSize - size, size);
-                mNumberOfChars = Encoding.UTF8.GetChars(mBytes, 0, bytes_read, mChars, 0);
-                mCharNumber = 0;
             }
 
             c = mChars[mCharNumber];
