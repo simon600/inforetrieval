@@ -58,7 +58,7 @@ namespace Parser
                         mBytes[i] = mBytes[size + i];
                     }
                     bytes_read = mBaseStream.Read(mBytes, mBufferSize - size, size);
-                    mNumberOfChars = Encoding.UTF8.GetChars(mBytes, 0, bytes_read, mChars, 0);
+                    mNumberOfChars = Encoding.UTF8.GetChars(mBytes, 0, bytes_read + mBufferSize - size, mChars, 0);
                     mCharNumber = 0;
                 }
             }
@@ -66,10 +66,6 @@ namespace Parser
             c = mChars[mCharNumber];
             mPosition += Encoding.UTF8.GetByteCount(mChars, mCharNumber, 1);
             
-            int a;
-            if (mPosition == 4999)
-                a = 0;
-
             mCharNumber++;
             return c;
         }
@@ -100,7 +96,7 @@ namespace Parser
                         mBytes[i] = mBytes[size + i];
                     }
                     bytes_read = mBaseStream.Read(mBytes, mBufferSize - size, size);
-                    mNumberOfChars = Encoding.UTF8.GetChars(mBytes, 0, bytes_read, mChars, 0);
+                    mNumberOfChars = Encoding.UTF8.GetChars(mBytes, 0, bytes_read + mBufferSize - size, mChars, 0);
                     mCharNumber = 0;
                 }
             }
