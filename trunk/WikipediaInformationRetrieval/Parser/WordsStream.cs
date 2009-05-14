@@ -14,13 +14,27 @@ namespace Parser
     {
         /// <summary>
         /// Constructor.
-        /// </summary>
-        /// <param name="UnderlyingStream">A stream from which
+        /// </summary>        
+        /// <param name="bufferSize">A stream from which
         /// WordsStream reads dats.</param>
-        public WordsStream(Stream underlyingStream)
+        /// <param name="baseStream">Size of the buffer</param>
+        public WordsStream(Stream baseStream, int bufferSize)
         {
-            mStreamReader = new StreamReader(underlyingStream);
-            mPosition = underlyingStream.Position;
+            mBaseStream = baseStream;
+            mCharReader = new CharReader(baseStream, bufferSize);
+            mCharReader.Position = 0;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="baseStream">A stream from which
+        /// WordsStream reads dats.</param>
+        public WordsStream(Stream baseStream)
+        {
+            mBaseStream = baseStream;
+            mCharReader = new CharReader(baseStream);
+            mCharReader.Position = 0;
         }
 
         /// <summary>
@@ -28,30 +42,31 @@ namespace Parser
         /// </summary>
         /// <returns>Read string.</returns>
         public String Read()
-        {
+        {                                   
             string read_string = "";
             char c;
             
-            c = (char)mStreamReader.Read();
-            UpdatePosition(c);            
+            c = (char)mCharReader.Read();
+            //UpdatePosition(c);            
 
             while (msSeparators.Contains(c))
             {
-                c = (char)mStreamReader.Read();
-                UpdatePosition(c);
+                c = (char)mCharReader.Read();
+                //UpdatePosition(c);
             }
 
             do
             {
                 read_string += c;
-                c = (char)mStreamReader.Read();
-                UpdatePosition(c);
-            } while (!mStreamReader.EndOfStream &&
+                c = (char)mCharReader.Read();
+                //UpdatePosition(c);
+            } while (!EndOfStream &&
                 !msSeparators.Contains(c));
 
-            while (msSeparators.Contains((char)mStreamReader.Peek()))
-            {                
-                UpdatePosition((char)mStreamReader.Read());
+            while (msSeparators.Contains((char)mCharReader.Peek()))
+            {
+                mCharReader.Read();
+                //UpdatePosition((char));
             }
 
             return read_string;
@@ -62,8 +77,7 @@ namespace Parser
         /// </summary>
         public void Close()
         {
-            mStreamReader.Close();
-            mPosition = 0;
+            mCharReader.Close();
         }
 
         /// <summary>
@@ -73,7 +87,7 @@ namespace Parser
         {
             get
             {
-                return mStreamReader.EndOfStream;
+                return mCharReader.EndOfStream;
             }
         }
 
@@ -84,25 +98,26 @@ namespace Parser
         {
             get
             {
-                return mPosition;
+                return mCharReader.Position;
             }
             set
             {
-                mPosition = value;
-                mStreamReader.BaseStream.Seek(mPosition, SeekOrigin.Begin);
+                mCharReader.Position = value;
             }
         }
 
-        private void UpdatePosition(char c)
-        {
-            //mPosition++;
-            char[] chars = new char[1];
-            chars[0] = c;   
-            mPosition += UnicodeEncoding.UTF8.GetByteCount(chars);            
-        }
+        //private void UpdatePosition(char c)
+        //{
+        //    //mPosition++;
+        //    char[] chars = new char[1];
+        //    chars[0] = c;               
+        //    mPosition += UnicodeEncoding.UTF8.GetByteCount(chars);            
+        //}
 
-        private StreamReader mStreamReader;
+        private CharReader mCharReader;
+        
+        private Stream mBaseStream;
         private static string msSeparators = " \n\t\r";
-        private long mPosition;
+        //private long mPosition;
     }
 }
