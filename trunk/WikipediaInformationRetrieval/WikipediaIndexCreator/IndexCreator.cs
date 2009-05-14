@@ -57,14 +57,14 @@ namespace WikipediaIndexCreator
             // documents accesible by their id;
             Dictionary<uint, Document> documents = new Dictionary<uint,Document>();
 
-            WordsStream words_stream = new WordsStream(sourceStream);
+            WordsStream words_stream = new WordsStream(sourceStream, 100000);
 
             // find first article
-            while (!words_stream.EndOfStream && words_stream.Read() != "##TITLE##")
+            while (!words_stream.EndOfStream && !words_stream.Read().Contains("##TITLE##"))
             {
             }
 
-            while (sourceStream.Position < sourceStream.Length)
+            while (!words_stream.EndOfStream)
             {
                 filename = "temp" + file_number.ToString() + ".tmp";
                 while (File.Exists(filename))
@@ -222,7 +222,7 @@ namespace WikipediaIndexCreator
                 documents.Add(document.Id, document);
 
                 while (!wordsStream.EndOfStream &&
-                    (word = wordsStream.Read()) != "##TITLE##")
+                    !(word = wordsStream.Read()).Contains("##TITLE##"))
                 {
                     article.Add(word);
                 }
@@ -287,27 +287,34 @@ namespace WikipediaIndexCreator
                         if (base_forms_after_stemming.Contains(word))
                             continue;
 
-                        else base_forms_after_stemming.Add(word);
+                        else 
+                        {
+                            base_forms_after_stemming.Add(word);
+                        }
                     }
 
-                    if (!inversedIndex.ContainsKey(word))
+                    if (word.Length > 0)
                     {
-                        size += (long)word.Length + 1;
-                        inversedIndex.Add(word,
-                            new SortedList<uint, List<ushort>>());
-                    }
 
-                    if (!inversedIndex[word].ContainsKey(
-                        document.Id))
-                    {
-                        size += sizeof(uint); // size of uint
-                        inversedIndex[word].Add(
-                            document.Id, new List<ushort>());
-                    }
+                        if (!inversedIndex.ContainsKey(word))
+                        {
+                            size += (long)word.Length + 1;
+                            inversedIndex.Add(word,
+                                new SortedList<uint, List<ushort>>());
+                        }
 
-                    size += sizeof(uint);
-                    inversedIndex[word][document.Id].Add(
-                        indexInArticle);
+                        if (!inversedIndex[word].ContainsKey(
+                            document.Id))
+                        {
+                            size += sizeof(uint); // size of uint
+                            inversedIndex[word].Add(
+                                document.Id, new List<ushort>());
+                        }
+
+                        size += sizeof(uint);
+                        inversedIndex[word][document.Id].Add(
+                            indexInArticle);
+                    }
                 }
             }
 
