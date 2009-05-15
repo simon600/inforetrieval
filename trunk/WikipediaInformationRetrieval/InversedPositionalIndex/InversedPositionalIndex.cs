@@ -86,8 +86,11 @@ namespace InversedIndex
             {
                 mWords[i] = reader.ReadString();
             
+            //    PositionalPostingList postingList =
+            //      mPostingLists[i] = ReadPostingList(stream);
                 PositionalPostingList postingList =
-                    mPostingLists[i] = ReadPostingList(stream);
+                    mPostingLists[i] = ReadPostingList(reader);
+
             }
 
             // read documents
@@ -114,13 +117,13 @@ namespace InversedIndex
         /// <summary>
         /// Gets documents.
         /// </summary>
-        public Dictionary<uint, Document> Documents
-        {
-            get
-            {
-                return mDocuments;
-            }
-        }
+        //public Dictionary<uint, Document> Documents
+        //{
+        //    get
+        //    {
+        //        return mDocuments;
+        //    }
+        //}
 
         public long[] Positions
         {
@@ -179,11 +182,12 @@ namespace InversedIndex
         {
             get
             {
+                Encoding enc = Encoding.UTF8;
                 long size = 0;
                 foreach (string word in mWords)
-                    size += word.Length;
+                    size += enc.GetByteCount(word.ToCharArray());
 
-                return size * sizeof(char);
+                return size;
             }
 
         }
@@ -195,26 +199,11 @@ namespace InversedIndex
         /// </summary>
         private InversedPositionalIndex()
         {
-            mDocuments = new Dictionary<uint, Document>();
+           //mDocuments = new Dictionary<uint, Document>();
         }
 
-        private PositionalPostingList ReadPostingList(Stream stream)
+        private PositionalPostingList ReadPostingList(BinaryReader reader)
         {
-            //ResetIndex();
-            BinaryReader reader;
-            //if (mCompressedPostingLists)
-            //{
-            //    GZipStream gzip_stream =
-            //        new GZipStream(stream, CompressionMode.Decompress);
-            //    reader = new BinaryReader(gzip_stream);
-            //}
-            //else
-            //{
-            //    reader = new BinaryReader(stream);
-            //}
-
-            reader = new BinaryReader(stream);
-           
             if (mPerformCompression)
                 return ReadCompressedPostingList(reader);
 
@@ -261,7 +250,7 @@ namespace InversedIndex
 
         public void ResetIndex()
         {
-            mDocuments = new Dictionary<uint,Document>();
+           // mDocuments = new Dictionary<uint,Document>();
             mWords = null;
             mPostingLists = null;
         }
@@ -275,7 +264,7 @@ namespace InversedIndex
         /// <summary>
         /// Mapis document identifiers to documents.
         /// </summary>
-        private Dictionary<uint, Document> mDocuments;
+      //  private Dictionary<uint, Document> mDocuments;
         private long[] mDocumentsPositions;
 
         private bool mPerformedStemming;

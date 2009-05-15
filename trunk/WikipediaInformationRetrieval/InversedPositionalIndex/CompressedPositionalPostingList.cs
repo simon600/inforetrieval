@@ -10,22 +10,28 @@ namespace InversedIndex
     /// </summary>
     public class CompressedPositionalPostingList: PositionalPostingList
     {
-        public CompressedPositionalPostingList(int size)
-        {
-            mSizeOfDocIds = size;
-        }
+        //public CompressedPositionalPostingList(int size)
+        //{
+        //    mPositions = null;
+        //    mDocIds = null;
+        //    mSizeOfDocIds = size;
+        //}
 
         public CompressedPositionalPostingList(int size, byte[] byte_stream)
         {
+            mPositions = null;
+            mDocIds = null;
             mSizeOfDocIds = size;
-            mCompressedPosting = new BitStream(byte_stream);
+            //mCompressedPosting = new BitStreamReader(byte_stream);
+            mCompressedPosting = byte_stream;
         }
 
-        public CompressedPositionalPostingList(int size, BitStream bitstream)
-            : base()
+        public CompressedPositionalPostingList(int size, BitStreamWriter bitstream)
         {
+            mPositions = null;
+            mDocIds = null;
             mSizeOfDocIds = size;
-            mCompressedPosting = bitstream;
+            mCompressedPosting = bitstream.Bytes;
         }
 
         public override CompressedPositionalPostingList Compress()
@@ -37,7 +43,8 @@ namespace InversedIndex
 
         public override void Decompress()
         {
-            mCompressedPosting.SetOnStart();
+            //mCompressedPosting.SetOnStart();
+            msBitStreamReader.ResetStream(mCompressedPosting);
 
             uint gap = 0;
             uint current_id = 0;
@@ -50,24 +57,24 @@ namespace InversedIndex
 
             for(int k = 0; k < mSizeOfDocIds; k++)
             {
-                gap = GammaEncoding.DecodeInt(mCompressedPosting);
+                //gap = GammaEncoding.DecodeInt(mCompressedPosting);
+                gap = GammaEncoding.DecodeInt(msBitStreamReader);
 
                 current_id += gap;
                 mDocIds[k] = current_id;
 
-                length_of_positions = GammaEncoding.DecodeInt(mCompressedPosting);
+                length_of_positions = GammaEncoding.DecodeInt(msBitStreamReader);
 
                 mPositions[k] = new ushort[length_of_positions];
                 current_position = 0;
 
                 for (int i = 0; i < length_of_positions; i++)
                 {
-                    gap = GammaEncoding.DecodeInt(mCompressedPosting);
+                    gap = GammaEncoding.DecodeInt(msBitStreamReader);
 
                     current_position += (ushort)gap;
                     mPositions[k][i] = current_position;
                 }
-
             }
         }
 
@@ -75,13 +82,15 @@ namespace InversedIndex
         {
             get
             {
-                return sizeof(int) + mCompressedPosting.SizeInBytes;
+                return sizeof(int) + mCompressedPosting.Length;
             }
         }
 
-
         private int mSizeOfDocIds;
-        private BitStream mCompressedPosting;
+        private byte[] mCompressedPosting;
+        //private BitStreamWriter mCompressedPosting;
 
+        //used to decompress postings
+        private static BitStreamReader msBitStreamReader = new BitStreamReader(new byte[0]);
     }
 }
