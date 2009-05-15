@@ -46,6 +46,7 @@ namespace WikipediaSearchEngine
                     if (sorted_clause.Count == 0)
                         return mNormalizedQuery;
 
+                            
                     sorted_clause.Sort();
                     
                     foreach (string w in sorted_clause)
@@ -72,8 +73,6 @@ namespace WikipediaSearchEngine
             List<uint> doc_ids = new List<uint>();
             List<ushort[]> list_of_positions = new List<ushort[]>();
 
-            ushort[] positions;
-
             int index1 = 0;
             int index2 = 0;
 
@@ -93,7 +92,7 @@ namespace WikipediaSearchEngine
                     doc_ids.Add(key1);
                    // list_of_positions.Add(posting1.Positions[index1]);  //to nas nie obchodzi
 
-                    list_of_positions.Add(new ushort[0]);
+                  //  list_of_positions.Add(new ushort[0]);
                     index1++;
                 }
                 else if (key2 < key1)
@@ -101,7 +100,7 @@ namespace WikipediaSearchEngine
                     doc_ids.Add(key2);
                   //  list_of_positions.Add(posting2.Positions[index2]);
 
-                    list_of_positions.Add(new ushort[0]);
+                   // list_of_positions.Add(new ushort[0]);
 
                     index2++;
                 }
@@ -110,9 +109,8 @@ namespace WikipediaSearchEngine
                     doc_ids.Add(key1);
                     //niezachowana kolejnosc pozycji!!! to nas nie obchodzi
                     //positions = posting1.Positions[index1].Concat(posting2.Positions[index2]).ToArray();
-                    positions = new ushort[0];
-
-                    list_of_positions.Add(positions);
+                  
+                  //  list_of_positions.Add(positions);
 
                     index1++;
                     index2++;
@@ -123,7 +121,7 @@ namespace WikipediaSearchEngine
             {
                 doc_ids.Add(posting1.DocumentIds[index1]);
                 //list_of_positions.Add(posting1.Positions[index1]);
-                list_of_positions.Add(new ushort[0]);
+              //  list_of_positions.Add(new ushort[0]);
 
                 index1++;
             }
@@ -132,7 +130,7 @@ namespace WikipediaSearchEngine
             {
                 doc_ids.Add(posting2.DocumentIds[index2]);
                 //list_of_positions.Add(posting2.Positions[index2]);
-                list_of_positions.Add(new ushort[0]);
+                //list_of_positions.Add(new ushort[0]);
 
                 index2++;
             }
@@ -155,8 +153,6 @@ namespace WikipediaSearchEngine
 
             List<uint> doc_ids = new List<uint>();
             List<ushort[]> list_of_positions = new List<ushort[]>();
-
-            ushort[] positions;
 
             int index1 = 0;
             int index2 = 0;
@@ -183,8 +179,7 @@ namespace WikipediaSearchEngine
                     doc_ids.Add(key1);
                     //niezachowana kolejnosc pozycji!!!
                     //positions = posting1.Positions[index1].Concat(posting2.Positions[index2]).ToArray();
-                    positions = new ushort[0];
-                    list_of_positions.Add(positions);
+                  //  list_of_positions.Add(positions);
 
                     index1++;
                     index2++;

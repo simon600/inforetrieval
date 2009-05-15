@@ -53,6 +53,11 @@ namespace Parser
                 {
                     int bytes_read;
                     int size = Encoding.UTF8.GetByteCount(mChars, 0, mNumberOfChars - 1);
+                    
+                    
+                    if (size > mBufferSize)
+                        size = mBufferSize;
+
                     for (int i = 0; i < mBufferSize - size; i++)
                     {
                         mBytes[i] = mBytes[size + i];
@@ -65,7 +70,8 @@ namespace Parser
 
             c = mChars[mCharNumber];
             mPosition += Encoding.UTF8.GetByteCount(mChars, mCharNumber, 1);
-            
+             
+
             mCharNumber++;
             return c;
         }

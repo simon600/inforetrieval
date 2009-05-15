@@ -55,8 +55,8 @@ namespace WikipediaIndexCreator
             SortedDictionary<string, SortedList<uint, List<ushort>>> inverted_index;
 
             // documents accesible by their id;
-            Dictionary<uint, Document> documents = new Dictionary<uint,Document>();
-
+       //     Dictionary<uint, Document> documents = new Dictionary<uint,Document>();
+           
             WordsStream words_stream = new WordsStream(sourceStream, 100000);
 
             // find first article
@@ -80,7 +80,6 @@ namespace WikipediaIndexCreator
                     words_stream,
                     BLOCK_SIZE,
                     out inverted_index,
-                    documents,
                     out size);
 
                 WriteIndexToStream(inverted_index, file_stream, size);
@@ -89,8 +88,10 @@ namespace WikipediaIndexCreator
 
             
             MergeIndices(file_streams, destinationStream);
-                       
-            WriteDocumentsToStream(documents, destinationStream);
+
+            List<long> positions = ReadTitlePosition(sourceStream);
+
+            WriteDocumentsToStream(positions, destinationStream);
             
             destinationStream.Close();
 
@@ -199,7 +200,6 @@ namespace WikipediaIndexCreator
                 long blockSize,
                 out SortedDictionary<string, SortedList<uint, List<ushort>>>
                     inversedIndex,
-                Dictionary<uint, Document> documents,
                 out long size)
         {
             // size of block in bytes
@@ -212,14 +212,15 @@ namespace WikipediaIndexCreator
                         
             string word;
             ushort index_in_article = 0;
-            Document document;
+         //  Document document;
                         
             while (!wordsStream.EndOfStream && size < blockSize)
             {
                 article.Clear();
                 index_in_article = 0;
-                document = new Document(wordsStream.Position);
-                documents.Add(document.Id, document);
+              //  document = new Document(wordsStream.Position);
+             //   documents.Add(document.Id, document);
+                mDocumentIndex++;
 
                 while (!wordsStream.EndOfStream &&
                     !(word = wordsStream.Read()).Contains("##TITLE##"))
@@ -233,7 +234,7 @@ namespace WikipediaIndexCreator
                 {
                     size += InsertTokenToIndex(token,
                         inversedIndex,
-                        document,
+                        mDocumentIndex-1,
                         index_in_article);
 
                     index_in_article++;
@@ -245,7 +246,7 @@ namespace WikipediaIndexCreator
             string token,
             SortedDictionary<string, SortedList<uint, List<ushort>>>
                 inversedIndex,
-            Document document,
+            uint document,
             ushort indexInArticle)
         {
             long size = 0;
@@ -304,15 +305,15 @@ namespace WikipediaIndexCreator
                         }
 
                         if (!inversedIndex[word].ContainsKey(
-                            document.Id))
+                            document))
                         {
                             size += sizeof(uint); // size of uint
                             inversedIndex[word].Add(
-                                document.Id, new List<ushort>());
+                                document, new List<ushort>());
                         }
 
                         size += sizeof(uint);
-                        inversedIndex[word][document.Id].Add(
+                        inversedIndex[word][document].Add(
                             indexInArticle);
                     }
                 }
@@ -422,23 +423,56 @@ namespace WikipediaIndexCreator
             return compressed_posting;
         }
 
+        private List<long> ReadTitlePosition(Stream source)
+        {
+            List<long> positions = new List<long>();
+           
+            string line;
+            long offset = Encoding.UTF8.GetByteCount((mArticleSeparator+" ").ToCharArray());
+            long position = 0;
+
+            source.Seek(0, SeekOrigin.Begin);
+            StreamReader str = new StreamReader(source);
+
+            while (!str.EndOfStream)
+            {
+                line = str.ReadLine();
+
+                if (line.StartsWith(mArticleSeparator))
+                {
+                    positions.Add(position + offset);
+                }
+
+                position += Encoding.UTF8.GetByteCount(line.ToCharArray()) + 1;
+            }
+
+            return positions;
+        }
+
         /// <summary>
         /// Writes list of documents to stream.
         /// </summary>
         /// <param name="documents">List of documents.</param>
         /// <param name="stream">Stream to write to.</param>
         private void WriteDocumentsToStream(
-            Dictionary<uint, Document> documents,
+            List<long> documents,
             Stream stream)
         {
-            stream.SetLength(stream.Length +
-                documents.Count * (sizeof(long) + sizeof(uint)));
+            stream.SetLength(stream.Length + documents.Count * (sizeof(long)) + sizeof(int));
             BinaryWriter writer = new BinaryWriter(stream);
-            foreach (KeyValuePair<uint, Document> pair in documents)
-            {
-                writer.Write(pair.Key);
-                writer.Write(pair.Value.FilePosition);
-            }
+
+            writer.Write(documents.Count);
+
+            foreach (long position in documents)
+                writer.Write(position);
+
+            //stream.SetLength(stream.Length + documents.Count * (sizeof(long) + sizeof(uint)));
+            //BinaryWriter writer = new BinaryWriter(stream);
+            //foreach (KeyValuePair<uint, Document> pair in documents)
+            //{
+            //    writer.Write(pair.Key);
+            //    writer.Write(pair.Value.FilePosition);
+            //}
         }
 
         /// <summary>
@@ -789,6 +823,8 @@ namespace WikipediaIndexCreator
         private bool mPerformStopWordsRemoval;
         private bool mPerformLematization;
         private bool mPerformCompression;
+
+        private uint mDocumentIndex = 0;
 
         Tokenizer tokenizer;
         Normalizer normalizer;

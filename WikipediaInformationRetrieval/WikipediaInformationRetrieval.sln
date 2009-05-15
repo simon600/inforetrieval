@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WikipediaSearchEngine", "Wi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GammaCompression", "GammaCompression\GammaCompression.csproj", "{AA74FB13-EFBC-466F-8011-15B918F63C74}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{490817D2-30B8-47BB-ABB7-340FC9040DA1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{AA74FB13-EFBC-466F-8011-15B918F63C74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA74FB13-EFBC-466F-8011-15B918F63C74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA74FB13-EFBC-466F-8011-15B918F63C74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{490817D2-30B8-47BB-ABB7-340FC9040DA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{490817D2-30B8-47BB-ABB7-340FC9040DA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{490817D2-30B8-47BB-ABB7-340FC9040DA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{490817D2-30B8-47BB-ABB7-340FC9040DA1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CharReader.cs" />
     <Compile Include="Lematizer.cs" />
     <Compile Include="Normalizer.cs" />
     <Compile Include="Stemmer.cs" />
