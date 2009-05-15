@@ -44,13 +44,13 @@ namespace WikipediaSearchEngine
 
             //response time start
             QueryPerformanceCounter(out mStart);
-            start = DateTime.Now;
+            mStartTime = DateTime.Now;
             PositionalPostingList query_result = mLastQuery.ProcessQuery();
             PrepareAnswerList(query_result);
 
             //response time stop
             QueryPerformanceCounter(out mStop);
-            stop = DateTime.Now;
+            mStopTime = DateTime.Now;
             return mAnswers;
         }
 
@@ -62,7 +62,7 @@ namespace WikipediaSearchEngine
             string query_string;
             Query query;
             PositionalPostingList postings;
-            mTotalTime = 0;
+            mTotalTime = new TimeSpan(0);
 
             while (!reader.EndOfStream)
             {
@@ -73,14 +73,14 @@ namespace WikipediaSearchEngine
                 else query = new BooleanQuery(query_string);
 
                 //mierzymy czas
-                QueryPerformanceCounter(out mStart);
-                
+                mStartTime = DateTime.Now;
+           
                 postings = query.ProcessQuery();
                 PrepareAnswerList(postings);
-                
-                QueryPerformanceCounter(out mStop);
 
-                mTotalTime += (mStop - mStart);
+                mStopTime = DateTime.Now;
+
+                mTotalTime += (mStopTime - mStartTime);
 
                 writer.Write("QUERY: " + query.UserQuery);
                 writer.WriteLine(" TOTAL: " + mAnswers.Count.ToString());
@@ -97,7 +97,7 @@ namespace WikipediaSearchEngine
         {
             get
             {
-                return (stop - start);
+                return (mStopTime - mStartTime);
             }
         }
 
@@ -109,7 +109,7 @@ namespace WikipediaSearchEngine
             }
         }
 
-        public double TotalResponseTime
+        public TimeSpan TotalResponseTime
         {
             get
             {
@@ -168,13 +168,13 @@ namespace WikipediaSearchEngine
         public void StartTimer()
         {
             QueryPerformanceCounter(out mStart);
-            start = DateTime.Now;
+            mStartTime = DateTime.Now;
         }
 
         public void StopTimer()
         {
             QueryPerformanceCounter(out mStop);
-            stop = DateTime.Now;
+            mStopTime = DateTime.Now;
         }
 
         private Query mLastQuery;
@@ -195,10 +195,10 @@ namespace WikipediaSearchEngine
         private long mStart;
         private long mStop;
         private long mFrequency;
-        private long mTotalTime;
+        private TimeSpan mTotalTime;
 
-        private DateTime start;
-        private DateTime stop;
+        private DateTime mStartTime;
+        private DateTime mStopTime;
        
     }
 }

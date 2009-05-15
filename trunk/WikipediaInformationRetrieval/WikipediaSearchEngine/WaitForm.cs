@@ -15,7 +15,7 @@ namespace WikipediaSearchEngine
         {
             InitializeComponent();
 
-            this.Name = name;
+            this.Text = name;
             
         }
     }

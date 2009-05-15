@@ -155,6 +155,5 @@ namespace WikipediaSearchEngine
                 waitform.ShowDialog();
             }
         }
-
     }
 }
