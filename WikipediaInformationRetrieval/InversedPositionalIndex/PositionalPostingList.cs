@@ -52,7 +52,7 @@ namespace InversedIndex
 
         public virtual CompressedPositionalPostingList Compress()
         {
-            BitStream compressed_posting = new BitStream();
+            BitStreamWriter compressed_posting = new BitStreamWriter();
 
             uint gap = 0;
             uint current_id = 0;
@@ -94,6 +94,6 @@ namespace InversedIndex
         /// Array of arrays of positions for each doc id.
         /// </summary>
         protected ushort[][] mPositions;
-
+    
     }
 }

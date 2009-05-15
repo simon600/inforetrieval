@@ -6,15 +6,15 @@ using System.Text;
 namespace GammaCompression
 {
     /// <summary>
-    /// Represents tape of bits.
-    /// It can be read and write from left to right
+    /// Represents tape of bits to write on.
+    /// It can be write from left to right.
     /// </summary>
-    public class BitStream
+    public class BitStreamWriter
     {
         /// <summary>
         /// Create empty bit stream
         /// </summary>
-        public BitStream()
+        public BitStreamWriter()
         {
             mByteTape = new List<byte>();
             mByteTape.Add(0);
@@ -23,17 +23,6 @@ namespace GammaCompression
             mMaskIndex = 0;
         }
 
-        /// <summary>
-        /// Create bit stream from array of bytes
-        /// </summary>
-        /// <param name="bytes"></param>
-        public BitStream(byte[] bytes)
-        {
-            mByteTape = new List<byte>(bytes);
-
-            mIndex = 0;
-            mMaskIndex = 0;
-        }
 
         /// <summary>
         /// Write bit on tape.
@@ -43,7 +32,7 @@ namespace GammaCompression
         public void SetNextBit(bool value)
         {
             if (value)
-                mByteTape[mIndex] |= mMasks[mMaskIndex];
+                mByteTape[mIndex] |= msMasks[mMaskIndex];
 
             mMaskIndex++;
             if(mMaskIndex == 8)
@@ -52,7 +41,6 @@ namespace GammaCompression
                 mIndex++;
                 mByteTape.Add(0);
             }
-
         }
 
         /// <summary>
@@ -61,41 +49,41 @@ namespace GammaCompression
         /// </summary>
         /// <returns>True if readed bit is 1
         ///          False if readed bit is 0</returns>
-        public bool GetNextBit()
-        {
-            int result = mByteTape[mIndex] & mMasks[mMaskIndex];
+        //public bool GetNextBit()
+        //{
+        //    int result = mByteTape[mIndex] & msMasks[mMaskIndex];
 
-            mMaskIndex++;
-            if (mMaskIndex == 8)
-            {
-                mMaskIndex = 0;
-                mIndex++;
-            }
+        //    mMaskIndex++;
+        //    if (mMaskIndex == 8)
+        //    {
+        //        mMaskIndex = 0;
+        //        mIndex++;
+        //    }
 
-            return result > 0;
-        }
+        //    return result > 0;
+        //}
 
         /// <summary>
         /// Move to the start of tape. 
         /// </summary>
-        public void SetOnStart()
-        {
-            int position = (mIndex << 3) + mMaskIndex;
-            if (mBitLength < position)
-                mBitLength = position;
+        //public void SetOnStart()
+        //{
+        //    int position = (mIndex << 3) + mMaskIndex;
+        //    if (mBitLength < position)
+        //        mBitLength = position;
 
-            mIndex = 0;
-            mMaskIndex = 0;
-        }
+        //    mIndex = 0;
+        //    mMaskIndex = 0;
+        //}
 
         /// <summary>
         /// Move after last written bit on tape.
         /// </summary>
-        public void GoToEnd()
-        {
-            mMaskIndex = mBitLength % 8;
-            mIndex = mBitLength >> 3;
-        }
+        //public void GoToEnd()
+        //{
+        //    mMaskIndex = mBitLength % 8;
+        //    mIndex = mBitLength >> 3;
+        //}
 
         /// <summary>
         /// Set all bits to 0 and go to the begining of tape
@@ -148,20 +136,19 @@ namespace GammaCompression
         /// <summary>
         /// True if we read already all of written bits
         /// </summary>
-        public bool EndOfStream
-        {
-            get
-            {
-                return Length == (mIndex << 3) + mMaskIndex; 
-            }
-        }
+        //public bool EndOfStream
+        //{
+        //    get
+        //    {
+        //        return Length == (mIndex << 3) + mMaskIndex;
+        //    }
+        //}
 
         public long SizeInBytes
         {
             get
             {
-                return 3 * sizeof(int) + mByteTape.Count * sizeof(byte)
-                    + mMasks.Length * sizeof(byte);
+                return 3 * sizeof(int) + mByteTape.Count * sizeof(byte);
             }
         }
 
@@ -170,6 +157,6 @@ namespace GammaCompression
         private int mMaskIndex;
         private int mBitLength;
 
-        private byte[] mMasks = { 128, 64, 32, 16, 8, 4, 2, 1 };
+        private static byte[] msMasks = { 128, 64, 32, 16, 8, 4, 2, 1 };
     }
 }

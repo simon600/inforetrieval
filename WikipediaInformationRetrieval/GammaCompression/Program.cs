@@ -17,7 +17,7 @@ namespace GammaCompression
             //Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());
 
-            BitStream bitStream = new BitStream();
+            BitStreamWriter bitStream = new BitStreamWriter();
 
             for (uint i = 0; i < 100; i++)
             {
@@ -26,13 +26,13 @@ namespace GammaCompression
                 Console.WriteLine(bitStream.Length+" size "+bitStream.StreamSize);
             }
 
-            bitStream.SetOnStart();
-           
-         
+            byte[] bytes = bitStream.Bytes;
 
-            while (!bitStream.EndOfStream)
+            BitStreamReader bitReader = new BitStreamReader(bytes);
+
+            while (!bitReader.EndOfStream)
             {
-                uint val = GammaEncoding.DecodeInt(bitStream);
+                uint val = GammaEncoding.DecodeInt(bitReader);
                 Console.WriteLine(val);
             }
          

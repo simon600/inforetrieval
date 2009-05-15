@@ -14,32 +14,13 @@ namespace Parser
     {
         /// <summary>
         /// Constructor.
-        /// </summary>        
-        /// <param name="bufferSize">A stream from which
-        /// WordsStream reads dats.</param>
-        /// <param name="baseStream">Size of the buffer</param>
-        public WordsStream(Stream baseStream, int bufferSize)
-        {
-            mBaseStream = baseStream;
-            mReader = new StreamReader(mBaseStream);
-
-           //   mCharReader = new CharReader(baseStream, bufferSize);
-         //   mCharReader.Position = 0;
-        }
-
-        /// <summary>
-        /// Constructor.
         /// </summary>
         /// <param name="baseStream">A stream from which
         /// WordsStream reads dats.</param>
         public WordsStream(Stream baseStream)
         {
             mBaseStream = baseStream;
-
             mReader = new StreamReader(mBaseStream);
-
-            // mCharReader = new CharReader(baseStream);
-           // mCharReader.Position = 0;
         }
 
         /// <summary>
@@ -50,8 +31,7 @@ namespace Parser
         {                                   
             string read_string = "";
             char c;
-            
-            //c = (char)mCharReader.Read();
+        
             c = (char)mReader.Read();
             
             while (msSeparators.Contains(c))
@@ -122,12 +102,10 @@ namespace Parser
         //    mPosition += UnicodeEncoding.UTF8.GetByteCount(chars);            
         //}
 
-        private CharReader mCharReader;
         private StreamReader mReader;
         
         private Stream mBaseStream;
         private static string msSeparators = " \n\t\r";
-//        private long mPosition;
         
     }
 }

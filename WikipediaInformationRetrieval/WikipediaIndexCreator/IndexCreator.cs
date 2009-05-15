@@ -53,11 +53,8 @@ namespace WikipediaIndexCreator
 
             // inverted index to create
             SortedDictionary<string, SortedList<uint, List<ushort>>> inverted_index;
-
-            // documents accesible by their id;
-       //     Dictionary<uint, Document> documents = new Dictionary<uint,Document>();
-           
-            WordsStream words_stream = new WordsStream(sourceStream, 100000);
+   
+            WordsStream words_stream = new WordsStream(sourceStream);
 
             // find first article
             while (!words_stream.EndOfStream && !words_stream.Read().Contains("##TITLE##"))
@@ -176,6 +173,8 @@ namespace WikipediaIndexCreator
             mPerformLematization = true;
             mPerformStemming = true;
             mPerformStopWordsRemoval = true;
+
+            mBitStreamWriter = new BitStreamWriter();
 
             tokenizer = new Tokenizer();
             normalizer = new Normalizer();
@@ -385,17 +384,19 @@ namespace WikipediaIndexCreator
             //write size
             writer.Write(postingList.Count);
 
-            BitStream bitstream = CompressPostingList(postingList);
+            //BitStreamWriter bitstream = CompressPostingList(postingList);
+            byte[] bitstream = CompressPostingList(postingList);
 
             //write size of bitstream
-            writer.Write(bitstream.StreamSize);
+            writer.Write(bitstream.Length);     //bitstream.StreamSize
             //write bitstream
-            writer.Write(bitstream.Bytes);
+            writer.Write(bitstream);      //bitStream.Bytes
         }
 
-        private BitStream CompressPostingList(SortedList<uint, List<ushort>> postingList)
+        private byte[] CompressPostingList(SortedList<uint, List<ushort>> postingList)
         {
-            BitStream compressed_posting = new BitStream();
+            //BitStreamWriter compressed_posting = new BitStreamWriter();
+            mBitStreamWriter.ResetStream();
 
             uint gap = 0;
             uint current_id = 0;
@@ -406,8 +407,10 @@ namespace WikipediaIndexCreator
                 gap = pair.Key - current_id;
                 current_id = pair.Key;
 
-                GammaEncoding.CodeInt(gap, compressed_posting);
-                GammaEncoding.CodeInt((uint)pair.Value.Count, compressed_posting);
+                //GammaEncoding.CodeInt(gap, compressed_posting);
+               // GammaEncoding.CodeInt((uint)pair.Value.Count, compressed_posting);
+                GammaEncoding.CodeInt(gap, mBitStreamWriter);
+                GammaEncoding.CodeInt((uint)pair.Value.Count, mBitStreamWriter);
 
                 current_position = 0;
 
@@ -416,19 +419,23 @@ namespace WikipediaIndexCreator
                     gap = (uint)pos - current_position;
                     current_position += (ushort)gap;
 
-                    GammaEncoding.CodeInt(gap, compressed_posting);
+                    //GammaEncoding.CodeInt(gap, compressed_posting);
+                    GammaEncoding.CodeInt(gap, mBitStreamWriter);
                 }
             }
 
-            return compressed_posting;
+           // return compressed_posting;
+            return mBitStreamWriter.Bytes;
         }
 
         private List<long> ReadTitlePosition(Stream source)
         {
             List<long> positions = new List<long>();
-           
+            
+            Encoding encoding = Encoding.UTF8;
+
             string line;
-            long offset = Encoding.UTF8.GetByteCount((mArticleSeparator+" ").ToCharArray());
+            long offset = encoding.GetByteCount((mArticleSeparator+" ").ToCharArray());
             long position = 0;
 
             source.Seek(0, SeekOrigin.Begin);
@@ -443,7 +450,7 @@ namespace WikipediaIndexCreator
                     positions.Add(position + offset);
                 }
 
-                position += Encoding.UTF8.GetByteCount(line.ToCharArray()) + 1;
+                position += encoding.GetByteCount(line.ToCharArray()) + 1;
             }
 
             return positions;
@@ -549,7 +556,8 @@ namespace WikipediaIndexCreator
                 postingLists.Clear();
                 foreach (int num in min_words)
                 {
-                    postingLists.Add(ReadPostingList(sourceStreams[num]));
+                   // postingLists.Add(ReadPostingList(sourceStreams[num]));
+                    postingLists.Add(ReadPostingList(readers[num]));
                 }
 
                 size++;
@@ -607,14 +615,14 @@ namespace WikipediaIndexCreator
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         /// <returns>Posting list read.</returns>
-        private SortedList<uint, List<ushort>> ReadPostingList(Stream stream)
+        private SortedList<uint, List<ushort>> ReadPostingList(BinaryReader reader)
         {
             SortedList<uint, List<ushort>> posting_list =
                 new SortedList<uint, List<ushort>>();
 
             List<ushort> positions_list;
 
-            BinaryReader reader = new BinaryReader(stream);
+            // BinaryReader reader = new BinaryReader(stream);
             int posting_length;
             int positions_length;
             uint doc_id;
@@ -784,30 +792,7 @@ namespace WikipediaIndexCreator
         #endregion
 
 
-        #region old
-        //private Dictionary<string, MemoryStream> CompressIndex(
-        //    Dictionary<string, SortedList<uint, List<uint>>> inversedIndex)
-        //{
-        //    Dictionary<string, MemoryStream> compressed_index =
-        //        new Dictionary<string, MemoryStream>();
 
-        //    GZipStream gzip_stream;
-        //    BinaryFormatter binary_formater = new BinaryFormatter();
-
-        //    foreach (KeyValuePair<string, SortedList<uint, List<uint>>>
-        //        pair in inversedIndex)
-        //    {
-        //        compressed_index[pair.Key] = new MemoryStream();
-        //        gzip_stream = new GZipStream(
-        //            compressed_index[pair.Key],
-        //            CompressionMode.Compress,
-        //            true);
-        //        binary_formater.Serialize(gzip_stream, pair.Value);
-        //    }
-
-        //    return compressed_index;
-        //} 
-        #endregion
 
         /// <summary>
         /// Holds instance of index creator.
@@ -826,6 +811,8 @@ namespace WikipediaIndexCreator
 
         private uint mDocumentIndex = 0;
 
+        private BitStreamWriter mBitStreamWriter;       //used to compress postings
+        
         Tokenizer tokenizer;
         Normalizer normalizer;
         Lematizer lematizer;

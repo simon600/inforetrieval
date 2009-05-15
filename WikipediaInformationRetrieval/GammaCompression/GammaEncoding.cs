@@ -15,7 +15,7 @@ namespace GammaCompression
         /// </summary>
         /// <param name="value">Integer to compressed</param>
         /// <param name="stream">Place to write compressed value</param>
-        public static void CodeInt(uint value, BitStream stream)
+        public static void CodeInt(uint value, BitStreamWriter stream)
         {
             string binary_value = Convert.ToString(value+1, 2);
             
@@ -25,7 +25,6 @@ namespace GammaCompression
 
             for (int i = 0; i < binary_value.Length; i++)
                 stream.SetNextBit(binary_value[i] == '1');
-
         }
 
         /// <summary>
@@ -33,22 +32,24 @@ namespace GammaCompression
         /// </summary>
         /// <param name="stream">Bit stream to read value from</param>
         /// <returns>Next integer coded on stream</returns>
-        public static uint DecodeInt(BitStream stream)
+        public static uint DecodeInt(BitStreamReader stream)
         {
             int len = 0;
+            msBinaryValue.Remove(0, msBinaryValue.Length);
 
             while (stream.GetNextBit() == false)
                 len += 1;
 
-            string binary_value = "1";
-            
+            msBinaryValue.Append('1');          //przeczytalismy 1
+
             for (int i = 0; i < len; i++)
                 if (stream.GetNextBit())
-                    binary_value += '1';
-                else binary_value += '0';
+                    msBinaryValue.Append('1');
+                else msBinaryValue.Append('0');
 
-            return Convert.ToUInt32(binary_value, 2) -1;
+            return Convert.ToUInt32(msBinaryValue.ToString(), 2) - 1;
         }
 
+        private static StringBuilder msBinaryValue = new StringBuilder();
     }
 }
