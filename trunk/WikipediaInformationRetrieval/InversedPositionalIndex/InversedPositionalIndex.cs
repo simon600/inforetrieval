@@ -80,7 +80,6 @@ namespace InversedIndex
 
             mWords = new string[size];
             mPostingLists = new PositionalPostingList[size];
-
             
             // read from stream
             for (int i = 0; i < size; i++)
@@ -92,17 +91,25 @@ namespace InversedIndex
             }
 
             // read documents
-            uint id;
-            long position;
+            //uint id;
+            //long position;
 
-            while (stream.Position < stream.Length)
-            {
-                id = (uint)reader.ReadInt32();
-                position = reader.ReadInt64();
+            //while (stream.Position < stream.Length)
+            //{
+            //    id = (uint)reader.ReadInt32();
+            //    position = reader.ReadInt64();
 
-                mDocuments.Add(id, new Document(id, position));
-            }
-        }        
+            //    mDocuments.Add(id, new Document(id, position));
+            //}
+
+            int positionsSize = reader.ReadInt32();
+
+            mDocumentsPositions = new long[positionsSize];
+
+            for (int i = 0; i < positionsSize; i++)
+                mDocumentsPositions[i] = reader.ReadInt64();
+
+        }
 
         /// <summary>
         /// Gets documents.
@@ -112,6 +119,14 @@ namespace InversedIndex
             get
             {
                 return mDocuments;
+            }
+        }
+
+        public long[] Positions
+        {
+            get
+            {
+                return mDocumentsPositions;
             }
         }
 
@@ -207,8 +222,8 @@ namespace InversedIndex
             int posting_length;
             int positions_length;
 
-            uint[] doc_ids;
-            ushort[][] positions;
+            uint[] doc_ids = null;
+            ushort[][] positions = null;
 
             posting_length = reader.ReadInt32();
 
@@ -216,7 +231,7 @@ namespace InversedIndex
             positions = new ushort[posting_length][];
 
             for (int i = 0; i < posting_length; i++)
-            {
+            { 
                 doc_ids[i] = reader.ReadUInt32();
                 positions_length = reader.ReadInt32();
                 positions[i] = new ushort[positions_length];
@@ -261,7 +276,8 @@ namespace InversedIndex
         /// Mapis document identifiers to documents.
         /// </summary>
         private Dictionary<uint, Document> mDocuments;
-        
+        private long[] mDocumentsPositions;
+
         private bool mPerformedStemming;
         private bool mPerformedStopWordsRemoval;
         private bool mPerformedLematization;

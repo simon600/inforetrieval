@@ -21,8 +21,10 @@ namespace Parser
         public WordsStream(Stream baseStream, int bufferSize)
         {
             mBaseStream = baseStream;
-            mCharReader = new CharReader(baseStream, bufferSize);
-            mCharReader.Position = 0;
+            mReader = new StreamReader(mBaseStream);
+
+           //   mCharReader = new CharReader(baseStream, bufferSize);
+         //   mCharReader.Position = 0;
         }
 
         /// <summary>
@@ -33,8 +35,11 @@ namespace Parser
         public WordsStream(Stream baseStream)
         {
             mBaseStream = baseStream;
-            mCharReader = new CharReader(baseStream);
-            mCharReader.Position = 0;
+
+            mReader = new StreamReader(mBaseStream);
+
+            // mCharReader = new CharReader(baseStream);
+           // mCharReader.Position = 0;
         }
 
         /// <summary>
@@ -46,29 +51,29 @@ namespace Parser
             string read_string = "";
             char c;
             
-            c = (char)mCharReader.Read();
-            //UpdatePosition(c);            
-
+            //c = (char)mCharReader.Read();
+            c = (char)mReader.Read();
+            
             while (msSeparators.Contains(c))
             {
-                c = (char)mCharReader.Read();
-                //UpdatePosition(c);
+                c = (char)mReader.Read();
             }
 
             do
             {
                 read_string += c;
-                c = (char)mCharReader.Read();
-                //UpdatePosition(c);
+                
+                c = (char)mReader.Read();
+                
+                
             } while (!EndOfStream &&
                 !msSeparators.Contains(c));
 
-            while (msSeparators.Contains((char)mCharReader.Peek()))
+            while (msSeparators.Contains((char)mReader.Peek()))
             {
-                mCharReader.Read();
-                //UpdatePosition((char));
+                c = (char)mReader.Read();
             }
-
+            
             return read_string;
         }
 
@@ -77,7 +82,7 @@ namespace Parser
         /// </summary>
         public void Close()
         {
-            mCharReader.Close();
+            mReader.Close();
         }
 
         /// <summary>
@@ -87,7 +92,7 @@ namespace Parser
         {
             get
             {
-                return mCharReader.EndOfStream;
+                return mReader.EndOfStream;
             }
         }
 
@@ -98,11 +103,14 @@ namespace Parser
         {
             get
             {
-                return mCharReader.Position;
+              //  mPosition += Encoding.UTF8.GetByteCount(mReadedString.ToString().ToCharArray());
+              //  mReadedString.Remove(0, mReadedString.Length);
+              //  return mPosition;
+                return 0;
             }
             set
             {
-                mCharReader.Position = value;
+                mBaseStream.Position = value;
             }
         }
 
@@ -115,9 +123,11 @@ namespace Parser
         //}
 
         private CharReader mCharReader;
+        private StreamReader mReader;
         
         private Stream mBaseStream;
         private static string msSeparators = " \n\t\r";
-        //private long mPosition;
+//        private long mPosition;
+        
     }
 }

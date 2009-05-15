@@ -14,7 +14,7 @@ namespace WikipediaSearchEngine
     {
         public SearchEngine(string source_path, string morphologic_path, string index_path, bool readTitles)
         {
-            mTextSource = new CharReader(new FileStream(source_path, FileMode.Open), 100);
+            mTextSource = new StreamReader(new FileStream(source_path, FileMode.Open));
 
             mMorphologic = MorphologicDictionary.Get();
             mMorphologic.ReadFromFile(morphologic_path);
@@ -136,13 +136,15 @@ namespace WikipediaSearchEngine
 
             foreach (uint docId in query_result.DocumentIds)
             {
-                position = mIndex.Documents[docId].FilePosition;
-                mTextSource.Position = position;
+                //position = mIndex.Documents[docId].FilePosition;
+                position = mIndex.Positions[docId];
+                mTextSource.BaseStream.Position = position;
+                mTextSource.DiscardBufferedData();
 
                 title = mTextSource.ReadLine();
                 //title = title.Replace("#", "").Trim();
-                mAnswers.Add(title);             
-             }
+                mAnswers.Add(title);
+            }
         }
 
         public void ReadTitles()
@@ -150,17 +152,29 @@ namespace WikipediaSearchEngine
             mTitles = new List<string>();
             string title;
 
-            foreach(Document d in mIndex.Documents.Values)
+            //foreach(Document d in mIndex.Documents.Values)
+            //{
+            //    mTextSource.Position = d.FilePosition;
+            //    //mTextSource.BaseStream.Seek(d.FilePosition, SeekOrigin.Begin);
+            //    title = mTextSource.ReadLine();
+            //    //title = title.Replace("#", "").Trim();
+               
+            //    mTitles.Add(title);
+   
+            //}
+
+            foreach (long position in mIndex.Positions)
             {
-                mTextSource.Position = d.FilePosition;
+                mTextSource.BaseStream.Position = position;
+                mTextSource.DiscardBufferedData();
                 //mTextSource.BaseStream.Seek(d.FilePosition, SeekOrigin.Begin);
                 title = mTextSource.ReadLine();
                 //title = title.Replace("#", "").Trim();
-               
+
                 mTitles.Add(title);
 
-                
             }
+
 
             mTextSource.Close();
             hasTitles = true;
@@ -183,7 +197,7 @@ namespace WikipediaSearchEngine
         private List<string> mTitles;
         private bool hasTitles = false;
 
-        private CharReader mTextSource;
+        private StreamReader mTextSource;
         private MorphologicDictionary mMorphologic;
         private InversedPositionalIndex mIndex;
 
