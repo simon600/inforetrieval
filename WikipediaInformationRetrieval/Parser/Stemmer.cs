@@ -19,41 +19,46 @@ namespace Parser
         {
             string stem;
             string stem2;
-
+          
+            stem = word;
+            //Step 1: cut off suffix according to rules
+            //stem is a proper stem after that
             foreach (string suffix in msRules)
             {
-                if ( word.EndsWith(suffix) )
+                if (word.EndsWith(suffix))
                 {
                     stem = word.Substring(0, word.Length - suffix.Length);
 
                     if (IsNotProperStem(stem))
-                        return word;
-                    else return stem;
+                        stem = word;
                 }
             }
 
-            if (msVowels.Contains<char>(word[word.Length - 1]))
+            //Step 2: cut of last characters while it is a vowel
+            //stem is a proper stem after that
+            while (msVowels.Contains<char>(stem[stem.Length - 1]))
             {
-                stem2 = word.Substring(0, word.Length - 1);
+                stem2 = stem.Substring(0, stem.Length - 1);
+                if (IsNotProperStem(stem2))
+                    break;
 
-                foreach (string ending in msEnding)
-                {
-                    if ( stem2.EndsWith(ending) )
-                    {
-                        stem = stem2.Substring(0, stem2.Length - ending.Length);
-
-                        if (IsNotProperStem(stem))
-                            return stem2;
-                        else return stem;
-                    }
-                }
-
-                return stem2;
+                else stem = stem2;
             }
 
-            return word;
-        }
+            //Step 3: cut of endings
+            foreach (string ending in msEnding)
+            {
+                if (stem.EndsWith(ending))
+                {
+                    stem2 = stem.Substring(0, stem.Length - ending.Length);
 
+                    if (!IsNotProperStem(stem2))    //if stem2 is proper stem
+                        stem = stem2;
+                }
+            }
+
+            return stem;
+        }
 
         private bool HasVowels(string word)
         {
