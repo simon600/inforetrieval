@@ -439,7 +439,7 @@ namespace WikipediaIndexCreator
             long position = 0;
 
             source.Seek(0, SeekOrigin.Begin);
-            StreamReader str = new StreamReader(source);
+            CharReader str = new CharReader(source);
 
             while (!str.EndOfStream)
             {
