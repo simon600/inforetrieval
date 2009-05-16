@@ -20,8 +20,24 @@ namespace WikipediaSearchEngine
         public Query(string query)
         {
             mUserQuery = query;
-            mIndex = InversedPositionalIndex.Get();
-            ParseQuery(mIndex.PerformedLematization, mIndex.PerformedStemming, mIndex.PerformedStopWordsRemoval);
+            mNormalizedQuery = null;
+            mQueryStructure = new List<List<string>>();
+           
+            ParseQuery(msIndex.PerformedLematization, msIndex.PerformedStemming, msIndex.PerformedStopWordsRemoval);
+        }
+
+        public void NewUserQuery(string query)
+        {
+            if (mUserQuery == query)
+                return;
+
+            mUserQuery = query;
+            mNormalizedQuery = null;
+            mQueryAnswer = null;
+
+            mQueryStructure.Clear();
+
+            ParseQuery(msIndex.PerformedLematization, msIndex.PerformedStemming, msIndex.PerformedStopWordsRemoval);
         }
 
         /// <summary>
@@ -56,13 +72,12 @@ namespace WikipediaSearchEngine
         public PositionalPostingList ProcessQuery()
         {
             //it's possibly query with stop words only
-            if (this.QueryNormalForm.Length < 1)
+            if (mQueryStructure.Count == 0)
                 return null;
-
+           
             if (mQueryAnswer != null)
                 return mQueryAnswer;
 
-            mIndex = InversedPositionalIndex.Get();
             List<PositionalPostingList> and_list = new List<PositionalPostingList>();
             List<PositionalPostingList> or_list = new List<PositionalPostingList>();
             PositionalPostingList word_posting;
@@ -72,13 +87,19 @@ namespace WikipediaSearchEngine
                 or_list.Clear();
                 foreach (string word in subquery)
                 {
-                    word_posting = mIndex.PostingList(word);
+                    word_posting = msIndex.PostingList(word);
                    
                     if ( word_posting.Positions.Length > 0 )
-                        or_list.Add(mIndex.PostingList(word));
+                        or_list.Add(msIndex.PostingList(word));
                 }
-                
-                and_list.Add(MergePostings(or_list));
+
+                //jesli ktoras z list postingowych 'or' jest pusta, to ich przeciecie
+                //tez bedzie puste
+                PositionalPostingList merge_posting = MergePostings(or_list);
+                if(merge_posting.DocumentIds.Length == 0)
+                    return merge_posting;
+
+                and_list.Add(merge_posting);
             }
 
             mQueryAnswer = GetPostingsProduct(and_list);
@@ -124,8 +145,6 @@ namespace WikipediaSearchEngine
             }
 
             return merge_postings[0];
-
-
         }
 
         /// <summary>
@@ -158,6 +177,11 @@ namespace WikipediaSearchEngine
         protected abstract PositionalPostingList UnionPostings(PositionalPostingList posting1, PositionalPostingList postings2);
 
         protected abstract PositionalPostingList IntersectPostings(PositionalPostingList posting1, PositionalPostingList posting2);
+
+        /// <summary>
+        /// Finishing building mQueryStructure for query
+        /// </summary>
+        protected abstract void FinalizeParsing();
 
         /// <summary>
         /// Return order of increasing document frequency for list of postings
@@ -197,7 +221,6 @@ namespace WikipediaSearchEngine
         /// <param name="removeStopWords">Does stop words will be removed</param>
         private void ParseQuery(bool doLematization, bool doStemming, bool removeStopWords)
         {
-            mQueryStructure = new List<List<string>>();
             string[] or_subtrees = mUserQuery.Split(new char[] { ' ' });
             string word;
 
@@ -236,18 +259,20 @@ namespace WikipediaSearchEngine
 
                 mQueryStructure.Add(result);
             }
+
+            FinalizeParsing();
         }
 
         private static Normalizer msNormalizer = new Normalizer();
         private static Tokenizer msTokenizer = new Tokenizer();
         private static Lematizer msLematizer = new Lematizer();
         private static Stemmer msStemmer = new Stemmer();
-        private InversedPositionalIndex mIndex;
+        private static InversedPositionalIndex msIndex = InversedPositionalIndex.Get();
         
         protected List<List<string>> mQueryStructure;
         protected PositionalPostingList mQueryAnswer;
         protected string mUserQuery;
-        protected string mNormalizedQuery;
+        protected string mNormalizedQuery = null;
         protected int[] mSequence;
     }
 }
