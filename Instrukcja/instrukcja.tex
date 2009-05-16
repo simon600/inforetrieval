@@ -1,0 +1,79 @@
+\documentclass[11pt,leqno]{article}
+
+\usepackage[cp1250]{inputenc}  % Polskie literki...
+\usepackage{polski}            % Polskie tytu³y, data, bibliografia, itp.
+\usepackage{a4wide}            % Szersza strona...
+
+\usepackage{amsmath,amssymb}   % Do³¹czamy zestaw ró¿nych przydatnych znaczków...
+\usepackage{bbm}               % \mathbbm{N} - zbior liczb naturalnych
+\usepackage{amsthm}
+
+\usepackage[dvipdfm,colorlinks=true]{hyperref}          % aby móc umieszczaæ linki w PDFie
+\title{Instrukcja}
+
+\begin{document}
+\maketitle                % Utworzenie tytu³u.
+\thispagestyle{empty}     % Nie numerujemy pierwszej strony.
+\tableofcontents          % Spis treœci
+\newpage
+
+\section{Instrukcja kreatora indeksu}
+
+\subsection{Wybór plików}
+Do  stworzenia indeksu s¹ potrzebne dwia pliki:
+
+\begin{itemize}
+\item S³ownik morfologiczny w binarnym formacie.
+\item Plik Ÿród³owy tekstowy z treœci¹ Wikipedii.
+\end{itemize}
+
+Aby wybraæ s³ownik morfologiczny kliknij Plik - Otwórz s³ownik morfologiczny. Pojawi siê okno wyboru pliku.
+\\
+Aby wybraæ plik Ÿród³owy kliknij Plik - Otwórz plik do zindeksowania. Pojawi siê okno wyboru pliku.
+
+\subsection{Opcje indeksu}
+Indeks mo¿na stworzyæ z nastêpuj¹cymi opcjami:
+\begin{itemize}
+\item \textbf{Stemming} - s³owa w indeksie bêd¹ poddane stemmingowi.
+\item \textbf{Lematyzacja} - indeksowane bêd¹ s³owa bazowe od s³owa w pliku Ÿród³owym.
+\item \textbf{Stop words} - krótkie popularne s³owa nie bêd¹ indeksowane.
+\item \textbf{Kompresuj indeks} - listy postingowe w indeksie bêd¹ poddane kompresji gamma.
+\item \textbf{Dziel wed³ug} - to pole mówi wed³ug jakiego ci¹gu znaków oddzielaæ artyku³y w pliku Ÿród³owym.
+\end{itemize}
+
+\subsection{Tworzenie indeksu}
+Aby stworzyæ indeks nale¿y po wybraniu opcji i wczytaniu potrzebnych plików klikn¹æ Plik - Zapisz plik indeksu. Pojawi siê okno z wyborem pliku docelowego.
+
+\section{Instrukcja wyszukiwarki}
+
+\subsection {Wczytywanie potrzebnych plików}
+Do wyszukiwania potzebne s¹ trzy pliki:
+\begin{itemize}
+\item Plik Ÿród³owy.
+\item S³ownik morfologiczny w formacie binarnym.
+\item Plik z indeksem w formacie binarnym.
+\end{itemize}
+Aby wczytaæ kazdy z tych plików kliknij na polu wybierz przy odpowiednim polu tekstowym. Nastêpnie wybierz plik po pojawieniu siê okna wyboru pliku.\\
+Po wczytaniu wszystkich plików kliknij ok. Rozpocznie siê wczytywanie.
+
+\subsection {Wyszukiwanie interaktywne}
+W polu tekstowym wpisz ci¹g s³ów do wyszukania a nastêpnie kliknij szukaj lub naciœnij enter.
+Jeœli chcesz wyszukiwaæ frazê wpisz j¹ w cudzys³owie.\\
+Wyniki wyszukiwania wyœwietl¹ siê poni¿ej.
+
+\subsection{Wyszukiwanie w trybie wsadowym}
+Kliknij Plik - Wybierz plik z zapytaniami aby wybraæ plik z zapytaniami.
+Kliknij Plik - Zapisz aby zapisaæ wyniki do pliku.
+
+%\section {Opis formatu s³ownika morfologicznego}
+
+%\subsection{Format pliku}
+%Plik binarny s³ownika morfologicznego ma nastêpuj¹cy format:
+%D³ugoœæ listy form bazowych ze s³ownika jako uint.\\
+%Lista form bazowych jako ci¹g stringów o dlugoœci zapisanej wczeœniej.
+%Iloœæ par (s³owo, lista numerów form bazowych) ze s³ownika.
+%Dla ka¿dej pary takiej jak powy¿ej s³owo jako string a potem d³ugoœæ listy numerów form bazowych a potem lista tych numerów.
+
+
+
+\end{document}
