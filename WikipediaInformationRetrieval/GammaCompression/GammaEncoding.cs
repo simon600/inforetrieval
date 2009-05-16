@@ -34,20 +34,20 @@ namespace GammaCompression
         /// <returns>Next integer coded on stream</returns>
         public static uint DecodeInt(BitStreamReader stream)
         {
-            int len = 0;
-            msBinaryValue.Remove(0, msBinaryValue.Length);
+            int len = 0; 
+            uint value = 1;
 
             while (stream.GetNextBit() == false)
                 len += 1;
 
-            msBinaryValue.Append('1');          //przeczytalismy 1
+            //przeczytalismy 1
 
             for (int i = 0; i < len; i++)
                 if (stream.GetNextBit())
-                    msBinaryValue.Append('1');
-                else msBinaryValue.Append('0');
+                    value = (value<<1) + 1;         //binary_value += '1';//msBinaryValue.Append('1');
+                else value <<= 1;                   //binary_value += '0'; // msBinaryValue.Append('0');
 
-            return Convert.ToUInt32(msBinaryValue.ToString(), 2) - 1;
+            return value - 1;                       //Convert.ToUInt32(binary_value, 2) - 1;
         }
 
         private static StringBuilder msBinaryValue = new StringBuilder();
