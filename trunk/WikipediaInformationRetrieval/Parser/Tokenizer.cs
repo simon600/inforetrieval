@@ -20,7 +20,7 @@ namespace Parser
         {
             //string str = " \t\n\r.,'\";:-_=+(){}[]!@#$%^&*|\\/><";
             //trim_chars = str.ToCharArray();
-            string str = ".,;|_()[]{}";
+            string str = ".,;|_()[]{}/\\";
 
             split_chars = str.ToCharArray();
         }
@@ -87,7 +87,7 @@ namespace Parser
             bool has_letters = false;
             foreach (char c in word)
             {
-                if (char.IsLetter(c))
+                if (char.IsLetterOrDigit(c))
                 {
                     has_letters = true;
                     break;

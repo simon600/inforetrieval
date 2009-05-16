@@ -10,6 +10,7 @@ namespace Parser
     {
         public CharReader(Stream baseStream, int bufferSize)
         {
+            mEncoding = Encoding.UTF8;
             mBufferSize = bufferSize;
             mBaseStream = baseStream;
             mEndOfStream = false;
@@ -20,6 +21,7 @@ namespace Parser
 
         public CharReader(Stream baseStream)            
         {
+            mEncoding = Encoding.UTF8;
             mBufferSize = 1024;
             mBaseStream = baseStream;
             mByteNumber = 0;
@@ -45,20 +47,20 @@ namespace Parser
                     }
                     if (mBytes[mByteNumber] < 194)
                     {
-                        c = Encoding.UTF8.GetChars(mBytes, mByteNumber, 1);
+                        c = mEncoding.GetChars(mBytes, mByteNumber, 1);
                         mByteNumber++;
                         mPosition++;
                     }
                     else if (mBytes[mByteNumber] < 224)
                     {
-                        c = Encoding.UTF8.GetChars(mBytes, mByteNumber,
+                        c = mEncoding.GetChars(mBytes, mByteNumber,
                             Math.Min(2, mBytesRead - mByteNumber));
                         mByteNumber += Math.Min(2, mBytesRead - mByteNumber);
                         mPosition += Math.Min(2, mBytesRead - mByteNumber);
                     }
                     else
                     {
-                        c = Encoding.UTF8.GetChars(mBytes, mByteNumber,
+                        c = mEncoding.GetChars(mBytes, mByteNumber,
                             Math.Min(3, mBytesRead - mByteNumber));
                         mByteNumber += Math.Min(3, mBytesRead - mByteNumber);
                         mPosition += Math.Min(3, mBytesRead - mByteNumber);
@@ -79,19 +81,19 @@ namespace Parser
             {
                 if (mBytes[mByteNumber] < 194)
                 {
-                    c = Encoding.UTF8.GetChars(mBytes, mByteNumber, 1);
+                    c = mEncoding.GetChars(mBytes, mByteNumber, 1);
                     mByteNumber++;
                     mPosition++;
                 }
                 else if (mBytes[mByteNumber] < 224)
                 {
-                    c = Encoding.UTF8.GetChars(mBytes, mByteNumber, 2);
+                    c = mEncoding.GetChars(mBytes, mByteNumber, 2);
                     mByteNumber += 2;
                     mPosition += 2;
                 }
                 else
                 {
-                    c = Encoding.UTF8.GetChars(mBytes, mByteNumber, 3);
+                    c = mEncoding.GetChars(mBytes, mByteNumber, 3);
                     mByteNumber += 3;
                     mPosition += 3;
                 }
@@ -121,16 +123,16 @@ namespace Parser
                     }
                     if (mBytes[mByteNumber] < 194)
                     {
-                        c = Encoding.UTF8.GetChars(mBytes, mByteNumber, 1);
+                        c = mEncoding.GetChars(mBytes, mByteNumber, 1);
                     }
                     else if (mBytes[mByteNumber] < 224)
                     {
-                        c = Encoding.UTF8.GetChars(mBytes, mByteNumber,
+                        c = mEncoding.GetChars(mBytes, mByteNumber,
                             Math.Min(2, mBytesRead - mByteNumber));
                     }
                     else
                     {
-                        c = Encoding.UTF8.GetChars(mBytes, mByteNumber,
+                        c = mEncoding.GetChars(mBytes, mByteNumber,
                             Math.Min(3, mBytesRead - mByteNumber));
                     }
                 }
@@ -149,15 +151,15 @@ namespace Parser
             {
                 if (mBytes[mByteNumber] < 194)
                 {
-                    c = Encoding.UTF8.GetChars(mBytes, mByteNumber, 1);
+                    c = mEncoding.GetChars(mBytes, mByteNumber, 1);
                 }
                 else if (mBytes[mByteNumber] < 224)
                 {
-                    c = Encoding.UTF8.GetChars(mBytes, mByteNumber, 2);
+                    c = mEncoding.GetChars(mBytes, mByteNumber, 2);
                 }
                 else
                 {
-                    c = Encoding.UTF8.GetChars(mBytes, mByteNumber, 3);
+                    c = mEncoding.GetChars(mBytes, mByteNumber, 3);
                 }
 
                 if (c.Length > 1)
@@ -214,8 +216,7 @@ namespace Parser
             }
         }
 
-
-
+        private Encoding mEncoding;
         private long mPosition;
         private int mBufferSize;
         private int mByteNumber;
