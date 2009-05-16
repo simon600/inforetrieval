@@ -13,7 +13,7 @@ namespace Parser
             mBufferSize = bufferSize;
             mBaseStream = baseStream;
             mEndOfStream = false;
-            mChars = new char[mBufferSize];
+            mByteNumber = 0;
             mBytes = new byte[mBufferSize];
             Position = 0;
         }
@@ -22,93 +22,151 @@ namespace Parser
         {
             mBufferSize = 1024;
             mBaseStream = baseStream;
+            mByteNumber = 0;
             mEndOfStream = false;
-            mChars = new char[mBufferSize];
             mBytes = new byte[mBufferSize];
             Position = 0;
         }
 
         public int Read()
-        {
-            char c;
+        {            
+            char[] c = null;
+            bool sth = true;
 
-            if (mCharNumber >= mNumberOfChars - 1)
+            if (mByteNumber >= mBytesRead - 5)
             {
                 if (mBaseStream.Position >= mBaseStream.Length)
                 {
-                    if (mCharNumber < mNumberOfChars)
-                    {
-                        c = mChars[mCharNumber];
-                        mPosition += Encoding.UTF8.GetByteCount(mChars, mCharNumber, 1);
-                        mCharNumber++;
-                        return c;
-                    }
-                    else
+                    sth = false;
+                    if (mByteNumber >= mBytesRead)
                     {
                         mEndOfStream = true;
                         return -1;
                     }
+                    if (mBytes[mByteNumber] < 194)
+                    {
+                        c = Encoding.UTF8.GetChars(mBytes, mByteNumber, 1);
+                        mByteNumber++;
+                        mPosition++;
+                    }
+                    else if (mBytes[mByteNumber] < 224)
+                    {
+                        c = Encoding.UTF8.GetChars(mBytes, mByteNumber,
+                            Math.Min(2, mBytesRead - mByteNumber));
+                        mByteNumber += Math.Min(2, mBytesRead - mByteNumber);
+                        mPosition += Math.Min(2, mBytesRead - mByteNumber);
+                    }
+                    else
+                    {
+                        c = Encoding.UTF8.GetChars(mBytes, mByteNumber,
+                            Math.Min(3, mBytesRead - mByteNumber));
+                        mByteNumber += Math.Min(3, mBytesRead - mByteNumber);
+                        mPosition += Math.Min(3, mBytesRead - mByteNumber);
+                    }
                 }
                 else
                 {
-                    int bytes_read;
-                    int size = Encoding.UTF8.GetByteCount(mChars, 0, mNumberOfChars - 1);
-                    
-                    
-                    if (size > mBufferSize)
-                        size = mBufferSize;
-
-                    for (int i = 0; i < mBufferSize - size; i++)
+                    for (int i = 0; i < mBytesRead - mByteNumber; i++)
                     {
-                        mBytes[i] = mBytes[size + i];
+                        mBytes[i] = mBytes[mByteNumber + i];
                     }
-                    bytes_read = mBaseStream.Read(mBytes, mBufferSize - size, size);
-                    mNumberOfChars = Encoding.UTF8.GetChars(mBytes, 0, bytes_read + mBufferSize - size, mChars, 0);
-                    mCharNumber = 0;
+                    mBaseStream.Read(mBytes, mBytesRead - mByteNumber, mBufferSize - (mBytesRead - mByteNumber));
+                    mByteNumber = 0;
                 }
             }
 
-            c = mChars[mCharNumber];
-            mPosition += Encoding.UTF8.GetByteCount(mChars, mCharNumber, 1);
-             
+            if (sth)
+            {
+                if (mBytes[mByteNumber] < 194)
+                {
+                    c = Encoding.UTF8.GetChars(mBytes, mByteNumber, 1);
+                    mByteNumber++;
+                    mPosition++;
+                }
+                else if (mBytes[mByteNumber] < 224)
+                {
+                    c = Encoding.UTF8.GetChars(mBytes, mByteNumber, 2);
+                    mByteNumber += 2;
+                    mPosition += 2;
+                }
+                else
+                {
+                    c = Encoding.UTF8.GetChars(mBytes, mByteNumber, 3);
+                    mByteNumber += 3;
+                    mPosition += 3;
+                }
 
-            mCharNumber++;
-            return c;
+                if (c.Length > 1)
+                {
+                    throw new Exception("Błąd");
+                }
+            }
+
+            return c[0];
         }
 
         public int Peek()
         {
-            char c;
-            if (mCharNumber >= mNumberOfChars - 1)
+            char[] c = null;
+            bool sth = true;
+
+            if (mByteNumber >= mBytesRead - 5)
             {
                 if (mBaseStream.Position >= mBaseStream.Length)
                 {
-                    if (mCharNumber < mNumberOfChars)
+                    sth = false;
+                    if (mByteNumber >= mBytesRead)
                     {
-                        c = mChars[mCharNumber];
-                        return c;
+                        return -1;
+                    }
+                    if (mBytes[mByteNumber] < 194)
+                    {
+                        c = Encoding.UTF8.GetChars(mBytes, mByteNumber, 1);
+                    }
+                    else if (mBytes[mByteNumber] < 224)
+                    {
+                        c = Encoding.UTF8.GetChars(mBytes, mByteNumber,
+                            Math.Min(2, mBytesRead - mByteNumber));
                     }
                     else
                     {
-                        return -1;
+                        c = Encoding.UTF8.GetChars(mBytes, mByteNumber,
+                            Math.Min(3, mBytesRead - mByteNumber));
                     }
                 }
                 else
                 {
-                    int bytes_read;
-                    int size = Encoding.UTF8.GetByteCount(mChars, 0, mNumberOfChars - 1);
-                    for (int i = 0; i < mBufferSize - size; i++)
+                    for (int i = 0; i < mBytesRead - mByteNumber; i++)
                     {
-                        mBytes[i] = mBytes[size + i];
+                        mBytes[i] = mBytes[mByteNumber + i];
                     }
-                    bytes_read = mBaseStream.Read(mBytes, mBufferSize - size, size);
-                    mNumberOfChars = Encoding.UTF8.GetChars(mBytes, 0, bytes_read + mBufferSize - size, mChars, 0);
-                    mCharNumber = 0;
+                    mBaseStream.Read(mBytes, mBytesRead - mByteNumber, mBufferSize - (mBytesRead - mByteNumber));
+                    mByteNumber = 0;
                 }
             }
 
-            c = mChars[mCharNumber];
-            return c;
+            if (sth)
+            {
+                if (mBytes[mByteNumber] < 194)
+                {
+                    c = Encoding.UTF8.GetChars(mBytes, mByteNumber, 1);
+                }
+                else if (mBytes[mByteNumber] < 224)
+                {
+                    c = Encoding.UTF8.GetChars(mBytes, mByteNumber, 2);
+                }
+                else
+                {
+                    c = Encoding.UTF8.GetChars(mBytes, mByteNumber, 3);
+                }
+
+                if (c.Length > 1)
+                {
+                    throw new Exception("Błąd");
+                }
+            }
+
+            return c[0];
         }
 
         public string ReadLine()
@@ -149,12 +207,10 @@ namespace Parser
             }
             set
             {
-                int bytes_read;
                 mPosition = value;
                 mBaseStream.Position = mPosition;
-                bytes_read = mBaseStream.Read(mBytes, 0, mBufferSize);
-                mNumberOfChars = Encoding.UTF8.GetChars(mBytes, 0, bytes_read, mChars, 0);
-                mCharNumber = 0;
+                mBytesRead = mBaseStream.Read(mBytes, 0, mBufferSize);
+                mByteNumber = 0;
             }
         }
 
@@ -162,10 +218,9 @@ namespace Parser
 
         private long mPosition;
         private int mBufferSize;
+        private int mByteNumber;
+        private int mBytesRead;
         private byte[] mBytes;
-        private int mCharNumber;
-        private int mNumberOfChars;
-        private char[] mChars;
         private bool mEndOfStream;
         private Stream mBaseStream;
     }
