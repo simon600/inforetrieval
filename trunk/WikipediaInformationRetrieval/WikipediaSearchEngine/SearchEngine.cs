@@ -14,7 +14,7 @@ namespace WikipediaSearchEngine
     {
         public SearchEngine(string source_path, string morphologic_path, string index_path, bool readTitles)
         {
-            mTextSource = new StreamReader(new FileStream(source_path, FileMode.Open));
+            mTextSource = new CharReader(new FileStream(source_path, FileMode.Open));
 
             mMorphologic = MorphologicDictionary.Get();
             mMorphologic.ReadFromFile(morphologic_path);
@@ -58,7 +58,7 @@ namespace WikipediaSearchEngine
 
         public void QueriesFromFile(string queries_path, string results_path)
         {
-            StreamReader reader = new StreamReader(new FileStream(queries_path, FileMode.Open));
+            CharReader reader = new CharReader(new FileStream(queries_path, FileMode.Open));
             StreamWriter writer = new StreamWriter(new FileStream(results_path, FileMode.Create), Encoding.UTF8);
 
             string query_string;
@@ -171,8 +171,8 @@ namespace WikipediaSearchEngine
             foreach (uint docId in query_result.DocumentIds)
             {
                 position = mIndex.Positions[docId];
-                mTextSource.BaseStream.Position = position;
-                mTextSource.DiscardBufferedData();
+                mTextSource.Position = position;
+                //mTextSource.DiscardBufferedData();
 
                 title = mTextSource.ReadLine();
                 mAnswers.Add(title);
@@ -188,9 +188,9 @@ namespace WikipediaSearchEngine
             {
                 long position = mIndex.Positions[i];
            
-                mTextSource.BaseStream.Position = position;
+                mTextSource.Position = position;
              
-                mTextSource.DiscardBufferedData();
+                //mTextSource.DiscardBufferedData();
               
                 title = mTextSource.ReadLine();
               
@@ -218,7 +218,7 @@ namespace WikipediaSearchEngine
         private string[] mTitles;
         private bool hasTitles = false;
 
-        private StreamReader mTextSource;
+        private CharReader mTextSource;
         private MorphologicDictionary mMorphologic;
         private InversedPositionalIndex mIndex;
 
