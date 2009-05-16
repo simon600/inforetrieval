@@ -12,29 +12,6 @@ namespace WikipediaSearchEngine
         public PhraseQuery(string query)
             :base(query)
         {
-            mDistances = new List<uint>();
-            mDistancesSequence = new List<int>();
-
-            int k = 0;
-            int i = 0;
-
-            while(i < mQueryStructure.Count - 1)
-            {
-                k = i+1;
-                while (mQueryStructure[k].Count == 0)
-                    k++;
-
-                mDistances.Add((uint)(k - i));
-                i = k;
-            }
-
-            i = 0;
-            while (i < mQueryStructure.Count)
-            {
-                if (mQueryStructure[i].Count == 0)
-                    mQueryStructure.RemoveAt(i);
-                else i++;
-            }
         }
 
         public override string QueryNormalForm
@@ -65,7 +42,37 @@ namespace WikipediaSearchEngine
                     mNormalizedQuery = mNormalizedQuery.Trim();
                 }
                 return mNormalizedQuery;
-            
+            }
+        }
+
+        /// <summary>
+        /// Finishing building mQueryStructure for query
+        /// </summary>
+        protected override void FinalizeParsing()
+        {
+            mDistances.Clear();                 // = new List<uint>();
+            mDistancesSequence.Clear();         // = new List<int>();
+
+            int k = 0;
+            int i = 0;
+
+            while (i < mQueryStructure.Count - 1)
+            {
+                k = i + 1;
+                while (mQueryStructure[k].Count == 0)
+                    k++;
+
+                mDistances.Add((uint)(k - i));
+                i = k;
+            }
+
+            //usuniecie list zawierajacych stop words
+            i = 0;
+            while (i < mQueryStructure.Count)
+            {
+                if (mQueryStructure[i].Count == 0)
+                    mQueryStructure.RemoveAt(i);
+                else i++;
             }
         }
 
@@ -119,7 +126,6 @@ namespace WikipediaSearchEngine
             }
 
             mDistancesSequence.RemoveAt(0);
-
 
             product_of_postings = new PositionalPostingList(doc_ids.ToArray(), list_of_positions.ToArray());
             return product_of_postings;
@@ -301,7 +307,7 @@ namespace WikipediaSearchEngine
             return positions.ToArray();
         }
 
-        private List<uint> mDistances;
-        private List<int> mDistancesSequence;
+        private List<uint> mDistances = new List<uint>();
+        private List<int> mDistancesSequence = new List<int>();
     }
 }

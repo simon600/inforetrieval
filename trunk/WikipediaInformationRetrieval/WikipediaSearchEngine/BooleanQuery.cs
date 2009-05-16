@@ -58,7 +58,22 @@ namespace WikipediaSearchEngine
                 return mNormalizedQuery;
             }
         }
-       
+
+        /// <summary>
+        /// Finishing building mQueryStructure for query
+        /// </summary>
+        protected override void FinalizeParsing()
+        {
+            //usuniecie list zawierajacych stop words
+            int i = 0;
+            while (i < mQueryStructure.Count)
+            {
+                if (mQueryStructure[i].Count == 0)
+                    mQueryStructure.RemoveAt(i);
+                else i++;
+            }
+        }
+
         /// <summary>
         /// Union two posting list
         /// Positions list are not relevant, in result posting list positions are empty.
@@ -71,8 +86,7 @@ namespace WikipediaSearchEngine
             PositionalPostingList union_of_postings;
            
             List<uint> doc_ids = new List<uint>();
-            List<ushort[]> list_of_positions = new List<ushort[]>();
-
+          
             int index1 = 0;
             int index2 = 0;
 
@@ -90,28 +104,19 @@ namespace WikipediaSearchEngine
                 if (key1 < key2)
                 {
                     doc_ids.Add(key1);
-                   // list_of_positions.Add(posting1.Positions[index1]);  //to nas nie obchodzi
-
-                  //  list_of_positions.Add(new ushort[0]);
+                  
                     index1++;
                 }
                 else if (key2 < key1)
                 {
                     doc_ids.Add(key2);
-                  //  list_of_positions.Add(posting2.Positions[index2]);
-
-                   // list_of_positions.Add(new ushort[0]);
-
+                 
                     index2++;
                 }
                 else
                 {
                     doc_ids.Add(key1);
-                    //niezachowana kolejnosc pozycji!!! to nas nie obchodzi
-                    //positions = posting1.Positions[index1].Concat(posting2.Positions[index2]).ToArray();
-                  
-                  //  list_of_positions.Add(positions);
-
+                   
                     index1++;
                     index2++;
                 }
@@ -120,23 +125,17 @@ namespace WikipediaSearchEngine
             while (index1 < size1)
             {
                 doc_ids.Add(posting1.DocumentIds[index1]);
-                //list_of_positions.Add(posting1.Positions[index1]);
-              //  list_of_positions.Add(new ushort[0]);
-
                 index1++;
             }
 
             while (index2 < size2)
             {
                 doc_ids.Add(posting2.DocumentIds[index2]);
-                //list_of_positions.Add(posting2.Positions[index2]);
-                //list_of_positions.Add(new ushort[0]);
-
                 index2++;
             }
 
             //list_of_positions is not sorted 
-            union_of_postings = new PositionalPostingList(doc_ids.ToArray(), list_of_positions.ToArray());
+            union_of_postings = new PositionalPostingList(doc_ids.ToArray(), new ushort[0][]);
             return union_of_postings;
         }
 
@@ -152,8 +151,7 @@ namespace WikipediaSearchEngine
             PositionalPostingList product_of_postings;
 
             List<uint> doc_ids = new List<uint>();
-            List<ushort[]> list_of_positions = new List<ushort[]>();
-
+         
             int index1 = 0;
             int index2 = 0;
 
@@ -177,16 +175,13 @@ namespace WikipediaSearchEngine
                 else
                 {
                     doc_ids.Add(key1);
-                    //niezachowana kolejnosc pozycji!!!
-                    //positions = posting1.Positions[index1].Concat(posting2.Positions[index2]).ToArray();
-                  //  list_of_positions.Add(positions);
-
+                    
                     index1++;
                     index2++;
                 }
             }
 
-            product_of_postings = new PositionalPostingList(doc_ids.ToArray(), list_of_positions.ToArray());
+            product_of_postings = new PositionalPostingList(doc_ids.ToArray(), new ushort[0][]);
             return product_of_postings;
         }
 

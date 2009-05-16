@@ -22,6 +22,8 @@ namespace WikipediaSearchEngine
             mIndex = InversedPositionalIndex.Get();
             mIndex.ReadFromStream(new FileStream(index_path, FileMode.Open));
 
+            mAnswers = new List<string>();
+
             if (readTitles)
                 ReadTitles();
 
@@ -60,29 +62,59 @@ namespace WikipediaSearchEngine
             StreamWriter writer = new StreamWriter(new FileStream(results_path, FileMode.Create), Encoding.UTF8);
 
             string query_string;
-            Query query;
+           // Query query;
+            BooleanQuery boolean_query = new BooleanQuery("");
+            PhraseQuery phrase_query = new PhraseQuery("");
+
             PositionalPostingList postings;
             mTotalTime = new TimeSpan(0);
 
             while (!reader.EndOfStream)
             {
                 query_string = reader.ReadLine();
-              
+
                 if (query_string.StartsWith("\"") && query_string.EndsWith("\""))
-                    query = new PhraseQuery(query_string);
-                else query = new BooleanQuery(query_string);
+                {
+                    phrase_query.NewUserQuery(query_string);
+                    //query = new PhraseQuery(query_string);
+
+                    //mierzymy czas
+                    mStartTime = DateTime.Now;
+
+                    postings = phrase_query.ProcessQuery();
+                    PrepareAnswerList(postings);
+
+                    mStopTime = DateTime.Now;
+
+                    mTotalTime += (mStopTime - mStartTime);
+                }
+                else
+                {
+                   // query = new BooleanQuery(query_string);
+                    boolean_query.NewUserQuery(query_string);
+
+                    //mierzymy czas
+                    mStartTime = DateTime.Now;
+
+                    postings =boolean_query.ProcessQuery();
+                    PrepareAnswerList(postings);
+
+                    mStopTime = DateTime.Now;
+
+                    mTotalTime += (mStopTime - mStartTime);
+                }
 
                 //mierzymy czas
-                mStartTime = DateTime.Now;
+                //mStartTime = DateTime.Now;
            
-                postings = query.ProcessQuery();
-                PrepareAnswerList(postings);
+                //postings = query.ProcessQuery();
+                //PrepareAnswerList(postings);
 
-                mStopTime = DateTime.Now;
+                //mStopTime = DateTime.Now;
 
-                mTotalTime += (mStopTime - mStartTime);
+                //mTotalTime += (mStopTime - mStartTime);
 
-                writer.Write("QUERY: " + query.UserQuery);
+                writer.Write("QUERY: " + query_string);
                 writer.WriteLine(" TOTAL: " + mAnswers.Count.ToString());
 
                 foreach (string title in mAnswers)
@@ -122,7 +154,9 @@ namespace WikipediaSearchEngine
             long position;
             string title;
 
-            mAnswers = new List<string>();
+            //mAnswers = new List<string>();
+            mAnswers.Clear();
+
             if (query_result == null)
                 return;
 
@@ -147,19 +181,21 @@ namespace WikipediaSearchEngine
 
         public void ReadTitles()
         {
-            mTitles = new List<string>();
+            mTitles = new string[mIndex.Positions.Length];
             string title;
 
-            foreach (long position in mIndex.Positions)
+            for(int i= 0; i<mIndex.Positions.Length; i++)
             {
+                long position = mIndex.Positions[i];
+           
                 mTextSource.BaseStream.Position = position;
+             
                 mTextSource.DiscardBufferedData();
               
                 title = mTextSource.ReadLine();
               
-                mTitles.Add(title);
+                mTitles[i] = title;
             }
-
 
             mTextSource.Close();
             hasTitles = true;
@@ -179,7 +215,7 @@ namespace WikipediaSearchEngine
 
         private Query mLastQuery;
         private List<string> mAnswers;
-        private List<string> mTitles;
+        private string[] mTitles;
         private bool hasTitles = false;
 
         private StreamReader mTextSource;

@@ -108,8 +108,6 @@ namespace WikipediaSearchEngine
 
             results = searcher.SearchFor(query);
 
-            
-
             foreach (string result in results)
                 resultTextBox.Text += result + "\r\n\r\n";
 
