@@ -18,10 +18,9 @@ namespace GammaCompression
             //Application.Run(new Form1());
 
             BitStreamWriter bitStream = new BitStreamWriter();
-
-            for (uint i = 0; i < 100; i++)
+            int k = 50;
+            for (uint i = 0; i < k; i++)
             {
-
                 GammaEncoding.CodeInt(i, bitStream);
                 Console.WriteLine(bitStream.Length+" size "+bitStream.StreamSize);
             }
@@ -30,7 +29,7 @@ namespace GammaCompression
 
             BitStreamReader bitReader = new BitStreamReader(bytes);
 
-            while (!bitReader.EndOfStream)
+            for( uint i = 0; i<k; i++)
             {
                 uint val = GammaEncoding.DecodeInt(bitReader);
                 Console.WriteLine(val);
