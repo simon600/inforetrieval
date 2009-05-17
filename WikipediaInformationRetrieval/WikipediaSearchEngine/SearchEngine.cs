@@ -62,7 +62,7 @@ namespace WikipediaSearchEngine
             StreamWriter writer = new StreamWriter(new FileStream(results_path, FileMode.Create), Encoding.UTF8);
 
             string query_string;
-           // Query query;
+          
             BooleanQuery boolean_query = new BooleanQuery("");
             PhraseQuery phrase_query = new PhraseQuery("");
 
@@ -77,8 +77,7 @@ namespace WikipediaSearchEngine
                 if (query_string.StartsWith("\"") && query_string.EndsWith("\""))
                 {
                     phrase_query.NewUserQuery(query_string);
-                    //query = new PhraseQuery(query_string);
-
+                   
                     //mierzymy czas
                     mStartTime = DateTime.Now;
 
@@ -91,7 +90,6 @@ namespace WikipediaSearchEngine
                 }
                 else
                 {
-                   // query = new BooleanQuery(query_string);
                     boolean_query.NewUserQuery(query_string);
                    
                     //mierzymy czas
@@ -105,21 +103,18 @@ namespace WikipediaSearchEngine
                     mTotalTime += (mStopTime - mStartTime);
                 }
 
-                //mierzymy czas
-                //mStartTime = DateTime.Now;
-           
-                //postings = query.ProcessQuery();
-                //PrepareAnswerList(postings);
-
-                //mStopTime = DateTime.Now;
-
-                //mTotalTime += (mStopTime - mStartTime);
-
                 writer.Write("QUERY: " + query_string);
                 writer.WriteLine(" TOTAL: " + mAnswers.Count.ToString());
 
                 foreach (string title in mAnswers)
                     writer.WriteLine(title);
+
+                mAnswers.Clear();
+
+                //ograniczenie zuzycia pamieci
+                //if (GC.GetTotalMemory(false) > 1500000000)
+                //    mIndex.CompressPostings();
+
             }
 
             reader.Close();

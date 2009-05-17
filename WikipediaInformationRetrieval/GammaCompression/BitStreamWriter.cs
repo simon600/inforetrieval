@@ -42,49 +42,7 @@ namespace GammaCompression
                 mByteTape.Add(0);
             }
         }
-
-        /// <summary>
-        /// Read next bit from tape
-        /// Throw IndexOutOfBound Exception if its end of stream
-        /// </summary>
-        /// <returns>True if readed bit is 1
-        ///          False if readed bit is 0</returns>
-        //public bool GetNextBit()
-        //{
-        //    int result = mByteTape[mIndex] & msMasks[mMaskIndex];
-
-        //    mMaskIndex++;
-        //    if (mMaskIndex == 8)
-        //    {
-        //        mMaskIndex = 0;
-        //        mIndex++;
-        //    }
-
-        //    return result > 0;
-        //}
-
-        /// <summary>
-        /// Move to the start of tape. 
-        /// </summary>
-        //public void SetOnStart()
-        //{
-        //    int position = (mIndex << 3) + mMaskIndex;
-        //    if (mBitLength < position)
-        //        mBitLength = position;
-
-        //    mIndex = 0;
-        //    mMaskIndex = 0;
-        //}
-
-        /// <summary>
-        /// Move after last written bit on tape.
-        /// </summary>
-        //public void GoToEnd()
-        //{
-        //    mMaskIndex = mBitLength % 8;
-        //    mIndex = mBitLength >> 3;
-        //}
-
+     
         /// <summary>
         /// Set all bits to 0 and go to the begining of tape
         /// </summary>

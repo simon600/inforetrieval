@@ -108,8 +108,8 @@ namespace WikipediaSearchEngine
 
             results = searcher.SearchFor(query);
 
-          //  foreach (string result in results)
-          //      resultTextBox.Text += result + "\r\n\r\n";
+            foreach (string result in results)
+                resultTextBox.Text += result + "\r\n\r\n";
 
             resultsCount.Text = "znaleziono dokumentów: " + results.Count;
             responseTimeLabel.Text = "czas odpowiedzi: " + Decimal.Round((decimal)searcher.ResponseTimeInSeconds, 3).ToString();

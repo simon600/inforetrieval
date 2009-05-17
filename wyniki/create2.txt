@@ -1,0 +1,26 @@
+﻿
+Wczytywanie słownika morfologicznego: 00:00:04.3992000
+Użyta pamięć: 229119604
+
+Tworzenie indeksu - opcje: 
+użyto stemmingu: True
+użyto kompresji: True
+usunięto stop words: True
+
+Czas wykonania:  01:11:40.1556000
+
+
+Tworzenie indeksu - opcje: 
+użyto stemmingu: True
+użyto kompresji: False
+usunięto stop words: True
+
+Czas wykonania:  01:08:50.2248000
+
+
+Tworzenie indeksu - opcje: 
+użyto stemmingu: False
+użyto kompresji: True
+usunięto stop words: True
+
+Czas wykonania:  00:58:41.6688000

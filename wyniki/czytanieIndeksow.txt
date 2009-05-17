@@ -1,0 +1,63 @@
+﻿Wczytywanie indeksu skompresowanego, ze stemmingiem: 00:00:16.2864000
+Wielkość słownikia: 2073396
+Zindeksowanych dokumentow: 811205
+
+Pomiary GC:
+Użyta pamięć: 462501616 
+Rozmiar słownika (w bajtach): 18482212
+Rozmiar postingow (w bajtach): 296264283
+
+Pomiary CLR:
+Zajmowana pamięć: 437 MB
+Skompresowane listy postingowe: tablice bajtow: 298 MB (68,24%) reszta: 47 MB (10,85%)
+Słownik:  69 MB (15,76%)
+Tablice String[] 7,9 MB(1,81%)
+Tablice PositionalPostingList[] 7,9 MB(1,81%)
+Tablice Int64[] 6,2 MB (1,42%)
+
+-------------------------------------------------------------------------
+
+Wczytywanie indeksu nieskompresowanego, ze stemmingiem: 00:01:08.5152000
+Wielkość słownikia: 2073396
+Zindeksowanych dokumentow: 811205
+
+
+Pomiary GC:
+Użyta pamięć: 1695401548
+Rozmiar słownika (w bajtach): 18482212
+Rozmiar postingow (w bajtach): 448494302
+
+Pomiary CLR: 
+Zajmowana pamięć: 1.5 GB
+Listy postingowe: 1.4 GB (94.02%) w tym:
+	- indeksy dokumentow  253 MB
+	- listy pozycji 886 + 261 = 1147 MB
+
+Słownik: 69 MB
+Tablice PositionalPostingList[] 32 MB (2,08%)
+Tablice Int64[] 6,2 MB 
+
+
+
+-------------------------------------------------------------------------
+
+Wczytywanie indeksu skompresowanego, bez stemmingu: 00:00:18.8136000
+Wielkość słownikia: 2473993
+Zindeksowanych dokumentow: 811205
+
+Pomiary GC:
+Użyta pamięć: 517734780
+Rozmiar słownika (w bajtach): 23048783
+Rozmiar postingow (w bajtach): 318513896
+
+
+Pomiary CLR:
+Zajmowana pamięć: 490 MB
+Skompresowane listy postingowe: tablice bajtow: 323 MB (65,91%) reszta: 57 MB (11,57%)
+Słownik:  84 MB (17,21%)
+Tablice String[] 9,4 MB(1,93%)
+Tablice PositionalPostingList[] 9,4 MB(1,93%)
+Tablice Int64[] 6,2 MB (1,26%)
+
+
+

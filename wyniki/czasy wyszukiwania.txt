@@ -1,0 +1,14 @@
+
+Zapytania: D:\ZAJECIA\WyszukiwanieInformacji\projekt1\pytania\pytania_and_dla_IR.txt
+Odpowiedzi: D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\wyniki\and_results.txt
+Ca³kowity czas przetwarzania: 00:00:47.8452000
+
+
+Zapytania: D:\ZAJECIA\WyszukiwanieInformacji\projekt1\pytania\pytania_or_dla_IR.txt
+Odpowiedzi: D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\wyniki\or_results.txt
+Ca³kowity czas przetwarzania: 00:02:14.0508000
+
+
+Zapytania: D:\ZAJECIA\WyszukiwanieInformacji\projekt1\pytania\pytania_frazowe.txt
+Odpowiedzi: D:\ZAJECIA\WyszukiwanieInformacji\projekt1\kody\inforetrieval\wyniki\phrase_results.txt
+Ca³kowity czas przetwarzania: 00:00:55.5048000

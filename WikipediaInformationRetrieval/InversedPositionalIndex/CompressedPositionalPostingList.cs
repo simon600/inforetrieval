@@ -10,19 +10,11 @@ namespace InversedIndex
     /// </summary>
     public class CompressedPositionalPostingList: PositionalPostingList
     {
-        //public CompressedPositionalPostingList(int size)
-        //{
-        //    mPositions = null;
-        //    mDocIds = null;
-        //    mSizeOfDocIds = size;
-        //}
-
         public CompressedPositionalPostingList(int size, byte[] byte_stream)
         {
             mPositions = null;
             mDocIds = null;
             mSizeOfDocIds = size;
-            //mCompressedPosting = new BitStreamReader(byte_stream);
             mCompressedPosting = byte_stream;
         }
 
@@ -43,7 +35,9 @@ namespace InversedIndex
 
         public override void Decompress()
         {
-            //mCompressedPosting.SetOnStart();
+            if (mDocIds != null)
+                return;
+
             msBitStreamReader.ResetStream(mCompressedPosting);
 
             uint gap = 0;
@@ -57,7 +51,6 @@ namespace InversedIndex
 
             for(int k = 0; k < mSizeOfDocIds; k++)
             {
-                //gap = GammaEncoding.DecodeInt(mCompressedPosting);
                 gap = GammaEncoding.DecodeInt(msBitStreamReader);
 
                 current_id += gap;
@@ -76,6 +69,9 @@ namespace InversedIndex
                     mPositions[k][i] = current_position;
                 }
             }
+
+            //achtung!!! if it's here you can't use CompressPostings method from InversedPositionalIndex
+            //mCompressedPosting = null;
         }
 
         public override long SizeInBytes
@@ -88,8 +84,7 @@ namespace InversedIndex
 
         private int mSizeOfDocIds;
         private byte[] mCompressedPosting;
-        //private BitStreamWriter mCompressedPosting;
-
+        
         //used to decompress postings
         private static BitStreamReader msBitStreamReader = new BitStreamReader(new byte[0]);
     }

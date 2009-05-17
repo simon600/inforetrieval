@@ -49,7 +49,5 @@ namespace GammaCompression
 
             return value - 1;                       //Convert.ToUInt32(binary_value, 2) - 1;
         }
-
-        private static StringBuilder msBinaryValue = new StringBuilder();
     }
 }
