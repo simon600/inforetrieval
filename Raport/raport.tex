@@ -81,4 +81,55 @@ koñcówek do usuniêcia lub s³owo robi siê zbyt krótkie stemming jest zakoñczony.
 
 Przeprowadziliœmy testy naszego programu na wybranych opcjach tworzenia indeksu oraz wybranych zapytaniach.
 
+\subsection {Wielkoœæ indeksu}
+\begin {itemize}
+\item \textbf{Wielkoœæ s³ownika} 2073396
+\item \textbf{Zindeksowanych dokumentów} 811205
+\end{itemize}
+
+\subsection {Czasy wyszukiwania}
+Poni¿ej czasy wyszukiwania dla zbiorów zapytañ.
+\begin {itemize}
+\item \textbf{Zapytania AND:} ca³kowity czas przetwarzania: 00:00:47.8452000
+\item \textbf{Zapytania OR:} ca³kowity czas przetwarzania: 00:02:14.0508000
+\item \textbf{Zapytania frazowe:} ca³kowity czas przetwarzania: 00:00:55.5048000
+\end{itemize}
+
+\subsection {Pomiar czasu i pamiêci dla indeksu skompresowanego ze stemmingiem}
+\begin {itemize}
+\item Czas wczytywania: 00:00:16.2864000
+\item Zajmowana pamiêæ: 437 MB
+\item Skompresowane listy postingowe: tablice bajtow: 298 MB (68,24\%) reszta: 47 MB (10,85\%)
+\item S³ownik:  69 MB (15,76\%)
+\item Tablice String[] 7,9 MB(1,81\%)
+\item Tablice PositionalPostingList[] 7,9 MB(1,81\%)
+\item Tablice Int64[] 6,2 MB (1,42\%)
+\end{itemize}
+
+\subsection {Pomiar czasu i pamiêci dla indeksu nieskompresowanego ze stemmingiem}
+\begin{itemize}
+\item Czas wczytywania: 00:01:08.5152000
+\item Zajmowana pamiêæ: 1.5 GB
+\item Listy postingowe: 1.4 GB (94.02\%) w tym:
+\begin{itemize}
+	\item indeksy dokumentow  253 MB
+	\item listy pozycji 886 + 261 = 1147 MB
+\end{itemize}
+\end{itemize}
+
+\subsection {Pomiar czasu i pamiêci dla indeksu skompresowanego bez stemmingu}
+\begin{itemize}
+\item Czas wczytywania: 0:00:18.8136000
+\item Zajmowana pamiêæ: 490 MB
+\item Skompresowane listy postingowe: tablice bajtow: 323 MB (65,91\%) reszta: 57 MB (11,57\%)
+\item S³ownik:  84 MB (17,21\%)
+\item Tablice String[] 9,4 MB(1,93\%)
+\item Tablice PositionalPostingList[] 9,4 MB(1,93\%)
+\item Tablice Int64[] 6,2 MB (1,26\%)
+\end{itemize}
+
+S³ownik: 69 MB
+Tablice PositionalPostingList[] 32 MB (2,08\%)
+Tablice Int64[] 6,2 MB 
+
 \end{document}
