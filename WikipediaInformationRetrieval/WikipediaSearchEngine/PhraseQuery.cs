@@ -50,8 +50,8 @@ namespace WikipediaSearchEngine
         /// </summary>
         protected override void FinalizeParsing()
         {
-            mDistances.Clear();                 // = new List<uint>();
-            mDistancesSequence.Clear();         // = new List<int>();
+            mDistances.Clear();                 
+            mDistancesSequence.Clear();         
 
             int k = 0;
             int i = 0;
