@@ -14,7 +14,7 @@ namespace WikipediaSearchEngine
     {
         public SearchEngine(string source_path, string morphologic_path, string index_path, bool readTitles)
         {
-            mTextSource = new CharReader(new FileStream(source_path, FileMode.Open));
+            mTextSource = new StreamReader(new FileStream(source_path, FileMode.Open));
 
             mMorphologic = MorphologicDictionary.Get();
             mMorphologic.ReadFromFile(morphologic_path);
@@ -72,6 +72,7 @@ namespace WikipediaSearchEngine
             while (!reader.EndOfStream)
             {
                 query_string = reader.ReadLine();
+                Console.WriteLine(query_string);
 
                 if (query_string.StartsWith("\"") && query_string.EndsWith("\""))
                 {
@@ -92,11 +93,11 @@ namespace WikipediaSearchEngine
                 {
                    // query = new BooleanQuery(query_string);
                     boolean_query.NewUserQuery(query_string);
-
+                   
                     //mierzymy czas
                     mStartTime = DateTime.Now;
 
-                    postings =boolean_query.ProcessQuery();
+                    postings = boolean_query.ProcessQuery();
                     PrepareAnswerList(postings);
 
                     mStopTime = DateTime.Now;
@@ -154,7 +155,6 @@ namespace WikipediaSearchEngine
             long position;
             string title;
 
-            //mAnswers = new List<string>();
             mAnswers.Clear();
 
             if (query_result == null)
@@ -171,8 +171,8 @@ namespace WikipediaSearchEngine
             foreach (uint docId in query_result.DocumentIds)
             {
                 position = mIndex.Positions[docId];
-                mTextSource.Position = position;
-                //mTextSource.DiscardBufferedData();
+                mTextSource.BaseStream.Position = position;
+                mTextSource.DiscardBufferedData();
 
                 title = mTextSource.ReadLine();
                 mAnswers.Add(title);
@@ -188,9 +188,9 @@ namespace WikipediaSearchEngine
             {
                 long position = mIndex.Positions[i];
            
-                mTextSource.Position = position;
+                mTextSource.BaseStream.Position = position;
              
-                //mTextSource.DiscardBufferedData();
+                mTextSource.DiscardBufferedData();
               
                 title = mTextSource.ReadLine();
               
@@ -218,7 +218,7 @@ namespace WikipediaSearchEngine
         private string[] mTitles;
         private bool hasTitles = false;
 
-        private CharReader mTextSource;
+        private StreamReader mTextSource;
         private MorphologicDictionary mMorphologic;
         private InversedPositionalIndex mIndex;
 

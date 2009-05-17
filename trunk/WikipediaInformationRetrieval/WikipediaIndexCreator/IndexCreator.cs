@@ -439,7 +439,7 @@ namespace WikipediaIndexCreator
             long position = 0;
 
             source.Seek(0, SeekOrigin.Begin);
-            CharReader str = new CharReader(source);
+            StreamReader str = new StreamReader(source);
 
             while (!str.EndOfStream)
             {
@@ -556,7 +556,6 @@ namespace WikipediaIndexCreator
                 postingLists.Clear();
                 foreach (int num in min_words)
                 {
-                   // postingLists.Add(ReadPostingList(sourceStreams[num]));
                     postingLists.Add(ReadPostingList(readers[num]));
                 }
 

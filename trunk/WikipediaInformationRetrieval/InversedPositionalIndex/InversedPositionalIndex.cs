@@ -86,24 +86,10 @@ namespace InversedIndex
             {
                 mWords[i] = reader.ReadString();
             
-            //    PositionalPostingList postingList =
-            //      mPostingLists[i] = ReadPostingList(stream);
                 PositionalPostingList postingList =
                     mPostingLists[i] = ReadPostingList(reader);
 
             }
-
-            // read documents
-            //uint id;
-            //long position;
-
-            //while (stream.Position < stream.Length)
-            //{
-            //    id = (uint)reader.ReadInt32();
-            //    position = reader.ReadInt64();
-
-            //    mDocuments.Add(id, new Document(id, position));
-            //}
 
             int positionsSize = reader.ReadInt32();
 

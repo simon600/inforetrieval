@@ -20,7 +20,7 @@ namespace Parser
         public WordsStream(Stream baseStream)
         {
             mBaseStream = baseStream;
-            mReader = new CharReader(mBaseStream);
+            mReader = new StreamReader(mBaseStream);
         }
 
         /// <summary>
@@ -86,11 +86,11 @@ namespace Parser
               //  mPosition += Encoding.UTF8.GetByteCount(mReadedString.ToString().ToCharArray());
               //  mReadedString.Remove(0, mReadedString.Length);
               //  return mPosition;
-                return mReader.Position;
+                return 0; // mReader.Position;
             }
             set
             {
-                mReader.Position = value;
+                mReader.BaseStream.Position = value;
             }
         }
 
@@ -102,8 +102,8 @@ namespace Parser
         //    mPosition += UnicodeEncoding.UTF8.GetByteCount(chars);            
         //}
 
-        private CharReader mReader;
-        
+     //   private CharReader mReader;
+        private StreamReader mReader; 
         private Stream mBaseStream;
         private static string msSeparators = " \n\t\r";
         
