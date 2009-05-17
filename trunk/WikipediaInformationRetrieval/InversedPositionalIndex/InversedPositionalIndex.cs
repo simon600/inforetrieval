@@ -59,8 +59,14 @@ namespace InversedIndex
             }
         }
 
-       
-      
+        public void CompressPostings()
+        {
+            for(int i = 0; i<mPostingLists.Length; i++)
+                mPostingLists[i] = mPostingLists[i].Compress();
+
+            GC.Collect();
+        }
+
         /// <summary>
         /// Reads inversed index from stream.
         /// </summary>
