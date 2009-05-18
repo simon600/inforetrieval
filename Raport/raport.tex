@@ -22,21 +22,21 @@
 S³ownik morfologiczny ma fromat zmieniony w stosunku do wersji oryginalnej.
 
 \subsection{Format pliku}
-Plik binarny s³ownika morfologicznego ma nastêpuj¹cy format:
+Plik binarny s³ownika morfologicznego ma nastêpuj¹cy format: \\
 D³ugoœæ listy form bazowych ze s³ownika jako uint.\\
-Lista form bazowych jako ci¹g stringów o dlugoœci zapisanej wczeœniej.
+Lista form bazowych jako ci¹g stringów o d³ugoœci zapisanej wczeœniej.
 Iloœæ par (s³owo, lista numerów form bazowych) ze s³ownika.
-Dla ka¿dej pary takiej jak powy¿ej s³owo jako string a potem d³ugoœæ listy numerów form bazowych a potem lista tych numerów.
+Dla ka¿dej pary takiej jak powy¿ej s³owo jako string, nastêpnie d³ugoœæ listy numerów form bazowych, zaœ dalej lista tych numerów.
 
 \subsection{Format w programie}
-W programie s³ownik morfologiczny po pwczytaniu z pliku jest przechowywany jako seria tablic.
+Po wczytaniu z pliku (w trakcie dzia³ania programu) s³ownik morfologiczny jest przechowywany jako seria tablic.
 \begin{itemize}
-\item Tablica s³ów które mo¿na sprawdziæ przechowywane.
+\item Posortowana tablica s³ów, dla których mo¿na odnaleŸæ formy bazowe (wyszukiwanie binarne).
 \item Tablica tablic numerów form bazowych. Te numery odpowiadaj¹ indeksom w tablicy form bazowych. Natomiast indeksy s¹ takie jak dla tablicy s³ów powy¿ej.
 \item Tablica form bazowych.
 \end{itemize}
-
-Wyszukujemy binarnie.
+\\
+Wczytywanie s³ownika morfologicznego trwa: 00:00:04.3992. \\U¿yta pamiêæ: 229119604 bajtów.
 
 \section {Indeks odwrócony}
 
@@ -45,37 +45,39 @@ Wyszukujemy binarnie.
 W indeksie przechowujemy:
 
 \begin{itemize}
-\item Tablicê tokenów do wyszukiwania posortowan¹.
+\item Posortowan¹ tablicê zindeksowanych tokenów (s³ownik).
 \item Tablicê list postingowych o indeksach odpowiadaj¹cych indeksom s³ów.
 \item Tablicê pozycji pocz¹tków kolejnych artyku³ów w pliku.
 \end{itemize}
 
-Wyszukujemy binarnie.
+S³owa wyszukujemy binarnie w tablicy tokenów.
 
 \subsection {Format listy postingowej}
 
-W lisie postingowej przechowujemy:
+W liœcie postingowej przechowujemy:
 
 \begin {itemize}
 \item Tablicê pozycji dokumentów (pozycja identyfikuje dokument)
 \item Tablicê tablic pozycji w dokumencie.
 \end {itemize}
 
-Listy postingowe mog¹ byæ zkompresowane przy pomocy kompresji gamma.
+W wersji skompresowanej lista postingowa sk³ada siê pojedynczej wratoœci int - oznaczaj¹cej liczbê dokumentów, w których wystêpuje dany term oraz z tablicy bajtów. W tablicy zapisujemy przy pomocy kompresji gamma kolejno: identyfikator dokumentu \textit{id}, liczbê wyst¹pieñ danego termu w dokumencie \textit{id}, kolejne pozycje termu w tym dokumencie. 
 
 \subsection {Tworzenie indeksu}
 
 Indeks odwrócony tworzymy w dwóch przebiegach.\\
 W pierwszym przebiegu tworzymy posortowany s³ownik mapuj¹cy s³owa na listy postingowe.\\ Gdy skoñczy siê miejsce zapisujemy go do pliku
-tymczasowego i tworzymy nowy s³ownik. Kiedy przerobimy ca³y plik ³¹czymy powsta³em pliki tymczasowe do jednego.
+tymczasowego i tworzymy nowy s³ownik. Po przetworzeniu ca³ego pliku Ÿród³owego ³¹czymy powsta³e pliki tymczasowe do jednego wynikowego.
 \\
 W drugim przebiegu wyliczamy pozycje dokumentów w pliku z Wikipedi¹ i zapisujemy do pliku.
 
 \section {Stemming}
 
 Nasz program wykorzystuje stemming przy tworzeniu indeksu oraz wyszukiwaniu.\\
-Najpierw z koñca s³owa s¹ usuwane samog³oski. Potem rozpoznawane s¹ konkretne koñcówki które mo¿na usuwaæ. W przypadku gdy nie ma wiêcej
-koñcówek do usuniêcia lub s³owo robi siê zbyt krótkie stemming jest zakoñczony.
+Najpierw obcinane s¹ z koñca s³owa rozpoznane koñcówki które mo¿na usuwaæ. Nastêpnie z koñca s³owa usuwamy samog³oski. W przypadku gdy nie ma wiêcej
+koñcówek do usuniêcia lub s³owo robi siê zbyt krótkie stemming jest zakoñczony. \\
+\\
+Stemming pozwala na zmniejszenie s³ownika o ok. 16\%.
 
 \section {Wyniki}
 
@@ -83,7 +85,7 @@ Przeprowadziliœmy testy naszego programu na wybranych opcjach tworzenia indeksu 
 
 \subsection {Wielkoœæ indeksu}
 \begin {itemize}
-\item \textbf{Wielkoœæ s³ownika} 2073396
+\item \textbf{Wielkoœæ s³ownika} ze stemmingiem 2073396, bez wykonania stemmingu: 2473993. 
 \item \textbf{Zindeksowanych dokumentów} 811205
 \end{itemize}
 
@@ -97,6 +99,7 @@ Poni¿ej czasy wyszukiwania dla zbiorów zapytañ.
 
 \subsection {Pomiar czasu i pamiêci dla indeksu skompresowanego ze stemmingiem}
 \begin {itemize}
+\item Czas tworzenia indeksu: 01:11:40.1556
 \item Czas wczytywania: 00:00:16.2864000
 \item Zajmowana pamiêæ: 437 MB
 \item Skompresowane listy postingowe: tablice bajtow: 298 MB (68,24\%) reszta: 47 MB (10,85\%)
@@ -108,6 +111,7 @@ Poni¿ej czasy wyszukiwania dla zbiorów zapytañ.
 
 \subsection {Pomiar czasu i pamiêci dla indeksu nieskompresowanego ze stemmingiem}
 \begin{itemize}
+\item Czas tworzenia indeksu: 01:08:50.2248
 \item Czas wczytywania: 00:01:08.5152000
 \item Zajmowana pamiêæ: 1.5 GB
 \item Listy postingowe: 1.4 GB (94.02\%) w tym:
@@ -115,10 +119,15 @@ Poni¿ej czasy wyszukiwania dla zbiorów zapytañ.
 	\item indeksy dokumentow  253 MB
 	\item listy pozycji 886 + 261 = 1147 MB
 \end{itemize}
+
+\item S³ownik: 69 MB
+\item Tablice PositionalPostingList[] 32 MB (2,08\%)
+\item Tablice Int64[] 6,2 MB 
 \end{itemize}
 
 \subsection {Pomiar czasu i pamiêci dla indeksu skompresowanego bez stemmingu}
 \begin{itemize}
+\item Czas tworzenia indeksu: 00:58:41.6688
 \item Czas wczytywania: 0:00:18.8136000
 \item Zajmowana pamiêæ: 490 MB
 \item Skompresowane listy postingowe: tablice bajtow: 323 MB (65,91\%) reszta: 57 MB (11,57\%)
@@ -127,9 +136,5 @@ Poni¿ej czasy wyszukiwania dla zbiorów zapytañ.
 \item Tablice PositionalPostingList[] 9,4 MB(1,93\%)
 \item Tablice Int64[] 6,2 MB (1,26\%)
 \end{itemize}
-
-S³ownik: 69 MB
-Tablice PositionalPostingList[] 32 MB (2,08\%)
-Tablice Int64[] 6,2 MB 
 
 \end{document}
