@@ -33,28 +33,30 @@ namespace Parser
             char c;
         
             c = (char)mReader.Read();
+            read_string += c;
             
             while (msSeparators.Contains(c))
             {
                 c = (char)mReader.Read();
+                read_string += c;
             }
 
             do
-            {
-                read_string += c;
-                
+            {                
                 c = (char)mReader.Read();
-                
-                
+                read_string += c;                
             } while (!EndOfStream &&
                 !msSeparators.Contains(c));
 
             while (msSeparators.Contains((char)mReader.Peek()))
             {
                 c = (char)mReader.Read();
+                read_string += c;
             }
-            
-            return read_string;
+
+            UpdatePosition(read_string);
+
+            return read_string.Trim(msSeparators.ToCharArray());
         }
 
         /// <summary>
@@ -86,26 +88,24 @@ namespace Parser
               //  mPosition += Encoding.UTF8.GetByteCount(mReadedString.ToString().ToCharArray());
               //  mReadedString.Remove(0, mReadedString.Length);
               //  return mPosition;
-                return 0; // mReader.Position;
+                return mPosition;
             }
-            set
-            {
-                mReader.BaseStream.Position = value;
-            }
+            //set
+            //{
+            //    mReader.BaseStream.Position = value;
+            //}
         }
 
-        //private void UpdatePosition(char c)
-        //{
-        //    //mPosition++;
-        //    char[] chars = new char[1];
-        //    chars[0] = c;               
-        //    mPosition += UnicodeEncoding.UTF8.GetByteCount(chars);            
-        //}
+        private void UpdatePosition(string s)
+        {
+            char[] chars = s.ToCharArray();            
+            mPosition += UnicodeEncoding.UTF8.GetByteCount(chars);
+        }
 
      //   private CharReader mReader;
         private StreamReader mReader; 
         private Stream mBaseStream;
         private static string msSeparators = " \n\t\r";
-        
+        long mPosition;
     }
 }
