@@ -431,26 +431,20 @@ namespace WikipediaIndexCreator
         private List<long> ReadTitlePosition(Stream source)
         {
             List<long> positions = new List<long>();
-            
-            Encoding encoding = Encoding.UTF8;
 
-            string line;
-            long offset = encoding.GetByteCount((mArticleSeparator+" ").ToCharArray());
-            long position = 0;
+            source.Position = 0;
+            WordsStream words_stream = new WordsStream(source);
 
-            source.Seek(0, SeekOrigin.Begin);
-            StreamReader str = new StreamReader(source);
-
-            while (!str.EndOfStream)
+            while (!words_stream.EndOfStream && !words_stream.Read().Contains("##TITLE##"))
             {
-                line = str.ReadLine();
+            }
 
-                if (line.StartsWith(mArticleSeparator))
+            while (!words_stream.EndOfStream)
+            {
+                positions.Add(words_stream.Position);
+                while (!words_stream.EndOfStream && !words_stream.Read().Contains("##TITLE##"))
                 {
-                    positions.Add(position + offset);
                 }
-
-                position += encoding.GetByteCount(line.ToCharArray()) + 1;
             }
 
             return positions;
