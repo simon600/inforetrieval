@@ -41,6 +41,7 @@
             this.sourceOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.morphOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.indexOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // label1
@@ -143,6 +144,10 @@
             // 
             this.indexOpenFileDialog.FileName = "\"\"";
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // PrepareForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -180,5 +185,6 @@
         private System.Windows.Forms.OpenFileDialog sourceOpenFileDialog;
         private System.Windows.Forms.OpenFileDialog morphOpenFileDialog;
         private System.Windows.Forms.OpenFileDialog indexOpenFileDialog;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }

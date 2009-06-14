@@ -67,20 +67,20 @@ namespace WikipediaSearchEngine
 
         private void sourceButton_Click(object sender, EventArgs e)
         {
-            if (sourceOpenFileDialog.ShowDialog() == DialogResult.OK)
-                sourceTextBox.Text = sourceOpenFileDialog.FileName;
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                sourceTextBox.Text = openFileDialog1.FileName;
         }
 
         private void morphButton_Click(object sender, EventArgs e)
         {
-            if (morphOpenFileDialog.ShowDialog() == DialogResult.OK)
-                morphologicTextBox.Text = morphOpenFileDialog.FileName;
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                morphologicTextBox.Text = openFileDialog1.FileName;
         }
 
         private void indexButton_Click(object sender, EventArgs e)
         {
-            if (indexOpenFileDialog.ShowDialog() == DialogResult.OK)
-                indexTextBox.Text = indexOpenFileDialog.FileName;
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                indexTextBox.Text = openFileDialog1.FileName;
 
         }
     }
