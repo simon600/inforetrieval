@@ -85,7 +85,7 @@ namespace Parser
         public static char[] msVowels = { 'a', 'ą', 'e', 'ę', 'i', 'o', 'u', 'y'};
         public static string[] msRules = { "ów", "owej", "ie", "iej", "ego", "emu", "em", "iem",
                                              "om", "ami", "ach", "im", "imi", "ich", "ym", "ymi", "ych" };
-        public static string[] msEnding = { "ówn", "ow" };
+        public static string[] msEnding = { "ówn", "ow", "`s", "’s", "`", "’" };
         public static short msMinLength = 3;
         
     }

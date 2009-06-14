@@ -100,22 +100,15 @@ namespace InversedIndex
             int positionsSize = reader.ReadInt32();
 
             mDocumentsPositions = new long[positionsSize];
-
+            mDocumentsLength = new int[positionsSize];
+            
             for (int i = 0; i < positionsSize; i++)
                 mDocumentsPositions[i] = reader.ReadInt64();
 
-        }
+            for (int i = 0; i < positionsSize; i++)
+                mDocumentsLength[i] = reader.ReadInt32();
 
-        /// <summary>
-        /// Gets documents.
-        /// </summary>
-        //public Dictionary<uint, Document> Documents
-        //{
-        //    get
-        //    {
-        //        return mDocuments;
-        //    }
-        //}
+        }
 
         public long[] Positions
         {
@@ -184,6 +177,20 @@ namespace InversedIndex
 
         }
 
+        public string[] Vocabulary
+        {
+            get
+            {
+                return mWords;
+            }
+        }
+
+        public void ResetIndex()
+        {
+            // mDocuments = new Dictionary<uint,Document>();
+            mWords = null;
+            mPostingLists = null;
+        }
         //////////////////////////////// PRIVATE /////////////////////////////
 
         /// <summary>
@@ -240,13 +247,6 @@ namespace InversedIndex
             return new CompressedPositionalPostingList(posting_length, stream);
         }
 
-        public void ResetIndex()
-        {
-           // mDocuments = new Dictionary<uint,Document>();
-            mWords = null;
-            mPostingLists = null;
-        }
-
 
         private static InversedPositionalIndex msInversedPositionalIndex;        
 
@@ -256,8 +256,8 @@ namespace InversedIndex
         /// <summary>
         /// Mapis document identifiers to documents.
         /// </summary>
-      //  private Dictionary<uint, Document> mDocuments;
         private long[] mDocumentsPositions;
+        private int[] mDocumentsLength;
 
         private bool mPerformedStemming;
         private bool mPerformedStopWordsRemoval;

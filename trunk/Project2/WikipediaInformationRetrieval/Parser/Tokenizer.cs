@@ -41,7 +41,7 @@ namespace Parser
                 {
                     modified_word = TrimWord(str);
                     if (modified_word.Length > 0 &&
-                        ContainsLetters(modified_word))
+                        ContainsLetters(modified_word))     //bez tego tak samo
                     {
                         list.Add(modified_word);
                     }
@@ -62,12 +62,12 @@ namespace Parser
             while (contains_bad_char && word.Length > 0)
             {
                 contains_bad_char = false;
-                if (!char.IsLetterOrDigit(word[0]))
+                if (!isLetterOrDigit(word[0]))
                 {
                     word = word.Remove(0, 1);
                     contains_bad_char = true;
                 }
-                else if (!char.IsLetterOrDigit(word[word.Length - 1]))
+                else if (!isLetterOrDigit(word[word.Length - 1]))
                 {
                     word = word.Remove(word.Length - 1, 1);
                     contains_bad_char = true;
@@ -87,7 +87,7 @@ namespace Parser
             bool has_letters = false;
             foreach (char c in word)
             {
-                if (char.IsLetterOrDigit(c))
+                if (isLetterOrDigit(c))
                 {
                     has_letters = true;
                     break;
@@ -96,7 +96,26 @@ namespace Parser
 
             return has_letters;
         }
-        
+
+        private static bool isLetterOrDigit(char c)
+        {
+            int value = (int)c;
+            if (value > 47 && value < 58)
+                return true;
+            if (value > 64 && value < 91)
+                return true;
+            if (value > 96 && value < 123)
+                return true;
+            if (value > 191 && value < 215)
+                return true;
+            if (value > 215 && value < 246)
+                return true;
+            if (value > 248 && value < 383)
+                return true;
+
+            return false;
+        }
+       
         private char[] split_chars;
     }
 }
