@@ -118,6 +118,14 @@ namespace InversedIndex
             }
         }
 
+        public int[] Lengths
+        {
+            get
+            {
+                return mDocumentsLength;
+            }
+        }
+
         public bool PerformedCompression
         {
             get

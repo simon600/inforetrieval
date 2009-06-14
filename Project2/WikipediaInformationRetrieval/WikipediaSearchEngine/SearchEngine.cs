@@ -196,13 +196,16 @@ namespace WikipediaSearchEngine
                 for (uint i = 0; i < posting_list.DocumentIds.Length; i++)
                 {
                     uint documentId = posting_list.DocumentIds[i];
-                    int termFrequency = posting_list.Positions[i].Length;
-                    mDocumentScores[documentId] += termFrequency * idf;
+                    //int termFrequency = posting_list.Positions[i].Length;
+                    float wf = 1 + (float)Math.Log(posting_list.Positions[i].Length);
+                    mDocumentScores[documentId] += wf * idf;
                 }
             }
 
-            // TODO:
-            // dzielenie przez długość dokumentów
+            for (int i = 0; i < mDocumentScores.Length; i++)
+            {
+                mDocumentScores[i] /= mIndex.Lengths[i];
+            }
 
             // sorting documents
             for (uint i = 0; i < mDocumentRanking.Length; i++)
