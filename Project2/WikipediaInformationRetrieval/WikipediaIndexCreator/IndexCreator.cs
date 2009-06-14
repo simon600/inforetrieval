@@ -53,7 +53,10 @@ namespace WikipediaIndexCreator
 
             // inverted index to create
             SortedDictionary<string, SortedList<uint, List<ushort>>> inverted_index;
-   
+
+            //length of documents
+            List<int> documents_length = new List<int>();
+
             WordsStream words_stream = new WordsStream(sourceStream);
 
             // find first article
@@ -77,7 +80,8 @@ namespace WikipediaIndexCreator
                     words_stream,
                     BLOCK_SIZE,
                     out inverted_index,
-                    out size);
+                    out size,
+                    documents_length);
 
                 WriteIndexToStream(inverted_index, file_stream, size);
                 file_stream.Flush();                
@@ -89,7 +93,8 @@ namespace WikipediaIndexCreator
             List<long> positions = ReadTitlePosition(sourceStream);
 
             WriteDocumentsToStream(positions, destinationStream);
-            
+            WriteDocumentsLengthToStream(documents_length, destinationStream);
+
             destinationStream.Close();
 
             foreach (string name in filenames)
@@ -97,6 +102,7 @@ namespace WikipediaIndexCreator
                 File.Delete(name);
             }
         }
+
 
         /// <summary>
         /// Gets or sets string separating articles in file.
@@ -199,7 +205,8 @@ namespace WikipediaIndexCreator
                 long blockSize,
                 out SortedDictionary<string, SortedList<uint, List<ushort>>>
                     inversedIndex,
-                out long size)
+                out long size, 
+                List<int> documents_len)
         {
             // size of block in bytes
             size = 0;
@@ -211,14 +218,13 @@ namespace WikipediaIndexCreator
                         
             string word;
             ushort index_in_article = 0;
-         //  Document document;
+        
                         
             while (!wordsStream.EndOfStream && size < blockSize)
             {
                 article.Clear();
                 index_in_article = 0;
-              //  document = new Document(wordsStream.Position);
-             //   documents.Add(document.Id, document);
+        
                 mDocumentIndex++;
 
                 while (!wordsStream.EndOfStream &&
@@ -238,6 +244,8 @@ namespace WikipediaIndexCreator
 
                     index_in_article++;
                 }
+
+                documents_len.Add(index_in_article);
             }            
         }
 
@@ -384,7 +392,6 @@ namespace WikipediaIndexCreator
             //write size
             writer.Write(postingList.Count);
 
-            //BitStreamWriter bitstream = CompressPostingList(postingList);
             byte[] bitstream = CompressPostingList(postingList);
 
             //write size of bitstream
@@ -395,7 +402,6 @@ namespace WikipediaIndexCreator
 
         private byte[] CompressPostingList(SortedList<uint, List<ushort>> postingList)
         {
-            //BitStreamWriter compressed_posting = new BitStreamWriter();
             mBitStreamWriter.ResetStream();
 
             uint gap = 0;
@@ -407,8 +413,6 @@ namespace WikipediaIndexCreator
                 gap = pair.Key - current_id;
                 current_id = pair.Key;
 
-                //GammaEncoding.CodeInt(gap, compressed_posting);
-               // GammaEncoding.CodeInt((uint)pair.Value.Count, compressed_posting);
                 GammaEncoding.CodeInt(gap, mBitStreamWriter);
                 GammaEncoding.CodeInt((uint)pair.Value.Count, mBitStreamWriter);
 
@@ -419,7 +423,6 @@ namespace WikipediaIndexCreator
                     gap = (uint)pos - current_position;
                     current_position += (ushort)gap;
 
-                    //GammaEncoding.CodeInt(gap, compressed_posting);
                     GammaEncoding.CodeInt(gap, mBitStreamWriter);
                 }
             }
@@ -466,14 +469,16 @@ namespace WikipediaIndexCreator
 
             foreach (long position in documents)
                 writer.Write(position);
+        }
 
-            //stream.SetLength(stream.Length + documents.Count * (sizeof(long) + sizeof(uint)));
-            //BinaryWriter writer = new BinaryWriter(stream);
-            //foreach (KeyValuePair<uint, Document> pair in documents)
-            //{
-            //    writer.Write(pair.Key);
-            //    writer.Write(pair.Value.FilePosition);
-            //}
+
+        private void WriteDocumentsLengthToStream(List<int> documents_length, Stream stream)
+        {
+            stream.SetLength(stream.Length + documents_length.Count * (sizeof(int)) );
+            BinaryWriter writer = new BinaryWriter(stream);
+
+            foreach (int len in documents_length)
+                writer.Write(len);
         }
 
         /// <summary>
@@ -805,7 +810,7 @@ namespace WikipediaIndexCreator
         private uint mDocumentIndex = 0;
 
         private BitStreamWriter mBitStreamWriter;       //used to compress postings
-        
+
         Tokenizer tokenizer;
         Normalizer normalizer;
         Lematizer lematizer;
