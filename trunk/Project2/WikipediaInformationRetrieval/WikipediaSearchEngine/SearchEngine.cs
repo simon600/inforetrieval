@@ -12,6 +12,28 @@ namespace WikipediaSearchEngine
 {
     public class SearchEngine
     {
+        private class DocumentComparer : System.Collections.IComparer
+        {
+            public int Compare(Object x, Object y)
+            {
+                float val_x = (float)x;
+                float val_y = (float)y;
+
+                if (val_y < val_x)
+                {
+                    return -1;
+                }
+                else if (val_y == val_x)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+        }
+
         public SearchEngine(string source_path, string morphologic_path, string index_path, bool readTitles)
         {
             mTextSource = new StreamReader(new FileStream(source_path, FileMode.Open));
@@ -21,6 +43,9 @@ namespace WikipediaSearchEngine
 
             mIndex = InversedPositionalIndex.Get();
             mIndex.ReadFromStream(new FileStream(index_path, FileMode.Open));
+
+            mDocumentScores = new float[mIndex.Positions.Length];
+            mDocumentRanking = new uint[mIndex.Positions.Length];
 
             mAnswers = new List<string>();
 
@@ -46,9 +71,11 @@ namespace WikipediaSearchEngine
 
             //response time start
             QueryPerformanceCounter(out mStart);
-            mStartTime = DateTime.Now;
-            PositionalPostingList query_result = mLastQuery.ProcessQuery();
-            PrepareAnswerList(query_result);
+            mStartTime = DateTime.Now;            
+            //PositionalPostingList query_result = mLastQuery.ProcessQuery();
+            ProcessQuery(mLastQuery);
+
+            PrepareAnswerList();
 
             //response time stop
             QueryPerformanceCounter(out mStop);
@@ -66,7 +93,7 @@ namespace WikipediaSearchEngine
             BooleanQuery boolean_query = new BooleanQuery("");
             PhraseQuery phrase_query = new PhraseQuery("");
 
-            PositionalPostingList postings;
+            //PositionalPostingList postings;
             mTotalTime = new TimeSpan(0);
 
             while (!reader.EndOfStream)
@@ -76,17 +103,17 @@ namespace WikipediaSearchEngine
 
                 if (query_string.StartsWith("\"") && query_string.EndsWith("\""))
                 {
-                    phrase_query.NewUserQuery(query_string);
+                    //phrase_query.NewUserQuery(query_string);
                    
-                    //mierzymy czas
-                    mStartTime = DateTime.Now;
+                    ////mierzymy czas
+                    //mStartTime = DateTime.Now;
 
-                    postings = phrase_query.ProcessQuery();
-                    PrepareAnswerList(postings);
+                    //postings = phrase_query.ProcessQuery();
+                    //PrepareAnswerList(postings);
 
-                    mStopTime = DateTime.Now;
+                    //mStopTime = DateTime.Now;
 
-                    mTotalTime += (mStopTime - mStartTime);
+                    //mTotalTime += (mStopTime - mStartTime);
                 }
                 else
                 {
@@ -95,8 +122,8 @@ namespace WikipediaSearchEngine
                     //mierzymy czas
                     mStartTime = DateTime.Now;
 
-                    postings = boolean_query.ProcessQuery();
-                    PrepareAnswerList(postings);
+                    ProcessQuery(boolean_query);
+                    PrepareAnswerList();
 
                     mStopTime = DateTime.Now;
 
@@ -145,25 +172,75 @@ namespace WikipediaSearchEngine
             }
         }
 
-        private void PrepareAnswerList(PositionalPostingList query_result)
+        private void ProcessQuery(Query query)
+        {
+            List<string> words = new List<string>();
+            foreach (List<string> or_list in query.QueryStructure)
+            {
+                if (or_list.Count > 0)
+                {
+                    words.Add(or_list[0]);
+                }
+            }
+
+            for (int i = 0; i < mDocumentScores.Length; i++)
+            {
+                mDocumentScores[i] = 0.0f;
+            }
+
+            // counting document scores
+            foreach (string word in words)
+            {                
+                PositionalPostingList posting_list = mIndex.PostingList(word);
+                float idf = (float)Math.Log((float)mIndex.VocabularySize / posting_list.DocumentIds.Length);
+                for (uint i = 0; i < posting_list.DocumentIds.Length; i++)
+                {
+                    uint documentId = posting_list.DocumentIds[i];
+                    int termFrequency = posting_list.Positions[i].Length;
+                    mDocumentScores[documentId] += termFrequency * idf;
+                }
+            }
+
+            // TODO:
+            // dzielenie przez długość dokumentów
+
+            // sorting documents
+            for (uint i = 0; i < mDocumentRanking.Length; i++)
+            {
+                mDocumentRanking[i] = i;
+            }
+            
+            Array.Sort(mDocumentScores, mDocumentRanking);
+            uint temp;
+            for (uint i = 0; i < mDocumentRanking.Length / 2; i++)
+            {
+                temp = mDocumentRanking[i];
+                mDocumentRanking[i] = mDocumentRanking[mDocumentRanking.Length - 1 - i];
+                mDocumentRanking[mDocumentRanking.Length - 1 - i] = temp;
+            }
+
+            // mDocumentScores unusable now, have to recalculate
+        }
+
+        private void PrepareAnswerList()
         {
             long position;
             string title;
 
             mAnswers.Clear();
 
-            if (query_result == null)
-                return;
+            //if (query_result == null)
+            //    return;
 
             if (hasTitles)
             {
-                foreach (uint docId in query_result.DocumentIds)
+                foreach (uint docId in mDocumentRanking)
                     mAnswers.Add(mTitles[(int)docId]);
 
                 return;
             }
 
-            foreach (uint docId in query_result.DocumentIds)
+            foreach (uint docId in mDocumentRanking)
             {
                 position = mIndex.Positions[docId];
                 mTextSource.BaseStream.Position = position;
@@ -226,6 +303,8 @@ namespace WikipediaSearchEngine
         private long mStart;
         private long mStop;
         private long mFrequency;
+        private float[] mDocumentScores;        
+        private uint[] mDocumentRanking;
         private TimeSpan mTotalTime;
 
         private DateTime mStartTime;
