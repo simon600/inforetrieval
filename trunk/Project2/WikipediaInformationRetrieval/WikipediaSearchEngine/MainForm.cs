@@ -90,6 +90,8 @@ namespace WikipediaSearchEngine
 
         private void button1_Click(object sender, EventArgs e)
         {
+            searcher.mBeginBonus = float.Parse(textBox1.Text);
+            searcher.mPhraseBonus = float.Parse(textBox2.Text);
             DoSearching();
         }
 

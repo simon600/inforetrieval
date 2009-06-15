@@ -43,6 +43,7 @@ namespace WikipediaSearchEngine
 
             mDocumentScores = new float[mIndex.Positions.Length];
             mDocumentRanking = new uint[mIndex.Positions.Length];
+            mDocumentWordsCount = new byte[mIndex.Positions.Length];
 
             mAnswers = new List<string>();
 
@@ -172,6 +173,12 @@ namespace WikipediaSearchEngine
         private void ProcessQuery(Query query)
         {
             List<string> words = new List<string>();
+            float idf;
+            float wf;
+            uint document_id;
+
+            PositionalPostingList posting_list;
+
             foreach (List<string> or_list in query.QueryStructure)
             {
                 if (or_list.Count > 0)
@@ -180,44 +187,59 @@ namespace WikipediaSearchEngine
                 }
             }
 
-            for (int i = 0; i < mDocumentScores.Length; i++)
+            // set default values
+            for (uint i = 0; i < mDocumentScores.Length; i++)
             {
                 mDocumentScores[i] = 0.0f;
+                mDocumentWordsCount[i] = 0;
+                mDocumentRanking[i] = i;
             }
 
             // counting document scores
             foreach (string word in words)
             {                
-                PositionalPostingList posting_list = mIndex.PostingList(word);
-                float idf = (float)Math.Log((float)mIndex.VocabularySize / posting_list.DocumentIds.Length);
+                posting_list = mIndex.PostingList(word);
+                idf = (float)Math.Log((float)mIndex.VocabularySize / posting_list.DocumentIds.Length);
                 for (uint i = 0; i < posting_list.DocumentIds.Length; i++)
                 {
-                    uint documentId = posting_list.DocumentIds[i];
+                    document_id = posting_list.DocumentIds[i];
                     //int termFrequency = posting_list.Positions[i].Length;
-                    float wf = 1 + (float)Math.Log(posting_list.Positions[i].Length);
-                    mDocumentScores[documentId] += wf * idf;
+                    wf = 1 + (float)Math.Log(posting_list.Positions[i].Length);
+                    if (posting_list.Positions[i][0] < 10)
+                    {
+                        wf *= mBeginBonus;
+                    }
+                    mDocumentWordsCount[document_id] += 1;
+                    mDocumentScores[document_id] += wf * idf;
                 }
             }
 
-            for (int i = 0; i < mDocumentScores.Length; i++)
+            // for phrase
+            for (int j = 0; j < words.Count - 1; j++)
             {
-                mDocumentScores[i] /= mIndex.Lengths[i];
+                posting_list = IntersectPostings(
+                    mIndex.PostingList(words[j]), mIndex.PostingList(words[j+1]));
+
+                idf = (float)Math.Log((float)mIndex.VocabularySize / posting_list.DocumentIds.Length);
+                for (uint i = 0; i < posting_list.DocumentIds.Length; i++)
+                {
+                    document_id = posting_list.DocumentIds[i];
+                    //int termFrequency = posting_list.Positions[i].Length;
+                    mDocumentScores[document_id] *= mPhraseBonus;                    
+                }
             }
 
-            // sorting documents
-            for (uint i = 0; i < mDocumentRanking.Length; i++)
+
+            for (int i = 0; i < mDocumentScores.Length; i++)
             {
-                mDocumentRanking[i] = i;
+                if (mDocumentScores[i] > 0)
+                {
+                    mDocumentScores[i] /= mIndex.Lengths[i];
+                    mDocumentScores[i] *= (float)Math.Pow(((float)mDocumentWordsCount[i] / words.Count), 2);
+                }
             }
             
             Array.Sort<float, uint>(mDocumentScores, mDocumentRanking, new DocumentComparer());            
-            //uint temp;
-            //for (uint i = 0; i < mDocumentRanking.Length / 2; i++)
-            //{
-            //    temp = mDocumentRanking[i];
-            //    mDocumentRanking[i] = mDocumentRanking[mDocumentRanking.Length - 1 - i];
-            //    mDocumentRanking[mDocumentRanking.Length - 1 - i] = temp;
-            //}
 
             // mDocumentScores unusable now, have to recalculate
         }
@@ -273,6 +295,86 @@ namespace WikipediaSearchEngine
             hasTitles = true;
         }
 
+        PositionalPostingList IntersectPostings(PositionalPostingList posting1, PositionalPostingList posting2)
+        {
+            PositionalPostingList product_of_postings;
+
+            List<uint> doc_ids = new List<uint>();
+            List<ushort[]> list_of_positions = new List<ushort[]>();
+
+            ushort[] positions;
+
+            int index1 = 0;
+            int index2 = 0;
+
+            int size1 = posting1.DocumentIds.Length;
+            int size2 = posting2.DocumentIds.Length;
+
+            uint key1;
+            uint key2;
+
+            while (index1 < size1 && index2 < size2)
+            {
+                key1 = posting1.DocumentIds[index1];
+                key2 = posting2.DocumentIds[index2];
+
+                if (key1 < key2)
+                    index1++;
+
+                else if (key2 < key1)
+                    index2++;
+
+                else
+                {
+                    positions = IntersectPositions(posting1.Positions[index1], posting2.Positions[index2], 1);
+
+                    if (positions.Length > 0)
+                    {
+                        doc_ids.Add(key1);
+                        list_of_positions.Add(positions);
+                    }
+
+                    index1++;
+                    index2++;
+                }
+            }            
+
+            product_of_postings = new PositionalPostingList(doc_ids.ToArray(), list_of_positions.ToArray());
+            return product_of_postings;
+        }
+
+        private ushort[] IntersectPositions(ushort[] position_list1, ushort[] position_list2, int diff)
+        {
+            List<ushort> new_positions = new List<ushort>();
+
+            int index1 = 0;
+            int index2 = 0;
+
+            int pos1;
+            int pos2;
+
+            while (index1 < position_list1.Length && index2 < position_list2.Length)
+            {
+                pos1 = (int)position_list1[index1];
+                pos2 = (int)position_list2[index2] - diff;
+
+                if (pos1 < pos2)
+                    index1++;
+                else if (pos1 > pos2)
+                    index2++;
+
+                else
+                {
+                    new_positions.Add((ushort)pos1);
+                    index1++;
+                    index2++;
+                }
+
+            }
+
+            return new_positions.ToArray();
+        }
+
         public void StartTimer()
         {
             QueryPerformanceCounter(out mStart);
@@ -305,6 +407,9 @@ namespace WikipediaSearchEngine
         private long mFrequency;
         private float[] mDocumentScores;        
         private uint[] mDocumentRanking;
+        private byte[] mDocumentWordsCount;
+        public float mBeginBonus;
+        public float mPhraseBonus;
         private TimeSpan mTotalTime;
 
         private DateTime mStartTime;

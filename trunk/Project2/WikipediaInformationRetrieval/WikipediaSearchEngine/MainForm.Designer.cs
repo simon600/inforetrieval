@@ -40,6 +40,8 @@
             this.resultsCount = new System.Windows.Forms.Label();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -59,20 +61,20 @@
             this.otwórzPlikZZapytaniamiToolStripMenuItem,
             this.wskażPlikWynikowyToolStripMenuItem});
             this.zapytaniaToolStripMenuItem.Name = "zapytaniaToolStripMenuItem";
-            this.zapytaniaToolStripMenuItem.Size = new System.Drawing.Size(38, 20);
+            this.zapytaniaToolStripMenuItem.Size = new System.Drawing.Size(34, 20);
             this.zapytaniaToolStripMenuItem.Text = "Plik";
             // 
             // otwórzPlikZZapytaniamiToolStripMenuItem
             // 
             this.otwórzPlikZZapytaniamiToolStripMenuItem.Name = "otwórzPlikZZapytaniamiToolStripMenuItem";
-            this.otwórzPlikZZapytaniamiToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.otwórzPlikZZapytaniamiToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.otwórzPlikZZapytaniamiToolStripMenuItem.Text = "Wybierz plik z zapytaniami";
             this.otwórzPlikZZapytaniamiToolStripMenuItem.Click += new System.EventHandler(this.otwórzPlikZZapytaniamiToolStripMenuItem_Click);
             // 
             // wskażPlikWynikowyToolStripMenuItem
             // 
             this.wskażPlikWynikowyToolStripMenuItem.Name = "wskażPlikWynikowyToolStripMenuItem";
-            this.wskażPlikWynikowyToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.wskażPlikWynikowyToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.wskażPlikWynikowyToolStripMenuItem.Text = "Zapisz wyniki zapytania do pliku";
             this.wskażPlikWynikowyToolStripMenuItem.Click += new System.EventHandler(this.wskażPlikWynikowyToolStripMenuItem_Click);
             // 
@@ -140,12 +142,28 @@
             this.resultsCount.Size = new System.Drawing.Size(0, 17);
             this.resultsCount.TabIndex = 6;
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(424, 85);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 20);
+            this.textBox1.TabIndex = 7;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(530, 85);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(100, 20);
+            this.textBox2.TabIndex = 8;
+            // 
             // MainForm
             // 
             this.AcceptButton = this.searchButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(867, 657);
+            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.resultsCount);
             this.Controls.Add(this.responseTimeLabel);
             this.Controls.Add(this.label1);
@@ -177,6 +195,8 @@
         private System.Windows.Forms.Label resultsCount;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox2;
     }
 }
 
