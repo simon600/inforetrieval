@@ -92,6 +92,7 @@ namespace WikipediaSearchEngine
         {
             searcher.mBeginBonus = float.Parse(textBox1.Text);
             searcher.mPhraseBonus = float.Parse(textBox2.Text);
+            searcher.mCountBonus = float.Parse(textBox3.Text);
             DoSearching();
         }
 
@@ -136,7 +137,9 @@ namespace WikipediaSearchEngine
 
         private void wskażPlikWynikowyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+            searcher.mBeginBonus = float.Parse(textBox1.Text);
+            searcher.mPhraseBonus = float.Parse(textBox2.Text);
+            searcher.mCountBonus = float.Parse(textBox3.Text);
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 resultFilePath = saveFileDialog.FileName;

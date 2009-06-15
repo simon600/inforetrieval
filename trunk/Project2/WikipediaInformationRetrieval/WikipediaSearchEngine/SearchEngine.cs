@@ -223,9 +223,8 @@ namespace WikipediaSearchEngine
                 idf = (float)Math.Log((float)mIndex.VocabularySize / posting_list.DocumentIds.Length);
                 for (uint i = 0; i < posting_list.DocumentIds.Length; i++)
                 {
-                    document_id = posting_list.DocumentIds[i];
-                    //int termFrequency = posting_list.Positions[i].Length;
-                    mDocumentScores[document_id] *= mPhraseBonus;                    
+                    document_id = posting_list.DocumentIds[i];                    
+                    mDocumentScores[document_id] *= mPhraseBonus;                   
                 }
             }
 
@@ -235,7 +234,7 @@ namespace WikipediaSearchEngine
                 if (mDocumentScores[i] > 0)
                 {
                     mDocumentScores[i] /= mIndex.Lengths[i];
-                    mDocumentScores[i] *= (float)Math.Pow(((float)mDocumentWordsCount[i] / words.Count), 2);
+                    mDocumentScores[i] *= (float)Math.Pow(((float)mDocumentWordsCount[i] / words.Count), mCountBonus);
                 }
             }
             
@@ -410,6 +409,7 @@ namespace WikipediaSearchEngine
         private byte[] mDocumentWordsCount;
         public float mBeginBonus;
         public float mPhraseBonus;
+        public float mCountBonus;
         private TimeSpan mTotalTime;
 
         private DateTime mStartTime;
