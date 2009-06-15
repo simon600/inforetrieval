@@ -12,18 +12,15 @@ namespace WikipediaSearchEngine
 {
     public class SearchEngine
     {
-        private class DocumentComparer : System.Collections.IComparer
+        private class DocumentComparer : System.Collections.Generic.IComparer<float>
         {
-            public int Compare(Object x, Object y)
-            {
-                float val_x = (float)x;
-                float val_y = (float)y;
-
-                if (val_y < val_x)
+            public int Compare(float x, float y)
+            {                
+                if (y < x)
                 {
                     return -1;
                 }
-                else if (val_y == val_x)
+                else if (y == x)
                 {
                     return 0;
                 }
@@ -213,14 +210,14 @@ namespace WikipediaSearchEngine
                 mDocumentRanking[i] = i;
             }
             
-            Array.Sort(mDocumentScores, mDocumentRanking);
-            uint temp;
-            for (uint i = 0; i < mDocumentRanking.Length / 2; i++)
-            {
-                temp = mDocumentRanking[i];
-                mDocumentRanking[i] = mDocumentRanking[mDocumentRanking.Length - 1 - i];
-                mDocumentRanking[mDocumentRanking.Length - 1 - i] = temp;
-            }
+            Array.Sort<float, uint>(mDocumentScores, mDocumentRanking, new DocumentComparer());            
+            //uint temp;
+            //for (uint i = 0; i < mDocumentRanking.Length / 2; i++)
+            //{
+            //    temp = mDocumentRanking[i];
+            //    mDocumentRanking[i] = mDocumentRanking[mDocumentRanking.Length - 1 - i];
+            //    mDocumentRanking[mDocumentRanking.Length - 1 - i] = temp;
+            //}
 
             // mDocumentScores unusable now, have to recalculate
         }
