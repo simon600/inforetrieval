@@ -223,11 +223,16 @@ namespace WikipediaSearchEngine
                 idf = (float)Math.Log((float)mIndex.VocabularySize / posting_list.DocumentIds.Length);
                 for (uint i = 0; i < posting_list.DocumentIds.Length; i++)
                 {
-                    document_id = posting_list.DocumentIds[i];                    
-                    mDocumentScores[document_id] *= mPhraseBonus;                   
+                    document_id = posting_list.DocumentIds[i];
+                    //int termFrequency = posting_list.Positions[i].Length;
+                    wf = 1 + (float)Math.Log(posting_list.Positions[i].Length);
+                    if (posting_list.Positions[i][0] < 10)
+                    {
+                        wf *= mBeginBonus;
+                    }
+                    mDocumentScores[document_id] += mPhraseBonus * wf * idf;
                 }
             }
-
 
             for (int i = 0; i < mDocumentScores.Length; i++)
             {

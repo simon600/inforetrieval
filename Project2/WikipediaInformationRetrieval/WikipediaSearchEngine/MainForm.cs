@@ -98,8 +98,8 @@ namespace WikipediaSearchEngine
 
         private void DoSearching()
         {
-            if (query == queryTextBox.Text.Trim())
-                return;
+            //if (query == queryTextBox.Text.Trim())
+            //    return;
 
             resultTextBox.Text = "";
 
