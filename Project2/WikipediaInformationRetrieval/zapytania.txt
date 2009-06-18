@@ -1,26 +1,26 @@
-QUERY: skecz z mart¹ papug¹
+ï»¿QUERY: skecz z martÄ… papugÄ…
 Martwa papuga
-Skeczu z martw¹ papug¹ nie bêdzie
-Lataj¹cy cyrk Monty Pythona
+Skeczu z martwÄ… papugÄ… nie bÄ™dzie
+LatajÄ…cy cyrk Monty Pythona
 {
-	Hiszpañska Inkwizycja (skecz)
-	Najzabawniejszy dowcip œwiata
-	Ministerstwo g³upich kroków
+	HiszpaÅ„ska Inkwizycja (skecz)
+	Najzabawniejszy dowcip Å›wiata
+	Ministerstwo gÅ‚upich krokÃ³w
 	Martwa papuga
-	A teraz coœ z zupe³nie innej beczki
+	A teraz coÅ› z zupeÅ‚nie innej beczki
 }
 
 QUERY: Krzywa Beziera
 Krzywa Beziera
 Krzywe Beziera
-Pierre Bézier
+Pierre BÃ©zier
 {
 	Algorytm de Casteljau
-	P³aty Béziera
+	PÅ‚aty BÃ©ziera
 }
 
-QUERY: Zderzacz Hadronów
-Zderzacz Hadronów
+QUERY: Zderzacz HadronÃ³w
+Zderzacz HadronÃ³w
 {
 	Hadron
 	Akcelerator zderzeniowy
