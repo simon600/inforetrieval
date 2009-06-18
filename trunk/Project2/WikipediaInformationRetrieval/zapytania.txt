@@ -1,13 +1,13 @@
-﻿QUERY: skecz z martą papugą
+QUERY: skecz z martą papugą
 Martwa papuga
 Skeczu z martwą papugą nie będzie
 Latający cyrk Monty Pythona
 {
-	Hiszpańska Inkwizycja (skecz)
-	Najzabawniejszy dowcip świata
-	Ministerstwo głupich kroków
-	Martwa papuga
-	A teraz coś z zupełnie innej beczki
+Hiszpańska Inkwizycja (skecz)
+Najzabawniejszy dowcip świata
+Ministerstwo głupich kroków
+Martwa papuga
+A teraz coś z zupełnie innej beczki
 }
 
 QUERY: Krzywa Beziera
@@ -15,20 +15,20 @@ Krzywa Beziera
 Krzywe Beziera
 Pierre Bézier
 {
-	Algorytm de Casteljau
-	Płaty Béziera
+Algorytm de Casteljau
+Płaty Béziera
 }
 
 QUERY: Zderzacz Hadronów
 Zderzacz Hadronów
 {
-	Hadron
-	Akcelerator zderzeniowy
-	Akcelerator LEP
+Hadron
+Akcelerator zderzeniowy
+Akcelerator LEP
 }
 {
-	TOTEM (detektor)
-	CMS (detektor)
+TOTEM (detektor)
+CMS (detektor)
 }
 LHCb
 
@@ -36,9 +36,9 @@ QUERY: Dostojewski
 Dostojewski
 Kategoria:Fiodor Dostojewski
 {
-	Biesy
-	Zbrodnia i kara
-	Idiota
-	Biedni ludzie
-	Literatura rosyjska
+Biesy
+Zbrodnia i kara
+Idiota
+Biedni ludzie
+Literatura rosyjska
 }
