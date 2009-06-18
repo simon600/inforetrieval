@@ -45,6 +45,7 @@ namespace WikipediaSearchEngine
             mDocumentRanking = new uint[mIndex.Positions.Length];
             mDocumentWordsCount = new byte[mIndex.Positions.Length];
 
+            mPostings = new List<PositionalPostingList>();
             mAnswers = new List<string>();
 
             if (readTitles)
@@ -94,9 +95,9 @@ namespace WikipediaSearchEngine
 
             //PositionalPostingList postings;
             mTotalTime = new TimeSpan(0);
-            mBeginBonus = 300;
-            mPhraseBonus = 700;
-            mCountBonus = 100;
+            mBeginBonus = 100;
+            mPhraseBonus = 900;
+            mCountBonus = 0;
 
             int commpres_counter = 0;
 
@@ -122,10 +123,8 @@ namespace WikipediaSearchEngine
               //  writer.WriteLine(" TOTAL: " + mAnswers.Count.ToString());
 
                 foreach (string title in mAnswers)
-                {
-                    if (!title.Contains('à') && !title.Contains('Š'))
-                        writer.WriteLine(title);
-                }
+                        writer.WriteLine(title.ToLower());
+
                 writer.WriteLine("");
 
                 mAnswers.Clear();
@@ -175,14 +174,31 @@ namespace WikipediaSearchEngine
             uint document_id;
 
             PositionalPostingList posting_list;
+            mPostings.Clear();
 
+            //wersja 2
             foreach (List<string> or_list in query.QueryStructure)
             {
                 if (or_list.Count > 0)
                 {
-                    words.Add(or_list[0]);
+                    posting_list = mIndex.PostingList(or_list[0]);
+
+                    for (int i = 1; i < or_list.Count; i++)
+                        posting_list = UnionPostings(posting_list, mIndex.PostingList(or_list[i]));
+
+                    mPostings.Add(posting_list); 
                 }
             }
+
+
+            //foreach (List<string> or_list in query.QueryStructure)
+            //{
+            //    if (or_list.Count > 0)
+            //    {
+            //        words.Add(or_list[0]);
+            //    }
+            //}
+
 
             // set default values
             for (uint i = 0; i < mDocumentScores.Length; i++)
@@ -193,16 +209,34 @@ namespace WikipediaSearchEngine
             }
 
             // counting document scores
-            foreach (string word in words)
-            {                
-                posting_list = mIndex.PostingList(word);
-                idf = (float)Math.Log((float)mIndex.VocabularySize / posting_list.DocumentIds.Length);
-                for (uint i = 0; i < posting_list.DocumentIds.Length; i++)
+            //foreach (string word in words)
+            //{
+            //    posting_list = mIndex.PostingList(word);
+            //    idf = (float)Math.Log((float)mIndex.VocabularySize / posting_list.DocumentIds.Length);
+            //    for (uint i = 0; i < posting_list.DocumentIds.Length; i++)
+            //    {
+            //        document_id = posting_list.DocumentIds[i];
+            //        int termFrequency = posting_list.Positions[i].Length;
+            //        wf = 1 + (float)Math.Log(posting_list.Positions[i].Length);
+            //        if (posting_list.Positions[i][0] < 10)
+            //        {
+            //            wf *= mBeginBonus;
+            //        }
+            //        mDocumentWordsCount[document_id] += 1;
+            //        mDocumentScores[document_id] += wf * idf;
+            //    }
+            //}
+
+            //wersja 2
+            foreach (PositionalPostingList posting in mPostings)
+            {
+                idf = (float)Math.Log((float)mIndex.VocabularySize / posting.DocumentIds.Length);
+                for (uint i = 0; i < posting.DocumentIds.Length; i++)
                 {
-                    document_id = posting_list.DocumentIds[i];
+                    document_id = posting.DocumentIds[i];
                     //int termFrequency = posting_list.Positions[i].Length;
-                    wf = 1 + (float)Math.Log(posting_list.Positions[i].Length);
-                    if (posting_list.Positions[i][0] < 10)
+                    wf = 1 + (float)Math.Log(posting.Positions[i].Length);
+                    if (posting.Positions[i][0] < 5)
                     {
                         wf *= mBeginBonus;
                     }
@@ -211,17 +245,31 @@ namespace WikipediaSearchEngine
                 }
             }
 
+
             // for phrase
-            for (int j = 0; j < words.Count - 1; j++)
+            //for (int j = 0; j < words.Count - 1; j++)
+            //{
+            //    posting_list = IntersectPostings(
+            //        mIndex.PostingList(words[j]), mIndex.PostingList(words[j+1]));
+
+            //    idf = (float)Math.Log((float)mIndex.VocabularySize / posting_list.DocumentIds.Length);
+            //    for (uint i = 0; i < posting_list.DocumentIds.Length; i++)
+            //    {
+            //        document_id = posting_list.DocumentIds[i];                    
+            //        mDocumentScores[document_id] *= mPhraseBonus;                   
+            //    }
+            //}
+
+            //wersja 2
+            for (int j = 0; j < mPostings.Count - 1; j++)
             {
-                posting_list = IntersectPostings(
-                    mIndex.PostingList(words[j]), mIndex.PostingList(words[j+1]));
+                posting_list = IntersectPostings(mPostings[j], mPostings[j + 1]);
 
                 idf = (float)Math.Log((float)mIndex.VocabularySize / posting_list.DocumentIds.Length);
                 for (uint i = 0; i < posting_list.DocumentIds.Length; i++)
                 {
-                    document_id = posting_list.DocumentIds[i];                    
-                    mDocumentScores[document_id] *= mPhraseBonus;                   
+                    document_id = posting_list.DocumentIds[i];
+                    mDocumentScores[document_id] *= mPhraseBonus;
                 }
             }
 
@@ -229,7 +277,7 @@ namespace WikipediaSearchEngine
             {
                 if (mDocumentScores[i] > 0)
                 {
-                    if (mDocumentWordsCount[i] < words.Count)
+                    if (mDocumentWordsCount[i] < mPostings.Count)       //words.Count
                         mDocumentScores[i] = 0;
 
                     else
@@ -384,6 +432,116 @@ namespace WikipediaSearchEngine
             return new_positions.ToArray();
         }
 
+        private PositionalPostingList UnionPostings(PositionalPostingList posting1, PositionalPostingList posting2)
+        {
+            PositionalPostingList union_of_postings;
+
+            List<uint> doc_ids = new List<uint>();
+            List<ushort[]> list_of_positions = new List<ushort[]>();
+
+            ushort[] positions;
+
+            int index1 = 0;
+            int index2 = 0;
+
+            int size1 = posting1.DocumentIds.Length;
+            int size2 = posting2.DocumentIds.Length;
+
+            uint key1;
+            uint key2;
+
+            while (index1 < size1 && index2 < size2)
+            {
+                key1 = posting1.DocumentIds[index1];
+                key2 = posting2.DocumentIds[index2];
+
+                if (key1 < key2)
+                {
+                    doc_ids.Add(key1);
+                    list_of_positions.Add(posting1.Positions[index1]);
+
+                    index1++;
+                }
+                else if (key2 < key1)
+                {
+                    doc_ids.Add(key2);
+                    list_of_positions.Add(posting2.Positions[index2]);
+
+                    index2++;
+                }
+                else
+                {
+                    doc_ids.Add(key1);
+
+                    positions = UnionPositionsList(posting1.Positions[index1], posting2.Positions[index2]);
+                    list_of_positions.Add(positions);
+
+                    index1++;
+                    index2++;
+                }
+            }
+
+            while (index1 < size1)
+            {
+                doc_ids.Add(posting1.DocumentIds[index1]);
+                list_of_positions.Add(posting1.Positions[index1]);
+
+                index1++;
+            }
+
+            while (index2 < size2)
+            {
+                doc_ids.Add(posting2.DocumentIds[index2]);
+                list_of_positions.Add(posting2.Positions[index2]);
+
+                index2++;
+            }
+
+            union_of_postings = new PositionalPostingList(doc_ids.ToArray(), list_of_positions.ToArray());
+            return union_of_postings;
+        }
+
+        private ushort[] UnionPositionsList(ushort[] positions1, ushort[] positions2)
+        {
+            List<ushort> positions = new List<ushort>();
+            int index1 = 0;
+            int index2 = 0;
+
+            while (index1 < positions1.Length && index2 < positions2.Length)
+            {
+                if (positions1[index1] < positions1[index2])
+                {
+                    positions.Add(positions1[index1]);
+                    index1++;
+                }
+                else if (positions1[index1] > positions1[index2])
+                {
+                    positions.Add(positions2[index2]);
+                    index2++;
+                }
+                else
+                {
+                    positions.Add(positions1[index1]);
+                    index1++;
+                    index2++;
+                }
+            }
+
+            while (index1 < positions1.Length)
+            {
+                positions.Add(positions1[index1]);
+                index1++;
+            }
+            while (index2 < positions2.Length)
+            {
+                positions.Add(positions2[index2]);
+                index2++;
+            }
+
+            return positions.ToArray();
+        }
+
+
         public void StartTimer()
         {
             QueryPerformanceCounter(out mStart);
@@ -420,6 +578,8 @@ namespace WikipediaSearchEngine
         public float mBeginBonus;
         public float mPhraseBonus;
         public float mCountBonus;
+        private List<PositionalPostingList> mPostings;
+        
         private TimeSpan mTotalTime;
 
         private DateTime mStartTime;
