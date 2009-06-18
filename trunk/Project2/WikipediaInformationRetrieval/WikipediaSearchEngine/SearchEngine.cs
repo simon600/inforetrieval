@@ -83,7 +83,8 @@ namespace WikipediaSearchEngine
 
         public void QueriesFromFile(string queries_path, string results_path)
         {
-            CharReader reader = new CharReader(new FileStream(queries_path, FileMode.Open));
+            StreamReader reader = new StreamReader(new FileStream(queries_path, FileMode.Open));
+           // CharReader reader = new CharReader(new FileStream(queries_path, FileMode.Open));
             StreamWriter writer = new StreamWriter(new FileStream(results_path, FileMode.Create), Encoding.UTF8);
 
             string query_string;
@@ -93,28 +94,17 @@ namespace WikipediaSearchEngine
 
             //PositionalPostingList postings;
             mTotalTime = new TimeSpan(0);
+            mBeginBonus = 300;
+            mPhraseBonus = 700;
+            mCountBonus = 100;
+
+            int commpres_counter = 0;
 
             while (!reader.EndOfStream)
             {
                 query_string = reader.ReadLine();
                 Console.WriteLine(query_string);
 
-                if (query_string.StartsWith("\"") && query_string.EndsWith("\""))
-                {
-                    //phrase_query.NewUserQuery(query_string);
-                   
-                    ////mierzymy czas
-                    //mStartTime = DateTime.Now;
-
-                    //postings = phrase_query.ProcessQuery();
-                    //PrepareAnswerList(postings);
-
-                    //mStopTime = DateTime.Now;
-
-                    //mTotalTime += (mStopTime - mStartTime);
-                }
-                else
-                {
                     boolean_query.NewUserQuery(query_string);
                    
                     //mierzymy czas
@@ -126,19 +116,26 @@ namespace WikipediaSearchEngine
                     mStopTime = DateTime.Now;
 
                     mTotalTime += (mStopTime - mStartTime);
-                }
+                
 
-                writer.Write("QUERY: " + query_string);
-                writer.WriteLine(" TOTAL: " + mAnswers.Count.ToString());
+                writer.WriteLine("QUERY: " + query_string);
+              //  writer.WriteLine(" TOTAL: " + mAnswers.Count.ToString());
 
                 foreach (string title in mAnswers)
-                    writer.WriteLine(title);
+                {
+                    if (!title.Contains('à') && !title.Contains('Š'))
+                        writer.WriteLine(title);
+                }
+                writer.WriteLine("");
 
                 mAnswers.Clear();
-
+                
                 //ograniczenie zuzycia pamieci
-                //if (GC.GetTotalMemory(false) > 1500000000)
-                //    mIndex.CompressPostings();
+                if (GC.GetTotalMemory(false) > 1600000000)
+                {
+                    mIndex.CompressPostings();
+                    commpres_counter++;
+                }
 
             }
 
@@ -223,14 +220,8 @@ namespace WikipediaSearchEngine
                 idf = (float)Math.Log((float)mIndex.VocabularySize / posting_list.DocumentIds.Length);
                 for (uint i = 0; i < posting_list.DocumentIds.Length; i++)
                 {
-                    document_id = posting_list.DocumentIds[i];
-                    //int termFrequency = posting_list.Positions[i].Length;
-                    wf = 1 + (float)Math.Log(posting_list.Positions[i].Length);
-                    if (posting_list.Positions[i][0] < 10)
-                    {
-                        wf *= mBeginBonus;
-                    }
-                    mDocumentScores[document_id] += mPhraseBonus * wf * idf;
+                    document_id = posting_list.DocumentIds[i];                    
+                    mDocumentScores[document_id] *= mPhraseBonus;                   
                 }
             }
 
@@ -238,8 +229,14 @@ namespace WikipediaSearchEngine
             {
                 if (mDocumentScores[i] > 0)
                 {
-                    mDocumentScores[i] /= mIndex.Lengths[i];
-                    mDocumentScores[i] *= (float)Math.Pow(((float)mDocumentWordsCount[i] / words.Count), mCountBonus);
+                    if (mDocumentWordsCount[i] < words.Count)
+                        mDocumentScores[i] = 0;
+
+                    else
+                    {
+                        mDocumentScores[i] /= mIndex.Lengths[i];
+                       // mDocumentScores[i] *= (float)Math.Pow(((float)mDocumentWordsCount[i] / words.Count), mCountBonus);
+                    }
                 }
             }
             
@@ -260,8 +257,15 @@ namespace WikipediaSearchEngine
 
             if (hasTitles)
             {
-                foreach (uint docId in mDocumentRanking)
+                int i= 0;
+                uint docId;
+                while (mDocumentScores[i] > 0)
+                {
+                    docId = mDocumentRanking[i];
                     mAnswers.Add(mTitles[(int)docId]);
+                    i++;
+                }
+              
 
                 return;
             }
@@ -275,6 +279,7 @@ namespace WikipediaSearchEngine
                 title = mTextSource.ReadLine();
                 mAnswers.Add(title);
             }
+        
         }
 
         public void ReadTitles()
