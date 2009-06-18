@@ -1,0 +1,44 @@
+QUERY: skecz z mart¹ papug¹
+Martwa papuga
+Skeczu z martw¹ papug¹ nie bêdzie
+Lataj¹cy cyrk Monty Pythona
+{
+	Hiszpañska Inkwizycja (skecz)
+	Najzabawniejszy dowcip œwiata
+	Ministerstwo g³upich kroków
+	Martwa papuga
+	A teraz coœ z zupe³nie innej beczki
+}
+
+QUERY: Krzywa Beziera
+Krzywa Beziera
+Krzywe Beziera
+Pierre Bézier
+{
+	Algorytm de Casteljau
+	P³aty Béziera
+}
+
+QUERY: Zderzacz Hadronów
+Zderzacz Hadronów
+{
+	Hadron
+	Akcelerator zderzeniowy
+	Akcelerator LEP
+}
+{
+	TOTEM (detektor)
+	CMS (detektor)
+}
+LHCb
+
+QUERY: Dostojewski
+Dostojewski
+Kategoria:Fiodor Dostojewski
+{
+	Biesy
+	Zbrodnia i kara
+	Idiota
+	Biedni ludzie
+	Literatura rosyjska
+}
