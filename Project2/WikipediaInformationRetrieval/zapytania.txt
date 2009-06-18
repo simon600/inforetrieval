@@ -1,4 +1,4 @@
-QUERY: skecz z martą papugą
+QUERY: skecz z martwą papugą
 Martwa papuga
 Skeczu z martwą papugą nie będzie
 Latający cyrk Monty Pythona
@@ -6,7 +6,6 @@ Latający cyrk Monty Pythona
 Hiszpańska Inkwizycja (skecz)
 Najzabawniejszy dowcip świata
 Ministerstwo głupich kroków
-Martwa papuga
 A teraz coś z zupełnie innej beczki
 }
 
