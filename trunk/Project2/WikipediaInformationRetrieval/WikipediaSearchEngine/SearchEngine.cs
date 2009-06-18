@@ -237,12 +237,15 @@ namespace WikipediaSearchEngine
                     //int termFrequency = posting_list.Positions[i].Length;
                     wf = 1 + (float)Math.Log(posting.Positions[i].Length);
                     if (posting.Positions[i][0] < 5)
-                    {
                         wf *= mBeginBonus;
-                    }
+                    
+                    if (mPostings.Count == 1 && posting.Positions[i][0] == 0)
+                        wf *= mBeginBonus;
+
                     mDocumentWordsCount[document_id] += 1;
                     mDocumentScores[document_id] += wf * idf;
                 }
+                
             }
 
 
@@ -270,6 +273,8 @@ namespace WikipediaSearchEngine
                 {
                     document_id = posting_list.DocumentIds[i];
                     mDocumentScores[document_id] *= mPhraseBonus;
+                    if (posting_list.Positions[i][0] < 2)
+                        mDocumentScores[document_id] *= mBeginBonus;
                 }
             }
 
