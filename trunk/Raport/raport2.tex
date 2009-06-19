@@ -1,0 +1,114 @@
+\documentclass[11pt,leqno]{article}
+
+\usepackage[cp1250]{inputenc}  % Polskie literki...
+\usepackage{polski}            % Polskie tytu³y, data, bibliografia, itp.
+\usepackage{a4wide}            % Szersza strona...
+
+\usepackage{amsmath,amssymb}   % Do³¹czamy zestaw ró¿nych przydatnych znaczków...
+\usepackage{bbm}               % \mathbbm{N} - zbior liczb naturalnych
+\usepackage{amsthm}
+
+\usepackage[dvipdfm,colorlinks=true]{hyperref}          % aby móc umieszczaæ linki w PDFie
+\title{Raport}
+
+\begin{document}
+\maketitle                % Utworzenie tytu³u.
+\thispagestyle{empty}     % Nie numerujemy pierwszej strony.
+\tableofcontents          % Spis treœci
+\newpage
+
+\section {Opis formatu s³ownika morfologicznego}
+
+S³ownik morfologiczny ma fromat zmieniony w stosunku do wersji oryginalnej.
+
+\subsection{Format pliku}
+Plik binarny s³ownika morfologicznego ma nastêpuj¹cy format: \\
+D³ugoœæ listy form bazowych ze s³ownika jako uint.\\
+Lista form bazowych jako ci¹g stringów o d³ugoœci zapisanej wczeœniej.
+Iloœæ par (s³owo, lista numerów form bazowych) ze s³ownika.
+Dla ka¿dej pary takiej jak powy¿ej s³owo jako string, nastêpnie d³ugoœæ listy numerów form bazowych, zaœ dalej lista tych numerów.
+
+\subsection{Format w programie}
+Po wczytaniu z pliku (w trakcie dzia³ania programu) s³ownik morfologiczny jest przechowywany jako seria tablic.
+\begin{itemize}
+\item Posortowana tablica s³ów, dla których mo¿na odnaleŸæ formy bazowe (wyszukiwanie binarne).
+\item Tablica tablic numerów form bazowych. Te numery odpowiadaj¹ indeksom w tablicy form bazowych. Natomiast indeksy s¹ takie jak dla tablicy s³ów powy¿ej.
+\item Tablica form bazowych.
+\end{itemize}
+
+Wczytywanie s³ownika morfologicznego trwa: 00:00:04.3992. \\U¿yta pamiêæ: 229119604 bajtów.
+
+\section {Indeks odwrócony}
+
+\subsection {Format w programie}
+
+W indeksie przechowujemy:
+
+\begin{itemize}
+\item Posortowan¹ tablicê zindeksowanych tokenów (s³ownik).
+\item Tablicê list postingowych o indeksach odpowiadaj¹cych indeksom s³ów.
+\item Tablicê pozycji pocz¹tków kolejnych artyku³ów w pliku.
+\end{itemize}
+
+S³owa wyszukujemy binarnie w tablicy tokenów.
+
+\subsection {Format listy postingowej}
+
+W liœcie postingowej przechowujemy:
+
+\begin {itemize}
+\item Tablicê pozycji dokumentów (pozycja identyfikuje dokument)
+\item Tablicê tablic pozycji w dokumencie.
+\end {itemize}
+
+W wersji skompresowanej lista postingowa sk³ada siê pojedynczej wratoœci int - oznaczaj¹cej liczbê dokumentów, w których wystêpuje dany term oraz z tablicy bajtów. W tablicy zapisujemy przy pomocy kompresji gamma kolejno: identyfikator dokumentu \textit{id}, liczbê wyst¹pieñ danego termu w dokumencie \textit{id}, kolejne pozycje termu w tym dokumencie. 
+
+\subsection {Tworzenie indeksu}
+
+Indeks odwrócony tworzymy w dwóch przebiegach.\\
+W pierwszym przebiegu tworzymy posortowany s³ownik mapuj¹cy s³owa na listy postingowe.\\ Gdy skoñczy siê miejsce zapisujemy go do pliku
+tymczasowego i tworzymy nowy s³ownik. Po przetworzeniu ca³ego pliku Ÿród³owego ³¹czymy powsta³e pliki tymczasowe do jednego wynikowego.
+\\
+W drugim przebiegu wyliczamy pozycje dokumentów w pliku z Wikipedi¹ i zapisujemy do pliku.
+
+\section {Stemming}
+
+Nasz program wykorzystuje stemming przy tworzeniu indeksu oraz wyszukiwaniu.\\
+Najpierw obcinane s¹ z koñca s³owa rozpoznane koñcówki które mo¿na usuwaæ. Nastêpnie z koñca s³owa usuwamy samog³oski. W przypadku gdy nie ma wiêcej
+koñcówek do usuniêcia lub s³owo robi siê zbyt krótkie stemming jest zakoñczony. \\
+\\
+Stemming pozwala na zmniejszenie s³ownika o ok. 16\%.
+
+
+\subsection {Wielkoœæ indeksu}
+\begin {itemize}
+\item \textbf{Wielkoœæ s³ownika} ze stemmingiem 1995890. 
+\item \textbf{Zindeksowanych dokumentów} 811205
+\end{itemize}
+
+\section {Realizacja zapytañ}
+
+Program pozwala na realizacjê zapytañ typu "free text query". Zapytanie takie jest dowolnym ci¹giem termów. Wyszukiwarka stara siê odnaleŸæ dokumenty najbardziej pasuj¹ce na podstawie funkcji ranguj¹cych, opartych na porównywaniu odleg³oœci Euklidesowej wektoru zapytania i dokumentów.\\
+
+Przy wykorzystaniu indeksu pozycyjnego, obliczana jest punktacja ka¿dego dokumentu. Dla kolejnych termów z zapytania przegl¹dane s¹ ich listy postingowe i dla ka¿dego dokumentu zawieraj¹cego term zwiêkszana jest jego punktacja o wartoœæ $wf \cdot idf$, przy czym:\\
+\begin{equation*}
+wf = 1 + \log tf_{t,d} \end{equation*}
+\begin{equation*}
+idf = \log \frac{N}{df_t}\end{equation*}
+gdzie:
+\begin{itemize}
+\item $tf_{t,d}$ - liczba wyst¹pieñ termu \textit{t} w dokumencie \textit{d}
+\item $N$ - rozmiar s³ownika
+\item $df_t$ - liczba dokumentów zawieraj¹cych term t
+\end{itemize}
+\indent
+Nastêpnie wartoœci dokumentów s¹ normalizowane poprzez podzielenie zyskanych punktów przez d³ugoœæ dokumentu. Ostatecznie dokumenty s¹ sortowane wed³ug ich rang i zwracane jako odpowiedŸ w kolejnoœci malej¹cych rang. \\
+Ponadto punkty dokumentu s¹ odpowiednio zwiêkszane (przydzielany jest bonus) w pewnych okreœlonych, uznanych za po¿¹dane z punktu widzenia istotnoœci dokumentu, sytuacjach:
+\begin{itemize}
+\item Jeœli term z zapytania wystêpuje jako jedno z 5 pierwszych s³ów, jego punkty s¹ mno¿one przez pewien okreœlony sta³y czynnik. 
+\item Dla ka¿dych dwóch kolejnych termów z zapytania, jeœli wystêpuj¹ one jako fraza w pewnym dokumencie, jego punkty s¹ mno¿one przez ustalon¹ wartoœæ bonusow¹. 
+\end{itemize}
+
+
+
+\end{document}
